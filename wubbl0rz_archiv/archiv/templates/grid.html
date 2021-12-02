@@ -1,0 +1,28 @@
+{% load static %}
+{% load custom_tags %}
+
+<div class="row">
+    {% for vod in vods %}
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-3 pb-4">
+        <div class="card card-rounded h-100">
+            <div class="position-relative">
+                <a href="/v/{{ vod.uuid }}">
+                    <img src="{{ MEDIA_URL }}{{ vod.filename }}.jpg" class="card-img-top image-rounded-top" alt="{{ vod.title }}">
+                    <div class="timecode-overlay text-white">
+                        {{ vod.duration|duration }}
+                    </div>
+                </a>
+            </div>
+            <div class="card-body">
+                <a href="/v/{{ vod.uuid }}" style="color: inherit;">
+                    <h5 class="card-title h5">{{ vod.title }}</h5>
+                </a>
+                <hr>
+                <p class="card-text">
+                    {{ vod.date|date }} - {{ vod.date|time }} Uhr
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

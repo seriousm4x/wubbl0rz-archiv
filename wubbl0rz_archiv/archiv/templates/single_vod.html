@@ -1,0 +1,100 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>Wubbl0rz Archiv</title>
+    <link rel="icon" type="image/png" href="{% static 'img/keks.png' %}" />
+    <link href=" {% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-dark.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+    <link href="{% static 'css/video-js.css' %}" rel="stylesheet">
+    <link href="{% static 'css/videojs-seek-buttons.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+    <div class="container p-4">
+        <div class="mb-4">
+            <video id="vod" class="video-js vjs-big-play-centered" controls preload="auto" width="100%" height="100%"
+                poster="{{ MEDIA_URL }}{{ vod.filename }}.jpg"
+                data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2]}'>
+                <source src="{{ MEDIA_URL }}{{ vod.filename }}.m3u8" type="application/x-mpegURL" />
+                <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a
+                    web browser that
+                    <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                </p>
+            </video>
+        </div>
+        <div class="card vod-infos">
+            <h1 class="h4">
+                {{ vod.title }}
+            </h1>
+            <p class="text-muted">
+                {{ vod.date|date }} - {{ vod.date|time }} Uhr
+            </p>
+            <p>
+                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Video details
+                </button>
+                <a href="{{ MEDIA_URL }}{{ vod.filename }}.ts" type="button" class="btn btn-primary btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                    </svg>
+                    Download
+                </a>
+            </p>
+            <div class="collapse text-muted" id="collapseExample">
+                Resolution: {{ vod.resolution }}<br>
+                Bitrate: {{ vod.bitrate }} kbit/s<br>
+                FPS: {{ vod.fps }}<br>
+                Size: {{ vod.size|filesizeformat }}
+            </div>
+            <hr>
+            <div class="card border-0" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="col-2 d-flex align-items-center">
+                        <img src="{% static 'img/keks.png' %}" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-10">
+                        <div class="card-body">
+                            <h5 class="card-title">wubbl0rz</h5>
+                            <p class="card-text">
+                                <a href="https://twitch.tv/wubbl0rz" target="_blank">twitch.tv/wubbl0rz</a><br>
+                                <a href="https://youtube.com/m4xfps" target="_blank">youtube.com/m4xfps</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/video.min.js' %}"></script>
+    <script src="{% static 'js/videojs-seek-buttons.min.js' %}"></script>
+    <script>
+        var options = {
+            controlBar: {
+                volumePanel: {
+                    inline: false
+                }
+            },
+        };
+        var player = videojs('vod', options);
+        player.fluid(true);
+        player.seekButtons({
+            forward: 30,
+            back: 10
+        });
+        player.play();
+    </script>
+</body>
+
+</html>

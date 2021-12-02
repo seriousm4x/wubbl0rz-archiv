@@ -1,0 +1,9 @@
+:8001 {
+	root * /mnt/nas/archiv-dev/
+	@notStatic {
+        not path /media/*
+	}
+	reverse_proxy @notStatic :8000
+	file_server
+    encode gzip
+}
