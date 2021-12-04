@@ -53,8 +53,8 @@
             </p>
             <div class="collapse text-muted" id="collapseExample">
                 Resolution: {{ vod.resolution }}<br>
-                Bitrate: {{ vod.bitrate }} kbit/s<br>
-                FPS: {{ vod.fps }}<br>
+                Bitrate: {{ vod.bitrate|filesizeformat }}it/s<br>
+                FPS: {{ vod.fps|floatformat:0 }}<br>
                 Size: {{ vod.size|filesizeformat }}
             </div>
             <hr>

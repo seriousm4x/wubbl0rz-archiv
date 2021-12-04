@@ -17,5 +17,5 @@ class Vod(models.Model):
     filename = models.SlugField(null=False, blank=False)
     resolution = models.TextField(null=True, blank=True)
     bitrate = models.PositiveIntegerField(null=True, blank=True)
-    fps = models.PositiveSmallIntegerField(null=True, blank=True)
+    fps = models.FloatField(null=True, blank=True)
     size = models.PositiveBigIntegerField(null=True, blank=True)
