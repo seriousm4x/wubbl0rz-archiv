@@ -7,6 +7,6 @@ from archiv import views
 urlpatterns = [
     path("", views.index, name="index"),
     path("v/<slug:uuid>/", views.single_vod, name="single_vod"),
-    path("jahre/", views.years, name="years"),
+    path("years/", views.years, name="years"),
     path("search/", views.search, name="search"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
