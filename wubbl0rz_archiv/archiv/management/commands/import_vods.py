@@ -1,11 +1,28 @@
 import json
 import os
+from pymediainfo import MediaInfo
 from datetime import datetime
 
 from archiv.models import Vod
 from django.core.management.base import BaseCommand
 from django.utils.timezone import make_aware
 
+
+def get_duration(f):
+    media_info = MediaInfo.parse(f)
+    for track in media_info.tracks:
+        if track.track_type == "Video":
+            return track.duration
+
+def get_resolution(f):
+    media_info = MediaInfo.parse(f)
+    for track in media_info.tracks:
+        if track.track_type == "Video":
+            return f"{track.width}x{track.height}"
+
+def get_bitrate(f):
+    media_info = MediaInfo.parse(f)
+    return media_info.general_tracks[0].to_data()["overall_bit_rate"]
 
 class Command(BaseCommand):
     def __init__(self):
@@ -22,10 +39,10 @@ class Command(BaseCommand):
                     filename=name,
                     defaults={
                         "title": info["title"],
-                        "duration": info["duration"],
+                        "duration": get_duration(os.path.join(self.vods_dir, name + ".ts")),
                         "date": make_aware(datetime.fromtimestamp(info["timestamp"])),
-                        "resolution": f"{info['width']}x{info['height']}",
-                        "bitrate": info["tbr"],
+                        "resolution": get_resolution(os.path.join(self.vods_dir, name + ".ts")),
+                        "bitrate": get_bitrate(os.path.join(self.vods_dir, name + ".ts")),
                         "fps": info["fps"],
                         "size": os.path.getsize(os.path.join(self.vods_dir, name + ".ts"))
                     })

@@ -1,3 +1,4 @@
 django
+pymediainfo
 gunicorn
 yt-dlp
