@@ -35,26 +35,23 @@
                 <div id='panelsStayOpen-collapse-{{ year.year|date:"Y" }}' class="accordion-collapse collapse"
                     aria-labelledby="panelsStayOpen-headingOne">
                     <div class="accordion-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Datum</th>
-                                    <th scope="col">Titel</th>
-                                    <th scope="col">Dauer</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for vod in vods %}
-                                    {% if vod.date|date:"Y" == year.year|date:"Y" %}
-                                        <tr>
-                                            <td>{{ vod.date|date:"d.m.Y" }} - {{ vod.date|time }} Uhr</td>
-                                            <td><a href="/v/{{ vod.uuid }}" style="color: inherit;">{{ vod.title }}</a></td>
-                                            <td>{{ vod.duration|duration }}</td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        <div class="container">
+                            {% for vod in vods %}
+                                {% if vod.date|date:"Y" == year.year|date:"Y" %}
+                                    <div class="row pb-4">
+                                        <div class="col-md-auto">
+                                            {{ vod.date|date:"d.m.Y" }} - {{ vod.date|time }} Uhr
+                                        </div>
+                                        <div class="col order-first order-md-last fw-bold">
+                                            <a href="/v/{{ vod.uuid }}" style="color: inherit;">{{ vod.title }}</a>
+                                        </div>
+                                        <div class="col-md-auto order-sm-last">
+                                            {{ vod.duration|duration }} h
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
