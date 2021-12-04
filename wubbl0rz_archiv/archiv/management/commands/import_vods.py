@@ -1,11 +1,11 @@
 import json
 import os
-from pymediainfo import MediaInfo
 from datetime import datetime
 
 from archiv.models import Vod
 from django.core.management.base import BaseCommand
 from django.utils.timezone import make_aware
+from pymediainfo import MediaInfo
 
 
 def get_duration(f):
@@ -14,15 +14,18 @@ def get_duration(f):
         if track.track_type == "Video":
             return track.duration
 
+
 def get_resolution(f):
     media_info = MediaInfo.parse(f)
     for track in media_info.tracks:
         if track.track_type == "Video":
             return f"{track.width}x{track.height}"
 
+
 def get_bitrate(f):
     media_info = MediaInfo.parse(f)
     return media_info.general_tracks[0].to_data()["overall_bit_rate"]
+
 
 class Command(BaseCommand):
     def __init__(self):
@@ -34,7 +37,7 @@ class Command(BaseCommand):
             if ext == ".json":
                 with open(os.path.join(self.vods_dir, f), "r", encoding="utf-8") as info_file:
                     info = json.load(info_file)
-                print(info["id"])
+                print(f)
                 Vod.objects.update_or_create(
                     filename=name,
                     defaults={

@@ -21,6 +21,7 @@
     <div class="container p-4">
         <h1 class="fw-bold pb-3">
             Jahresansicht
+            <small class="text-muted">Gesamt: {{ vods|length }}</small>
         </h1>
         <div class="accordion" id="accordionPanelsStayOpenExample">
             {% for year in grouped_years %}
