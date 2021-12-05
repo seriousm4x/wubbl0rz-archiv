@@ -29,15 +29,17 @@ def get_bitrate(f):
 
 class Command(BaseCommand):
     def __init__(self):
-        self.vods_dir = "/mnt/nas/Archiv/wubbl0rz-twitch-vods/Downloads/"
+        self.vods_dir = "/mnt/nas/Archiv/wubbl0rz-twitch-vods/media/"
 
     def handle(self, **options):
         for f in os.listdir(self.vods_dir):
             name, ext = os.path.splitext(f)
             if ext == ".json":
+                if Vod.objects.filter(filename=name).exists():
+                    continue
+                print(f)
                 with open(os.path.join(self.vods_dir, f), "r", encoding="utf-8") as info_file:
                     info = json.load(info_file)
-                print(f)
                 Vod.objects.update_or_create(
                     filename=name,
                     defaults={
