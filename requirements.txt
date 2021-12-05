@@ -1,4 +1,5 @@
+celery[redis]
 django
-pymediainfo
 gunicorn
+pymediainfo
 yt-dlp
