@@ -1,5 +1,8 @@
 celery[redis]
 django
+django-compressor
+django-sass-processor
 gunicorn
+libsass
 pymediainfo
 yt-dlp
