@@ -29,7 +29,7 @@ def get_bitrate(f):
 
 class Command(BaseCommand):
     def __init__(self):
-        self.vods_dir = "/mnt/nas/archiv-dev/media/"
+        self.vods_dir = "/mnt/nas/Archiv/wubbl0rz-twitch-vods/Downloads/"
 
     def handle(self, **options):
         for f in os.listdir(self.vods_dir):
