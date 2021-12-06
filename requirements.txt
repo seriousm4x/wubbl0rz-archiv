@@ -5,4 +5,5 @@ django-sass-processor
 gunicorn
 libsass
 pymediainfo
+requests
 yt-dlp

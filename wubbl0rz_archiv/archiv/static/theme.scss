@@ -1,10 +1,198 @@
-// imports
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap');
+// fonts
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&display=swap');
 
 
-// variables
+// bootstrap variable overwrite
 
-$font-family-sans-serif: "Roboto", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+$font-family-sans-serif: "Rubik",
+-apple-system,
+BlinkMacSystemFont,
+'Segoe UI',
+Roboto,
+Oxygen,
+Ubuntu,
+Cantarell,
+'Open Sans',
+'Helvetica Neue',
+sans-serif;
+$container-max-widths: (sm: 540px,
+    md: 720px,
+    lg: 960px,
+    xl: 1140px,
+    xxl: 1600px);
+$card-border-width: 0px;
+$grid-gutter-width: 0.5rem;
+
+
+// bootstrap import
+
+@import "bootstrap/scss/bootstrap";
+
+
+// bootstrap overwrites
+
+:root {
+    scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.bg-wrap {
+    overflow: hidden;
+    position: relative;
+}
+
+.bg-img1 {
+    opacity: 0.6;
+    position: absolute;
+    left: 85vw;
+    top: 28vh;
+    width: 100px;
+    height: auto;
+    rotate: 11deg;
+    pointer-events: none;
+}
+
+.bg-img2 {
+    opacity: 0.5;
+    position: absolute;
+    left: 4vw;
+    top: 75vh;
+    width: 100px;
+    height: auto;
+    rotate: -6deg;
+    pointer-events: none;
+}
+
+.bg-content {
+    position: relative;
+}
+
+body,
+.nav-link,
+.form-control {
+    color: #222222 !important;
+}
+
+hr {
+    margin: 0.5rem;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #222222 !important;
+}
+
+.form-control {
+    border: 1px solid #222222 !important;
+}
+
+.form-control:focus {
+    color: inherit;
+    box-shadow: none;
+}
+
+.navbar {
+    height: 5rem;
+    background-color: white;
+}
+
+.navbar-collapse {
+    background-color: white;
+}
+
+.bg-light {
+    background-color: #eeeeee !important;
+}
+
+.card-body {
+    padding: 0.5rem 0;
+}
+
+.card-body a {
+    text-decoration: none;
+}
+
+.card-body h5 {
+    font-weight: 500;
+}
+
+.search-center input,
+.search-center button {
+    border-radius: 2rem;
+}
+
+.btn.btn-dark.btn-sm {
+    border-radius: 2rem;
+}
+
+.btn:focus {
+    box-shadow: none;
+}
+
+.page-link {
+    color: #222222;
+}
+
+.page-link:hover {
+    color: #464646;
+}
+
+.page-link:focus {
+    color: inherit;
+    box-shadow: none;
+}
+
+.page-item.active .page-link {
+    background-color: #222222;
+    border-color: #222222;
+}
+
+.accordion-button:hover {
+    background-color: #eeeeee;
+}
+
+.accordion-button:focus {
+    color: inherit;
+    box-shadow: none;
+}
+
+.accordion-button:not(.collapsed) {
+    color: white;
+    background-color: #222222;
+}
+
+.accordion-button:not(.collapsed)::after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+
+
+// video.js overwrites
+
+.video-js .vjs-current-time,
+.vjs-no-flex .vjs-current-time,
+.vjs-time-divider,
+.video-js .vjs-duration,
+.vjs-no-flex .vjs-duration {
+    display: block !important;
+}
+
+.vjs-remaining-time.vjs-time-control.vjs-control {
+    display: none !important;
+}
+
+.vjs-control-bar {
+    font-family: $font-family-sans-serif;
+    font-size: 150%;
+    background: rgb(0,0,0) !important;
+    background: linear-gradient(0deg, rgba(0,0,0,0.58) 20%, rgba(255,255,255,0) 95%) !important;
+}
+
+.vjs-menu-button-popup .vjs-menu .vjs-menu-content, .video-js .vjs-volume-vertical {
+    background-color: rgba(0,0,0,0.58) !important;
+}
 
 
 // custom css
@@ -23,23 +211,17 @@ $font-family-sans-serif: "Roboto", -apple-system, BlinkMacSystemFont, 'Segoe UI'
     width: 35px !important;
 }
 
-.video-js .vjs-current-time,
-.vjs-no-flex .vjs-current-time,
-.vjs-time-divider,
-.video-js .vjs-duration,
-.vjs-no-flex .vjs-duration {
-    display: block !important;
+@media screen and (min-width: 1200px) {
+    .container-navbar {
+        margin-top: 1.5rem;
+    }
+
+    .search-center {
+        position: absolute;
+        left: 0;
+        right: 0;
+        width: 500px;
+        margin-right: auto;
+        margin-left: auto;
+    }
 }
-
-.vjs-remaining-time.vjs-time-control.vjs-control {
-    display: none !important;
-}
-
-.vjs-control-bar {
-    font-size: 120%;
-}
-
-
-// bs import
-
-@import "bootstrap/scss/bootstrap";

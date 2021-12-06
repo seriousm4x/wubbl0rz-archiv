@@ -3,12 +3,13 @@ import os
 import subprocess
 from datetime import datetime
 
+import requests
 import yt_dlp
 from celery import shared_task
 from django.utils.timezone import make_aware
 from pymediainfo import MediaInfo
 
-from .models import Vod
+from .models import ApiStorage, Emote, Vod
 
 
 class MyLogger:
@@ -89,8 +90,116 @@ class VODDownloader:
             })
 
 
+class EmoteUpdater:
+    def __init__(self) -> None:
+        self.broadcaster_id = ApiStorage.objects.get().broadcaster_id
+
+    def mark_outdated(self):
+        for emote in Emote.objects.all():
+            emote.outdated = True
+            emote.save()
+
+    def twitch(self):
+        ttv_client_id = ApiStorage.objects.get().ttv_client_id
+        ttv_client_secret = ApiStorage.objects.get().ttv_client_secret
+
+        # refresh twitch credentials
+        tokenurl = "https://id.twitch.tv/oauth2/token?client_id={}&client_secret={}&grant_type=client_credentials".format(
+            ttv_client_id, ttv_client_secret)
+        try:
+            # get bearer token
+            token_response = requests.post(tokenurl)
+            token_response.raise_for_status()
+            token_jsonResponse = token_response.json()
+            bearer = token_jsonResponse["access_token"]
+
+            helix_header = {
+                "Client-ID": ttv_client_id,
+                "Authorization": "Bearer {}".format(bearer),
+            }
+
+            # write to database
+            ApiStorage.objects.update_or_create(
+                broadcaster_id=self.broadcaster_id,
+                defaults={
+                    "ttv_bearer_token": bearer
+                }
+            )
+        except requests.exceptions.HTTPError as http_err:
+            print("HTTP error occurred: {}".format(http_err))
+        except Exception as err:
+            print("Other error occurred: {}".format(err))
+
+        # get emotes
+        emote_url = f"https://api.twitch.tv/helix/chat/emotes?broadcaster_id={self.broadcaster_id}"
+        emote_resp = requests.get(emote_url, headers=helix_header)
+        emote_resp.raise_for_status()
+        emote_json_resp = emote_resp.json()
+        for emote in emote_json_resp["data"]:
+            if "animated" in emote["format"]:
+                image = emote["images"]["url_4x"].replace(
+                    "/static/", "/animated/")
+            else:
+                image = emote["images"]["url_4x"]
+            Emote.objects.update_or_create(
+                id=emote["id"],
+                provider="twitch",
+                defaults={
+                    "name": emote["name"],
+                    "url": image,
+                    "outdated": False
+                }
+            )
+
+    def bttv(self):
+        emote_url = f"https://api.betterttv.net/3/cached/users/twitch/{self.broadcaster_id}"
+        emote_resp = requests.get(emote_url)
+        emote_resp.raise_for_status()
+        emote_json_resp = emote_resp.json()
+        for emote in emote_json_resp["sharedEmotes"]:
+            Emote.objects.update_or_create(
+                id=emote["id"],
+                provider="bttv",
+                defaults={
+                    "name": emote["code"],
+                    "url": f"https://cdn.betterttv.net/emote/{emote['id']}/3x",
+                    "outdated": False
+                }
+            )
+
+    def ffz(self):
+        emote_url = f"https://api.frankerfacez.com/v1/room/id/{self.broadcaster_id}"
+        emote_resp = requests.get(emote_url)
+        emote_resp.raise_for_status()
+        emote_json_resp = emote_resp.json()
+        for _, value in emote_json_resp["sets"].items():
+            for emote in value["emoticons"]:
+                Emote.objects.update_or_create(
+                    id=emote["id"],
+                    provider="ffz",
+                    defaults={
+                        "name": emote["name"],
+                        "url": f"https://cdn.frankerfacez.com/emote/{emote['id']}/4",
+                        "outdated": False
+                    }
+                )
+
+    def delete_outdated(self):
+        for emote in Emote.objects.all():
+            if emote.outdated == True:
+                emote.delete()
+
+
+    def update_all(self):
+        self.mark_outdated()
+        self.twitch()
+        self.bttv()
+        self.ffz()
+        self.delete_outdated()
+
+
 @shared_task
-def main_dl():
+def download_vods():
     vod_dir = "/mnt/nas/Archiv/wubbl0rz-twitch-vods/media/"
     vodd = VODDownloader()
     print("getting info dict")
@@ -98,7 +207,7 @@ def main_dl():
     for entry in info_dict["entries"]:
         if entry["live_status"] == "is_live" or Vod.objects.filter(filename=entry["id"]).exists() or os.path.isfile(os.path.join(vod_dir, entry["id"] + ".ts")):
             continue
-        
+
         if not os.path.isfile(os.path.join(vod_dir, entry["id"] + ".json")):
             with open(os.path.join(vod_dir, entry["id"] + ".json"), "w", encoding="utf-8") as f:
                 json.dump(entry, f)
@@ -116,3 +225,9 @@ def main_dl():
         print("update db")
         vodd.update_db(entry["id"], entry["title"], duration,
                        entry["timestamp"], resolution, bitrate, entry["fps"], filesize)
+
+
+@shared_task
+def update_emotes():
+    eu = EmoteUpdater()
+    eu.update_all()

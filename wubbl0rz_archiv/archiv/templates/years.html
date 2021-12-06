@@ -11,7 +11,6 @@
     <title>Wubbl0rz Archiv</title>
     <link rel="icon" type="image/png" href="{% static 'img/keks.png' %}" />
     <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -28,7 +27,7 @@
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target='#panelsStayOpen-collapse-{{ year.year|date:"Y" }}' aria-expanded="true"
                         aria-controls='panelsStayOpen-collapse-{{ year.year|date:"Y" }}'>
-                        {{ year.year|date:"Y" }} ({{ year.c }})
+                        <span class="fw-bold pe-1">{{ year.year|date:"Y" }}</span> ({{ year.c }})
                     </button>
                 </h2>
                 <div id='panelsStayOpen-collapse-{{ year.year|date:"Y" }}' class="accordion-collapse collapse"

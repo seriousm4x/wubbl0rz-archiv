@@ -7,7 +7,7 @@ from .models import Vod
 
 def index(request):
     all_vods = Vod.objects.all().order_by("-date")
-    paginator = Paginator(all_vods, 12)
+    paginator = Paginator(all_vods, 30)
     page_number = request.GET.get("p")
     vods = paginator.get_page(page_number)
     ctx = {

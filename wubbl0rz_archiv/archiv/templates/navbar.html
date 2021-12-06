@@ -1,7 +1,7 @@
 {% load static %}
-<nav class="navbar navbar-expand-md navbar-light bg-light mb-4">
+<nav class="navbar navbar-expand-md navbar-light border-bottom sticky-top mb-4">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand ps-3" href="/">
             <img src="{% static 'img/keks.png' %}" width="40" height="40" class="rounded-circle">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -9,18 +9,18 @@
             aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse p-3" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Kürzlich</a>
+                    <a class="nav-link fs-5" href="/">Kürzlich</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/years">Jahresansicht</a>
+                    <a class="nav-link fs-5" href="/years">Jahresansicht</a>
                 </li>
             </ul>
-            <form class="d-flex" action='{% url "search" %}'>
+            <form class="d-flex search-center" action='{% url "search" %}'>
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="s" value="{{ searchquery }}">
-                <button class="btn btn-secondary" type="submit">Search</button>
+                <button class="btn btn-dark" type="submit">Search</button>
             </form>
         </div>
     </div>
