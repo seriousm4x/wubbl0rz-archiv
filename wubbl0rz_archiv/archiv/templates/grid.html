@@ -7,7 +7,10 @@
         <div class="card card-rounded h-100">
             <div class="position-relative">
                 <a href="/v/{{ vod.uuid }}">
-                    <img src="{{ MEDIA_URL }}{{ vod.filename }}.jpg" class="card-img-top image-rounded-top" alt="{{ vod.title }}">
+                    <picture>
+                        <source type="image/avif" srcset="{{ MEDIA_URL }}{{ vod.filename }}-sm.avif" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
+                        <img src="{{ MEDIA_URL }}{{ vod.filename }}-sm.jpg" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
+                    </picture>
                     <div class="timecode-overlay text-white">
                         {{ vod.duration|duration }}
                     </div>
@@ -15,7 +18,7 @@
             </div>
             <div class="card-body">
                 <a href="/v/{{ vod.uuid }}" style="color: inherit;">
-                    <h5 class="h5 m-0">{{ vod.title }}</h5>
+                    <span class="h5 m-0">{{ vod.title }}</span>
                 </a>
                 <p class="card-text text-muted">
                     {{ vod.date|date }} - {{ vod.date|time }} Uhr

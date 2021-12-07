@@ -3,11 +3,13 @@ import os
 import subprocess
 from datetime import datetime
 
+import pillow_avif
 import requests
 import yt_dlp
 from celery import shared_task
 from django.utils import timezone
 from django.utils.timezone import make_aware
+from PIL import Image
 from pymediainfo import MediaInfo
 
 from .models import ApiStorage, Emote, Vod
@@ -30,7 +32,7 @@ class MyLogger:
 class VODDownloader:
     def __init__(self) -> None:
         obj = ApiStorage.objects.first()
-        obj.date_vods_updated=timezone.now()
+        obj.date_vods_updated = timezone.now()
         obj.save()
 
     def get_info_dict(self):
@@ -64,22 +66,54 @@ class VODDownloader:
 
     def create_thumbnail(self, vod_dir, id, duration):
         ts = os.path.join(vod_dir, id + ".ts")
-        cmd = ["ffmpeg", "-ss", str(duration/1000/2), "-i",
-               ts, "-vframes", "1", os.path.join(vod_dir, id + ".jpg")]
+
+        # create lossless image to use as source for smaller thumbs
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(round(duration/2)), "-i",
+               ts, "-vframes", "1", "-f", "image2", "-y", os.path.join(vod_dir, id + ".png")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
 
+        # jpg lg
+        lossless = Image.open(os.path.join(vod_dir, id + ".png"))
+        lossless.save(os.path.join(vod_dir, id + "-lg.jpg"), quality=90)
+
+        # jpg sm
+        lossless = Image.open(os.path.join(vod_dir, id + ".png"))
+        img = lossless.resize((480, 270), Image.ANTIALIAS)
+        img.save(os.path.join(vod_dir, id + "-sm.jpg"), quality=90)
+
+        # avif sm
+        lossless = Image.open(os.path.join(vod_dir, id + ".png"))
+        img = lossless.resize((480, 270), Image.ANTIALIAS)
+        img.save(os.path.join(vod_dir, id + "-sm.avif"), quality=90)
+
+        os.remove(os.path.join(vod_dir, id + ".png"))
+
     def get_metadata(self, vod_dir, entry):
         ts = os.path.join(vod_dir, entry["id"] + ".ts")
+
+        # duration
+        cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
+               "default=noprint_wrappers=1:nokey=1", os.path.join(vod_dir, id + ".ts")]
+        proc = subprocess.Popen(
+            cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        out, _ = proc.communicate()
+        duration = float(out.decode().strip())
+
+        # resolution
         media_info = MediaInfo.parse(ts)
         for track in media_info.tracks:
             if track.track_type == "Video":
-                duration = track.duration
                 resolution = f"{track.width}x{track.height}"
+
+        # bitrate
         bitrate = media_info.general_tracks[0].to_data()[
             "overall_bit_rate"]
+
+        # filesize
         filesize = os.path.getsize(ts)
+
         return duration, resolution, bitrate, filesize
 
     def update_db(self, id, title, duration, timestamp, resolution, bitrate, fps, filesize):
@@ -99,7 +133,7 @@ class VODDownloader:
 class EmoteUpdater:
     def __init__(self) -> None:
         obj = ApiStorage.objects.first()
-        obj.date_emotes_updated=timezone.now()
+        obj.date_emotes_updated = timezone.now()
         obj.save()
         self.broadcaster_id = ApiStorage.objects.get().broadcaster_id
 
@@ -197,7 +231,6 @@ class EmoteUpdater:
         for emote in Emote.objects.all():
             if emote.outdated == True:
                 emote.delete()
-
 
     def update_all(self):
         self.mark_outdated()
