@@ -3,10 +3,10 @@ import os
 import subprocess
 from datetime import datetime
 
-import pillow_avif
 import requests
 import yt_dlp
 from celery import shared_task
+from django.conf import settings
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from PIL import Image
@@ -242,7 +242,7 @@ class EmoteUpdater:
 
 @shared_task
 def download_vods():
-    vod_dir = "/mnt/nas/Archiv/wubbl0rz-twitch-vods/media/"
+    vod_dir = settings.MEDIA_ROOT
     vodd = VODDownloader()
     print("getting info dict")
     info_dict = vodd.get_info_dict()
