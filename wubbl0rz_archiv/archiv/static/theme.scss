@@ -40,37 +40,6 @@ $grid-gutter-width: 0.5rem;
     display: none;
 }
 
-.bg-wrap {
-    overflow: hidden;
-    position: relative;
-}
-
-.bg-img1 {
-    opacity: 0.6;
-    position: absolute;
-    left: 85vw;
-    top: 28vh;
-    width: 100px;
-    height: auto;
-    rotate: 11deg;
-    pointer-events: none;
-}
-
-.bg-img2 {
-    opacity: 0.5;
-    position: absolute;
-    left: 4vw;
-    top: 75vh;
-    width: 100px;
-    height: auto;
-    rotate: -6deg;
-    pointer-events: none;
-}
-
-.bg-content {
-    position: relative;
-}
-
 body,
 .nav-link,
 .form-control {
@@ -107,8 +76,16 @@ hr {
     background-color: white;
 }
 
+.navbar-brand img {
+    transform: scaleX(-1);
+}
+
 .bg-light {
     background-color: #eeeeee !important;
+}
+
+.chat_embed {
+    min-height: 400px;
 }
 
 .card-body {
@@ -190,12 +167,13 @@ hr {
 .vjs-control-bar {
     font-family: $font-family-sans-serif;
     font-size: 140%;
-    background: rgb(0,0,0) !important;
-    background: linear-gradient(0deg, rgba(0,0,0,0.58) 20%, rgba(255,255,255,0) 95%) !important;
+    background: rgb(0, 0, 0) !important;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.58) 20%, rgba(255, 255, 255, 0) 95%) !important;
 }
 
-.vjs-menu-button-popup .vjs-menu .vjs-menu-content, .video-js .vjs-volume-vertical {
-    background-color: rgba(0,0,0,0.58) !important;
+.vjs-menu-button-popup .vjs-menu .vjs-menu-content,
+.video-js .vjs-volume-vertical {
+    background-color: rgba(0, 0, 0, 0.58) !important;
 }
 
 
@@ -215,6 +193,26 @@ hr {
     width: 35px !important;
 }
 
+
+@media screen and (max-width: 767px) {
+    #twitch-embed iframe {
+        height: 300px;
+    }
+}
+
+
+@media screen and (min-width: 768px) {
+    #twitch-embed iframe {
+        height: 400px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    #twitch-embed iframe {
+        height: 536px;
+    }
+}
+
 @media screen and (min-width: 1200px) {
     .container-navbar {
         margin-top: 1.5rem;
@@ -227,5 +225,15 @@ hr {
         width: 500px;
         margin-right: auto;
         margin-left: auto;
+    }
+
+    #twitch-embed iframe {
+        height: 476px;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    #twitch-embed iframe {
+        height: 670px;
     }
 }

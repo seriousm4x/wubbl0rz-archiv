@@ -15,52 +15,77 @@
 <body class="d-flex flex-column h-100">
     {% include 'navbar.html' %}
     <main class="flex-shrink-0">
-        <div class="bg-wrap">
-            <img class="bg-img1" src="/static/img/CHANGE.png" alt="">
-            <img class="bg-img2" src="/static/img/CHANGE.png" alt="">
-            <div class="container bg-content">
+        <div class="container">
+            {% if api_obj.is_live %}
                 <h1 class="display-3 fw-bolder pb-3">
-                    Kürzliche Streams
+                    Max ist live!
                 </h1>
-                {% include 'grid.html' %}
-                <nav aria-label="Pagination">
-                    <ul class="pagination justify-content-center">
-                        {% if vods.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?p=1">First</a>
-                            </li>
-                            <li class="page-item pagination-ellipsis text-center">
-                                <span>&hellip;</span>
-                            </li>
-                        {% endif %}
-                        {% for i in vods.paginator.page_range %}
-                            {% if i <= vods.number|add:3 and i >= vods.number|add:-3 %}
-                                {% if vods.number == i %}
-                                    <li class="page-item active">
-                                        <a class="page-link" href="?p={{ forloop.counter }}">{{ forloop.counter }}</a>
-                                    </li>
-                                {% else %}
-                                <li class="page-item">
+                <div class="row pb-3">
+                    <div class="col-xs-12 col-sm-12 col-xl-9">
+                        <div id="twitch-embed"></div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-xl-3">
+                        <iframe
+                            id="chat_embed"
+                            class="chat_embed"
+                            src="https://www.twitch.tv/embed/wubbl0rz/chat?parent=localhost"
+                            height="100%"
+                            width="100%">
+                        </iframe>
+                    </div>
+                </div>
+            {% endif %}
+            <h1 class="display-3 fw-bolder pb-3">
+                Kürzliche Streams
+            </h1>
+            {% include 'grid.html' %}
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center">
+                    {% if vods.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?p=1">First</a>
+                        </li>
+                        <li class="page-item pagination-ellipsis text-center">
+                            <span>&hellip;</span>
+                        </li>
+                    {% endif %}
+                    {% for i in vods.paginator.page_range %}
+                        {% if i <= vods.number|add:3 and i >= vods.number|add:-3 %}
+                            {% if vods.number == i %}
+                                <li class="page-item active">
                                     <a class="page-link" href="?p={{ forloop.counter }}">{{ forloop.counter }}</a>
                                 </li>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                        {% if vods.has_next %}
-                            <li class="page-item pagination-ellipsis text-center">
-                                <span>&hellip;</span>
-                            </li>
+                            {% else %}
                             <li class="page-item">
-                                <a class="page-link" href="?p={{ vods.paginator.num_pages }}">Last</a>
+                                <a class="page-link" href="?p={{ forloop.counter }}">{{ forloop.counter }}</a>
                             </li>
+                            {% endif %}
                         {% endif %}
-                    </ul>
-                </nav>
-            </div>
+                    {% endfor %}
+                    {% if vods.has_next %}
+                        <li class="page-item pagination-ellipsis text-center">
+                            <span>&hellip;</span>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?p={{ vods.paginator.num_pages }}">Last</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
     </main>
     {% include 'footer.html' %}
     <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    {% if api_obj.is_live %}
+        <script src="https://player.twitch.tv/js/embed/v1.js"></script>
+        <script type="text/javascript">
+            new Twitch.Player("twitch-embed", {
+                channel: "wubbl0rz",
+                width: "100%",
+                height: "500px"
+            });
+        </script>
+    {% endif %}
 </body>
 
 </html>

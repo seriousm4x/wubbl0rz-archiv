@@ -240,3 +240,17 @@ def download_vods():
 def update_emotes():
     eu = EmoteUpdater()
     eu.update_all()
+
+
+@shared_task
+def check_live():
+    try:
+        with yt_dlp.YoutubeDL() as ydl:
+            ydl.extract_info("https://www.twitch.tv/wubbl0rz/", download=False)
+        obj = ApiStorage.objects.first()
+        obj.is_live = True
+        obj.save()
+    except yt_dlp.DownloadError:
+        obj = ApiStorage.objects.first()
+        obj.is_live = False
+        obj.save()

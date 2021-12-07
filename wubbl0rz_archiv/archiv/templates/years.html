@@ -37,7 +37,7 @@
                             <div class="container">
                                 {% for vod in vods %}
                                     {% if vod.date|date:"Y" == year.year|date:"Y" %}
-                                        <div class="row pb-4">
+                                        <div class="row py-2">
                                             <div class="col-md-auto">
                                                 {{ vod.date|date:"d.m.Y" }} - {{ vod.date|time }} Uhr
                                             </div>
@@ -48,6 +48,7 @@
                                                 {{ vod.duration|duration }} h
                                             </div>
                                         </div>
+                                        <hr class="my-2 mx-0">
                                     {% endif %}
                                 {% endfor %}
                             </div>

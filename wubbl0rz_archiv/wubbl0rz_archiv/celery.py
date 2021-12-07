@@ -19,8 +19,11 @@ app.conf.beat_schedule = {
     "update_emotes": {
         "task": "archiv.tasks.update_emotes",
         "schedule": crontab(hour=2, minute=0)
+    },
+    "check_live": {
+        "task": "archiv.tasks.check_live",
+        "schedule": crontab(minute="*/3")
     }
-
 }
 
 app.autodiscover_tasks()

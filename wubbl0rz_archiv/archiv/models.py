@@ -38,3 +38,4 @@ class ApiStorage(models.Model):
     ttv_bearer_token = models.SlugField(blank=True, null=True)
     date_vods_updated = models.DateTimeField(blank=True, null=True)
     date_emotes_updated = models.DateTimeField(blank=True, null=True)
+    is_live = models.BooleanField(blank=True, null=True, default=False)
