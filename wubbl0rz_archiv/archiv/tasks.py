@@ -245,12 +245,15 @@ def update_emotes():
 @shared_task
 def check_live():
     try:
-        with yt_dlp.YoutubeDL() as ydl:
+        ydl_opts = {
+            'logger': MyLogger()
+        }
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.extract_info("https://www.twitch.tv/wubbl0rz/", download=False)
-        obj = ApiStorage.objects.first()
-        obj.is_live = True
-        obj.save()
+        live = True
     except yt_dlp.DownloadError:
+        live = False
+    finally:
         obj = ApiStorage.objects.first()
-        obj.is_live = False
+        obj.is_live = live
         obj.save()
