@@ -6,6 +6,7 @@ from datetime import datetime
 import requests
 import yt_dlp
 from celery import shared_task
+from django.utils import timezone
 from django.utils.timezone import make_aware
 from pymediainfo import MediaInfo
 
@@ -27,6 +28,11 @@ class MyLogger:
 
 
 class VODDownloader:
+    def __init__(self) -> None:
+        obj = ApiStorage.objects.first()
+        obj.date_vods_updated=timezone.now()
+        obj.save()
+
     def get_info_dict(self):
         ydl_opts = {
             'logger': MyLogger(),
@@ -92,6 +98,9 @@ class VODDownloader:
 
 class EmoteUpdater:
     def __init__(self) -> None:
+        obj = ApiStorage.objects.first()
+        obj.date_emotes_updated=timezone.now()
+        obj.save()
         self.broadcaster_id = ApiStorage.objects.get().broadcaster_id
 
     def mark_outdated(self):

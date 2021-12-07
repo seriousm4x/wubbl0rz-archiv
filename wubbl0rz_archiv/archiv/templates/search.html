@@ -2,7 +2,7 @@
 {% load sass_tags %}
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-100">
 
 <head>
     <meta charset="utf-8">
@@ -13,14 +13,17 @@
     <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css" />
 </head>
     
-<body>
+<body class="d-flex flex-column h-100">
     {% include 'navbar.html' %}
-    <div class="container">
-        <h1 class="display-3 fw-bolder pb-3">
-            Suche
-        </h1>
-        {% include 'grid.html' %}
-    </div>
+    <main class="flex-shrink-0">
+        <div class="container">
+            <h1 class="display-3 fw-bolder pb-3">
+                Suche
+            </h1>
+            {% include 'grid.html' %}
+        </div>
+    </main>
+    {% include 'footer.html' %}
     <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 

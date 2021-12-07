@@ -1,7 +1,7 @@
 {% load static %}
 {% load sass_tags %}
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-100">
 
 <head>
     <meta charset="utf-8">
@@ -14,58 +14,61 @@
     <link href="{% static 'css/videojs-seek-buttons.css' %}" rel="stylesheet">
 </head>
 
-<body>
+<body class="d-flex flex-column h-100">
     {% include 'navbar.html' %}
-    <div class="container">
-        <div class="mb-4">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-9">
-                    <video id="vod" class="video-js vjs-big-play-centered" controls preload="auto" width="100%" height="100%"
-                        poster="{{ MEDIA_URL }}{{ vod.filename }}.jpg"
-                        data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2]}'>
-                        <source src="{{ MEDIA_URL }}{{ vod.filename }}.m3u8" type="application/x-mpegURL" />
-                        <p class="vjs-no-js">
-                            To view this video please enable JavaScript, and consider upgrading to a
-                            web browser that
-                            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                        </p>
-                    </video>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
-                    <div class="bg-dark text-white h-100">
-                        rechat coming soon
+    <main class="flex-shrink-0">
+        <div class="container">
+            <div class="mb-4">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-9">
+                        <video id="vod" class="video-js vjs-big-play-centered" controls preload="auto" width="100%" height="100%"
+                            poster="{{ MEDIA_URL }}{{ vod.filename }}.jpg"
+                            data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2]}'>
+                            <source src="{{ MEDIA_URL }}{{ vod.filename }}.m3u8" type="application/x-mpegURL" />
+                            <p class="vjs-no-js">
+                                To view this video please enable JavaScript, and consider upgrading to a
+                                web browser that
+                                <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                            </p>
+                        </video>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+                        <div class="bg-dark text-white h-100">
+                            rechat coming soon
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card vod-infos">
-            <h1 class="display-6 fw-bolder">
-                {{ vod.title }}
-            </h1>
-            <p class="text-muted">
-                {{ vod.date|date }} - {{ vod.date|time }} Uhr
-            </p>
-            <p>
-                <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    Video details
-                </button>
-                <a href="{{ MEDIA_URL }}{{ vod.filename }}.ts" class="btn btn-dark btn-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                    </svg>
-                    Download
-                </a>
-            </p>
-            <div class="collapse text-muted" id="collapseExample">
-                Resolution: {{ vod.resolution }}<br>
-                Bitrate: {{ vod.bitrate|filesizeformat }}it/s<br>
-                FPS: {{ vod.fps|floatformat:0 }}<br>
-                Size: {{ vod.size|filesizeformat }}
+            <div class="card vod-infos">
+                <h1 class="display-6 fw-bolder">
+                    {{ vod.title }}
+                </h1>
+                <p class="text-muted">
+                    {{ vod.date|date }} - {{ vod.date|time }} Uhr
+                </p>
+                <p>
+                    <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        Video details
+                    </button>
+                    <a href="{{ MEDIA_URL }}{{ vod.filename }}.ts" class="btn btn-dark btn-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                        </svg>
+                        Download
+                    </a>
+                </p>
+                <div class="collapse text-muted" id="collapseExample">
+                    Resolution: {{ vod.resolution }}<br>
+                    Bitrate: {{ vod.bitrate|filesizeformat }}it/s<br>
+                    FPS: {{ vod.fps|floatformat:0 }}<br>
+                    Size: {{ vod.size|filesizeformat }}
+                </div>
             </div>
         </div>
-    </div>
+    </main>
+    {% include 'footer.html' %}
     <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/video.min.js' %}"></script>
     <script src="{% static 'js/videojs-seek-buttons.min.js' %}"></script>

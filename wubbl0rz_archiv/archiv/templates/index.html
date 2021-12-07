@@ -1,7 +1,7 @@
 {% load static %}
 {% load sass_tags %}
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-100">
 
 <head>
     <meta charset="utf-8">
@@ -12,51 +12,54 @@
     <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css" />
 </head>
 
-<body>
+<body class="d-flex flex-column h-100">
     {% include 'navbar.html' %}
-    <div class="bg-wrap">
-        <img class="bg-img1" src="/static/img/CHANGE.png" alt="">
-        <img class="bg-img2" src="/static/img/CHANGE.png" alt="">
-        <div class="container bg-content">
-            <h1 class="display-3 fw-bolder pb-3">
-                Kürzliche Streams
-            </h1>
-            {% include 'grid.html' %}
-            <nav aria-label="Pagination">
-                <ul class="pagination justify-content-center">
-                    {% if vods.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?p=1">First</a>
-                        </li>
-                        <li class="page-item pagination-ellipsis text-center">
-                            <span>&hellip;</span>
-                        </li>
-                    {% endif %}
-                    {% for i in vods.paginator.page_range %}
-                        {% if i <= vods.number|add:3 and i >= vods.number|add:-3 %}
-                            {% if vods.number == i %}
-                                <li class="page-item active">
+    <main class="flex-shrink-0">
+        <div class="bg-wrap">
+            <img class="bg-img1" src="/static/img/CHANGE.png" alt="">
+            <img class="bg-img2" src="/static/img/CHANGE.png" alt="">
+            <div class="container bg-content">
+                <h1 class="display-3 fw-bolder pb-3">
+                    Kürzliche Streams
+                </h1>
+                {% include 'grid.html' %}
+                <nav aria-label="Pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if vods.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?p=1">First</a>
+                            </li>
+                            <li class="page-item pagination-ellipsis text-center">
+                                <span>&hellip;</span>
+                            </li>
+                        {% endif %}
+                        {% for i in vods.paginator.page_range %}
+                            {% if i <= vods.number|add:3 and i >= vods.number|add:-3 %}
+                                {% if vods.number == i %}
+                                    <li class="page-item active">
+                                        <a class="page-link" href="?p={{ forloop.counter }}">{{ forloop.counter }}</a>
+                                    </li>
+                                {% else %}
+                                <li class="page-item">
                                     <a class="page-link" href="?p={{ forloop.counter }}">{{ forloop.counter }}</a>
                                 </li>
-                            {% else %}
-                            <li class="page-item">
-                                <a class="page-link" href="?p={{ forloop.counter }}">{{ forloop.counter }}</a>
-                            </li>
+                                {% endif %}
                             {% endif %}
+                        {% endfor %}
+                        {% if vods.has_next %}
+                            <li class="page-item pagination-ellipsis text-center">
+                                <span>&hellip;</span>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?p={{ vods.paginator.num_pages }}">Last</a>
+                            </li>
                         {% endif %}
-                    {% endfor %}
-                    {% if vods.has_next %}
-                        <li class="page-item pagination-ellipsis text-center">
-                            <span>&hellip;</span>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?p={{ vods.paginator.num_pages }}">Last</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
+                    </ul>
+                </nav>
+            </div>
         </div>
-    </div>
+    </main>
+    {% include 'footer.html' %}
     <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 

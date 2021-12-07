@@ -81,6 +81,10 @@ hr {
     margin: 0.5rem;
 }
 
+.border-top {
+    border-top: 1px solid #222222 !important;
+}
+
 .border-bottom {
     border-bottom: 1px solid #222222 !important;
 }
@@ -185,7 +189,7 @@ hr {
 
 .vjs-control-bar {
     font-family: $font-family-sans-serif;
-    font-size: 150%;
+    font-size: 140%;
     background: rgb(0,0,0) !important;
     background: linear-gradient(0deg, rgba(0,0,0,0.58) 20%, rgba(255,255,255,0) 95%) !important;
 }
