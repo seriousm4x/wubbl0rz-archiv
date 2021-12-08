@@ -9,11 +9,12 @@
 
 ## 🚀 Features
 
-* Komplett autonome Webanwendung mit background tasks. VODs werden automatisch runtergeladen und importiert, thumbnails sowie m3u8 Playlist werden erstellt
-* 100% Cross Platform kompatibel (.ts/h264 Videos mit .avif Thumbnails und.jpg Fallback)
-* Dark/Light Mode mit toggle/preferes-color-scheme/LocalStorage
-* Live status check mit Twitchstream embed
+* Komplett autonome Webanwendung mit background tasks die sich um runterladen, files generieren und import kümmern
+* VODs zurück bis 2017
 * Ansichten: Kürzliche Streams, Suche, Jahresansicht
+* Dark/Light Mode mit toggle/preferes-color-scheme/LocalStorage
+* 100% Cross Platform kompatibel (.ts/h264 Videos mit .avif Thumbnails und.jpg Fallback)
+* Live status check mit Twitchstream embed
 
 ## 🕒 Coming soon
 
