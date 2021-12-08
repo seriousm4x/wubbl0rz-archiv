@@ -13,8 +13,7 @@
         // Set color mode before anyting else, to prevent flashing screen
         if (localStorage.getItem("dark-mode") == "true") {
             document.documentElement.classList.add("dark-mode");
-            let darkModeState = true;
-            document.querySelector(".toggle").checked = true;
+            let currentModeState = true;
         }
     </script>
     <link rel="icon" type="image/png" href="{% static 'img/keks.png' %}" />
