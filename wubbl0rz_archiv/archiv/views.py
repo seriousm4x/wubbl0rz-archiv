@@ -2,40 +2,48 @@ from django.db.models import Count
 from django.db.models.functions import TruncYear
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
-from .models import Vod
-
+from .models import Emote, Vod, ApiStorage
+import random
 
 def index(request):
     all_vods = Vod.objects.all().order_by("-date")
-    paginator = Paginator(all_vods, 12)
+    paginator = Paginator(all_vods, 30)
     page_number = request.GET.get("p")
     vods = paginator.get_page(page_number)
+    api_obj = ApiStorage.objects.first()
     ctx = {
         "vods": vods,
+        "api_obj": api_obj
     }
     return render(request, "index.html", ctx)
 
 
 def single_vod(request, uuid):
+    api_obj = ApiStorage.objects.first()
     ctx = {
-        "vod": get_object_or_404(Vod, uuid=uuid)
+        "vod": get_object_or_404(Vod, uuid=uuid),
+        "api_obj": api_obj
     }
     return render(request, "single_vod.html", ctx)
 
 def years(request):
     vods = Vod.objects.all().order_by("-date")
     grouped_years = Vod.objects.annotate(year=TruncYear("date")).values("year").annotate(c=Count('uuid')).values('year', 'c').order_by("-year")
+    api_obj = ApiStorage.objects.first()
     ctx = {
         "vods": vods,
-        "grouped_years": grouped_years
+        "grouped_years": grouped_years,
+        "api_obj": api_obj
     }
     return render(request, "years.html", ctx)
 
 def search(request):
     search = request.GET.get("s")
     vods = Vod.objects.filter(title__icontains=search)
+    api_obj = ApiStorage.objects.first()
     ctx = {
         "vods": vods,
-        "searchquery": search
+        "searchquery": search,
+        "api_obj": api_obj
     }
     return render(request, "search.html", ctx)

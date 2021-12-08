@@ -6,8 +6,8 @@ register = template.Library()
 
 
 @register.filter
-def duration(milliseconds):
-    dur = str(datetime.timedelta(milliseconds=milliseconds))
+def duration(seconds):
+    dur = str(datetime.timedelta(seconds=seconds))
     if "." in dur:
         dur = dur.split(".")[0]
     return dur

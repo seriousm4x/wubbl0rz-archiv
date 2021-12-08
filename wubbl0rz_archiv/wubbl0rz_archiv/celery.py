@@ -13,8 +13,16 @@ app.conf.timezone = "Europe/Berlin"
 
 app.conf.beat_schedule = {
     "download_vods": {
-        "task": "archiv.tasks.main_dl",
+        "task": "archiv.tasks.download_vods",
         "schedule": crontab(hour=3, minute=0)
+    },
+    "update_emotes": {
+        "task": "archiv.tasks.update_emotes",
+        "schedule": crontab(hour=2, minute=0)
+    },
+    "check_live": {
+        "task": "archiv.tasks.check_live",
+        "schedule": crontab(minute="*/3")
     }
 }
 

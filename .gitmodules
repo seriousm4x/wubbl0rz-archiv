@@ -1,0 +1,3 @@
+[submodule "wubbl0rz_archiv/archiv/static/bootstrap"]
+	path = wubbl0rz_archiv/archiv/static/bootstrap
+	url = https://github.com/twbs/bootstrap.git
