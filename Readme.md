@@ -17,7 +17,6 @@
 
 ## 🕒 Coming soon
 
-* Screenshots
 * SQLite zu Postgres
 * Docker Image
 * Rechat Fenster neben dem VOD um den Chat mitlesen zu können
@@ -25,4 +24,9 @@
 
 ## 📸 Screenshots
 
-much empty such modCheck very bloated
+| Dark | Light |
+| ---- | ----- |
+| ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/index-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/index-light.png) |
+| ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/single-vod-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/single-vod-light.png) |
+| ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/search-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/search-light.png) |
+| ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/years-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/years-light.png) |
