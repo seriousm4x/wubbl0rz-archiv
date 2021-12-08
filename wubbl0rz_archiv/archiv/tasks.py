@@ -26,7 +26,7 @@ class MyLogger:
         pass
 
     def error(self, msg):
-        print(msg)
+        pass
 
 
 class VODDownloader:
@@ -201,10 +201,10 @@ class EmoteUpdater:
         emote_json_resp = emote_resp.json()
         for emote in emote_json_resp["sharedEmotes"]:
             Emote.objects.update_or_create(
-                id=emote["id"],
+                name=emote["code"],
                 provider="bttv",
                 defaults={
-                    "name": emote["code"],
+                    "id": emote["id"],
                     "url": f"https://cdn.betterttv.net/emote/{emote['id']}/3x",
                     "outdated": False
                 }
