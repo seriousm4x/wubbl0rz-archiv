@@ -1,11 +1,11 @@
 {% load static %}
 <header>
-    <nav class="navbar navbar-expand-md navbar-light border-bottom sticky-top mb-4">
+    <nav class="navbar navbar-expand-lg border-bottom sticky-top mb-4">
         <div class="container-fluid">
             <a class="navbar-brand ps-3" href="/">
                 <img src="{% static 'img/wubPog.png' %}" width="50" height="50" class="rounded-circle" alt="wubPog">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -21,8 +21,9 @@
                 </ul>
                 <form class="d-flex search-center" action='{% url "search" %}'>
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="s" value="{{ searchquery }}">
-                    <button class="btn btn-dark" type="submit">Search</button>
+                    <button class="btn" type="submit">Search</button>
                 </form>
+                <input id="toggle" class="toggle m-2" type="checkbox">
             </div>
         </div>
     </nav>

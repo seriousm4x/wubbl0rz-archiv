@@ -8,6 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
     <title>Wubbl0rz Archiv</title>
+    <script>
+        // Set color mode before anyting else, to prevent flashing screen
+        if (localStorage.getItem("dark-mode") == "true") {
+            document.documentElement.classList.add("dark-mode");
+            let darkModeState = true;
+            document.querySelector(".toggle").checked = true;
+        }
+    </script>
     <link rel="icon" type="image/png" href="{% static 'img/keks.png' %}" />
     <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css" />
 </head>
@@ -76,6 +84,7 @@
     </main>
     {% include 'footer.html' %}
     <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/dark-light.js' %}"></script>
     {% if api_obj.is_live %}
         <script src="https://player.twitch.tv/js/embed/v1.js"></script>
         <script type="text/javascript">
