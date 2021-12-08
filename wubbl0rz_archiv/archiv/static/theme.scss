@@ -217,12 +217,27 @@ hr {
 
 // custom classes
 
-.grid-title {
-    color: inherit;
-}
+.emote-title {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    color: var(--main-color);
 
-.inline-emote {
-    height: 1em;
+    img {
+        height: 1em;
+    }
+
+    &.large {
+        img {
+            margin: 0 0.5rem 0 0.5rem;
+        }
+    }
+
+    &.small {
+        img {
+            margin: 0 0.2rem 0 0.2rem;
+        }
+    }
 }
 
 .timecode-overlay {

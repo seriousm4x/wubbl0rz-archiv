@@ -17,8 +17,8 @@
                 </a>
             </div>
             <div class="card-body">
-                <a href="/v/{{ vod.uuid }}" class="grid-title">
-                    <span class="h5 m-0">{{ vod.title|safe }}</span>
+                <a href="/v/{{ vod.uuid }}">
+                    <span class="h5 m-0 emote-title small">{{ vod.title|safe }}</span>
                 </a>
                 <p class="card-text text-muted">
                     {{ vod.date|date }} - {{ vod.date|time }} Uhr

@@ -1,9 +1,11 @@
+import re
+
+from django.core.paginator import Paginator
 from django.db.models import Count
 from django.db.models.functions import TruncYear
 from django.shortcuts import get_object_or_404, render
-from django.core.paginator import Paginator
-from .models import Emote, Vod, ApiStorage
-import re
+
+from .models import ApiStorage, Emote, Vod
 
 
 def match_emotes(vod):
@@ -11,7 +13,8 @@ def match_emotes(vod):
     findemotes = re.compile(r'([A-Z]\w*)')
     for possible_emote in set(findemotes.findall(vod.title)):
         if possible_emote in all_emotes:
-            vod.title = vod.title.replace(possible_emote, f'<img src="{Emote.objects.filter(name__iexact=possible_emote).first().url}" class="inline-emote">')
+            this_emote = Emote.objects.filter(name__iexact=possible_emote).first()
+            vod.title = vod.title.replace(possible_emote, f'<img src="{this_emote.url}" data-toggle="tooltip" title="{this_emote.name}">')
 
 
 def index(request):
