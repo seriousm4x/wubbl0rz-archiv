@@ -3,6 +3,7 @@ import os
 import subprocess
 from datetime import datetime
 
+import pillow_avif
 import requests
 import yt_dlp
 from celery import shared_task
@@ -95,7 +96,7 @@ class VODDownloader:
 
         # duration
         cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
-               "default=noprint_wrappers=1:nokey=1", os.path.join(vod_dir, id + ".ts")]
+               "default=noprint_wrappers=1:nokey=1", os.path.join(vod_dir, entry["id"] + ".ts")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         out, _ = proc.communicate()
