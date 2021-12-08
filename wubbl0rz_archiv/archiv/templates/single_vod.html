@@ -47,9 +47,9 @@
                 </div>
             </div>
             <div class="card vod-infos">
-                <h1 class="display-6 fw-bolder">
-                    {{ vod.title }}
-                </h1>
+                <p class="display-6 fw-bolder">
+                    {{ vod.title|safe }}
+                </p>
                 <p class="text-muted">
                     {{ vod.date|date }} - {{ vod.date|time }} Uhr
                 </p>
