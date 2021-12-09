@@ -63,6 +63,14 @@ body {
     background-color: var(--bg-color);
 }
 
+a {
+    color: var(--main-color);
+
+    &:hover {
+        color: var(--main-color);
+    }
+}
+
 input {
     background-color: var(--bg-color) !important;
 }
@@ -218,11 +226,6 @@ hr {
 // custom classes
 
 .emote-title {
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    color: var(--main-color);
-
     img {
         height: 1em;
     }
@@ -230,12 +233,6 @@ hr {
     &.large {
         img {
             margin: 0 0.5rem 0 0.5rem;
-        }
-    }
-
-    &.small {
-        img {
-            margin: 0 0.2rem 0 0.2rem;
         }
     }
 }

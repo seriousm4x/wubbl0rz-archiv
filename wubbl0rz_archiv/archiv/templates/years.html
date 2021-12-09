@@ -16,7 +16,7 @@
             let currentModeState = true;
         }
     </script>
-    <link rel="icon" type="image/png" href="{% static 'img/keks.png' %}" />
+    <link rel="icon" type="image/png" href="{% static 'img/wubPog.png' %}" />
     <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css" />
 </head>
 
@@ -49,7 +49,7 @@
                                                 {{ vod.date|date:"d.m.Y" }} - {{ vod.date|time }} Uhr
                                             </div>
                                             <div class="col order-first order-md-last fw-bold">
-                                                <a href="/v/{{ vod.uuid }}" style="color: inherit;">{{ vod.title|safe }}</a>
+                                                <a href="/v/{{ vod.uuid }}" class="emote-title">{{ vod.title|safe }}</a>
                                             </div>
                                             <div class="col-md-auto order-sm-last">
                                                 {{ vod.duration|duration }} h

@@ -15,7 +15,7 @@
             let currentModeState = true;
         }
     </script>
-    <link rel="icon" type="image/png" href="{% static 'img/keks.png' %}" />
+    <link rel="icon" type="image/png" href="{% static 'img/wubPog.png' %}" />
     <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'css/video-js.css' %}" rel="stylesheet">
     <link href="{% static 'css/videojs-seek-buttons.css' %}" rel="stylesheet">
@@ -47,9 +47,9 @@
                 </div>
             </div>
             <div class="card vod-infos">
-                <span class="display-6 fw-bolder emote-title large">
+                <p class="display-6 fw-bolder emote-title large">
                     {{ vod.title|safe }}
-                </span>
+                </p>
                 <p class="text-muted">
                     {{ vod.date|date }} - {{ vod.date|time }} Uhr
                 </p>
