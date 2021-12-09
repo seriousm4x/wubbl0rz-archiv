@@ -20,8 +20,8 @@
 
 * SQLite zu Postgres
 * Docker Image
-* Rechat Fenster neben dem VOD um den Chat mitlesen zu können
 * Paar Statistiken
+* ❌ ~~Rechat Fenster neben dem VOD um den Chat mitlesen zu können~~ ([#3](https://github.com/AgileProggers/wubbl0rz-archiv/issues/3))
 
 ## 📸 Screenshots
 
