@@ -1,5 +1,4 @@
 function load() {
-    let currentModeState = false;
     const toggleBtn = document.querySelector(".toggle-dark");
     const preferesDark = window.matchMedia("(prefers-color-scheme: dark)");
 
