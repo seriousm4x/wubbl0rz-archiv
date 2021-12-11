@@ -91,6 +91,10 @@
         });
         player.play();
     </script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        autocomplete(document.querySelector("#search"), {{ all_vod_titles|safe }});
+    </script>
 </body>
 
 </html>

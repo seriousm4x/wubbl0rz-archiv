@@ -266,6 +266,53 @@ hr {
     }
 }
 
+.autocomplete {
+    width: 100%;
+}
+
+.autocomplete-items {
+    position: absolute;
+    border: var(--border);
+    z-index: 99;
+    width: fit-content;
+    max-width: 413px;
+    border-radius: 1rem;
+
+    :not(div) {
+        border: none;
+    }
+
+    div:first-child {
+        border-radius: 1rem 1rem 0 0;
+    }
+
+    div:last-child {
+        border-radius: 0 0 1rem 1rem;
+    }
+
+    div:only-child {
+        border-radius: 1rem;
+    }
+}
+
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: var(--bg-color);
+}
+
+.autocomplete-items div:hover {
+    /*when hovering an item:*/
+    background-color: var(--hover-color);
+}
+
+.autocomplete-active {
+    /*when navigating through the items using the arrow keys:*/
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+}
+
+
 // video.js overwrites
 
 .video-js .vjs-current-time,

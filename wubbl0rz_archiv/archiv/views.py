@@ -13,13 +13,15 @@ def match_emotes(vod):
     findemotes = re.compile(r'([A-Z]\w*)')
     for possible_emote in set(findemotes.findall(vod.title)):
         if possible_emote in all_emotes:
-            this_emote = Emote.objects.filter(name__iexact=possible_emote).first()
-            vod.title = vod.title.replace(possible_emote, f'<img src="{this_emote.url}" data-toggle="tooltip" title="{this_emote.name}">')
+            this_emote = Emote.objects.filter(
+                name__iexact=possible_emote).first()
+            vod.title = vod.title.replace(
+                possible_emote, f'<img src="{this_emote.url}" data-toggle="tooltip" title="{this_emote.name}">')
 
 
 def index(request):
-    all_vods = Vod.objects.all().order_by("-date")
-    paginator = Paginator(all_vods, 30)
+    all_vods = Vod.objects.all()
+    paginator = Paginator(all_vods.order_by("-date"), 30)
     page_number = request.GET.get("p")
     vods = paginator.get_page(page_number)
     api_obj = ApiStorage.objects.first()
@@ -28,37 +30,46 @@ def index(request):
 
     ctx = {
         "vods": vods,
+        "all_vod_titles": list(all_vods.values_list("title", flat=True)),
         "api_obj": api_obj
     }
     return render(request, "index.html", ctx)
 
 
 def single_vod(request, uuid):
+    all_vods = Vod.objects.all()
     api_obj = ApiStorage.objects.first()
     vod = get_object_or_404(Vod, uuid=uuid)
     match_emotes(vod)
 
     ctx = {
         "vod": vod,
+        "all_vod_titles": list(all_vods.values_list("title", flat=True)),
         "api_obj": api_obj
     }
     return render(request, "single_vod.html", ctx)
 
+
 def years(request):
+    all_vods = Vod.objects.all()
     vods = Vod.objects.all().order_by("-date")
-    grouped_years = Vod.objects.annotate(year=TruncYear("date")).values("year").annotate(c=Count('uuid')).values('year', 'c').order_by("-year")
+    grouped_years = Vod.objects.annotate(year=TruncYear("date")).values(
+        "year").annotate(c=Count('uuid')).values('year', 'c').order_by("-year")
     api_obj = ApiStorage.objects.first()
     for v in vods:
         match_emotes(v)
 
     ctx = {
         "vods": vods,
+        "all_vod_titles": list(all_vods.values_list("title", flat=True)),
         "grouped_years": grouped_years,
         "api_obj": api_obj
     }
     return render(request, "years.html", ctx)
 
+
 def search(request):
+    all_vods = Vod.objects.all()
     search = request.GET.get("s")
     vods = Vod.objects.filter(title__icontains=search)
     api_obj = ApiStorage.objects.first()
@@ -67,6 +78,7 @@ def search(request):
 
     ctx = {
         "vods": vods,
+        "all_vod_titles": list(all_vods.values_list("title", flat=True)),
         "searchquery": search,
         "api_obj": api_obj
     }

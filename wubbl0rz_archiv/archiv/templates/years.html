@@ -69,6 +69,10 @@
     {% include 'footer.html' %}
     <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/dark-light.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        autocomplete(document.querySelector("#search"), {{ all_vod_titles|safe }});
+    </script>
 </body>
 
 </html>
