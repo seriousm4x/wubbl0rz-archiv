@@ -12,6 +12,7 @@
 * Komplett autonome Webanwendung mit background tasks die sich um runterladen, files generieren und import kümmern
 * VODs zurück bis 2017
 * Ansichten: Kürzliche Streams, Suche, Jahresansicht
+* Live Suche beim tippen
 * Dark/Light Mode mit toggle/preferes-color-scheme/LocalStorage
 * 100% Cross Platform kompatibel (.ts/h264 Videos mit .avif Thumbnails und.jpg Fallback)
 * Live status check mit Twitchstream embed
