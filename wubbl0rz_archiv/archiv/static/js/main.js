@@ -1,4 +1,7 @@
 function autocomplete(inp, arr) {
+    if (arr == undefined) {
+        return
+    }
     if (arr.length == null) {
         removeActive(x);
         return

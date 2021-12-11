@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <title>Wubbl0rz Archiv</title>
+    <title>{{ vod.title }}</title>
     <script>
         // Set color mode before anyting else, to prevent flashing screen
         if (localStorage.getItem("dark-mode") == "true") {
@@ -43,7 +43,11 @@
             </div>
             <div class="card vod-infos mb-4">
                 <p class="display-6 fw-bolder emote-title large">
-                    {{ vod.title|safe }}
+                    {% if vod.emote_title %}
+                        {{ vod.emote_title|safe }}
+                    {% else %}
+                        {{ vod.title }}
+                    {% endif %}
                 </p>
                 <p class="text-muted">
                     {{ vod.date|date }} - {{ vod.date|time }} Uhr

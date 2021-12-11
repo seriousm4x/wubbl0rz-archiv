@@ -15,7 +15,7 @@ def match_emotes(vod):
         if possible_emote in all_emotes:
             this_emote = Emote.objects.filter(
                 name__iexact=possible_emote).first()
-            vod.title = vod.title.replace(
+            vod.emote_title = vod.title.replace(
                 possible_emote, f'<img src="{this_emote.url}" data-toggle="tooltip" title="{this_emote.name}">')
 
 
@@ -69,10 +69,12 @@ def years(request):
 
 
 def search(request):
-    all_vods = Vod.objects.all()
-    search = request.GET.get("s")
-    vods = Vod.objects.filter(title__icontains=search)
     api_obj = ApiStorage.objects.first()
+    search = request.GET.get("s")
+    if not search:
+        return render(request, "search.html", {"api_obj": api_obj})
+    all_vods = Vod.objects.all()
+    vods = Vod.objects.filter(title__icontains=search).order_by("-date")
     for v in vods:
         match_emotes(v)
 

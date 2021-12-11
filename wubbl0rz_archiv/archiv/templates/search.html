@@ -27,6 +27,9 @@
             <h1 class="display-3 fw-bolder pb-3">
                 Suche
             </h1>
+            {% if vods == None %}
+                <img src="{% static 'img/modcheck.gif' %}" alt="">
+            {% endif %}
             {% include 'grid.html' %}
         </div>
     </main>
