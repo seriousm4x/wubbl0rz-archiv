@@ -32,3 +32,4 @@
 | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/single-vod-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/single-vod-light.png) |
 | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/search-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/search-light.png) |
 | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/years-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/years-light.png) |
+| ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/stats-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/stats-light.png) |
