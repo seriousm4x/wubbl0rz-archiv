@@ -28,8 +28,8 @@
 
 | Dark | Light |
 | ---- | ----- |
-| ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/index-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/index-light.png) |
-| ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/single-vod-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/single-vod-light.png) |
-| ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/search-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/search-light.png) |
-| ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/years-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/years-light.png) |
-| ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/stats-dark.png) | ![](https://raw.githubusercontent.com/AgileProggers/wubbl0rz-archiv/master/screenshots/stats-light.png) |
+| ![](https://i.imgur.com/zYMnfly.png) | ![](https://i.imgur.com/j0DBl0T.png) |
+| ![](https://i.imgur.com/Ln6yJwZ.png) | ![](https://i.imgur.com/mxP330u.png) |
+| ![](https://i.imgur.com/DUTdbBY.png) | ![](https://i.imgur.com/1G0KKjq.png) |
+| ![](https://i.imgur.com/t9iv9sM.png) | ![](https://i.imgur.com/xRfL6sh.png) |
+| ![](https://i.imgur.com/0Pzx7UF.png) | ![](https://i.imgur.com/lRvGmqc.png) |
