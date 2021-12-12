@@ -16,12 +16,12 @@
 * Dark/Light Mode mit toggle/preferes-color-scheme/LocalStorage
 * 100% Cross Platform kompatibel (.ts/h264 Videos mit .avif Thumbnails und.jpg Fallback)
 * Live status check mit Twitchstream embed
+* Statistiken
 
 ## 🕒 Coming soon
 
 * SQLite zu Postgres
 * Docker Image
-* Paar Statistiken
 * ❌ ~~Rechat Fenster neben dem VOD um den Chat mitlesen zu können~~ ([#3](https://github.com/AgileProggers/wubbl0rz-archiv/issues/3))
 
 ## 📸 Screenshots

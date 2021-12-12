@@ -40,7 +40,7 @@ function autocomplete(inp, arr) {
         if (e.keyCode == 40) {
             currentFocus++;
             addActive(x);
-        } else if (e.keyCode == 38) { //up
+        } else if (e.keyCode == 38) {
             currentFocus--;
             addActive(x);
         } else if (e.keyCode == 13) {
@@ -76,3 +76,120 @@ function autocomplete(inp, arr) {
         closeAllLists(e.target);
     });
 }
+
+function cssvar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name);
+}
+
+function drawDoughnut(id, labels, dataset) {
+    const ctx = document.getElementById(id).getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: dataset,
+                backgroundColor: ["#4E79A7", "#F28E2B", "#E15759", "#76B7B2", "#59A14F", "#EDC948", "#B07AA1", "#FF9DA7", "#9C755F", "#BAB0AC"],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: cssvar('--main-color'),
+                    }
+                }
+            }
+        }
+    });
+}
+
+function drawBar(id, labels, dataset) {
+    const ctx = document.getElementById(id).getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            color: cssvar('--main-color'),
+            datasets: [{
+                data: dataset,
+                backgroundColor: ["#4E79A7", "#F28E2B", "#E15759", "#76B7B2", "#59A14F", "#EDC948", "#B07AA1", "#FF9DA7", "#9C755F", "#BAB0AC"],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                },
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        color: cssvar('--main-color'),
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: cssvar('--main-color'),
+                    }
+                }
+            }
+        }
+    });
+};
+
+function drawLine(id, labels, dataset) {
+    const ctx = document.getElementById(id).getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            color: cssvar('--main-color'),
+            datasets: [{
+                data: dataset,
+                borderColor: "#F28E2B",
+                tension: 0.4
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+            },
+            interaction: {
+                intersect: false,
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        color: cssvar('--main-color'),
+                    },
+                    title: {
+                        display: true,
+                        text: 'Anzahl Streams',
+                        color: cssvar('--main-color'),
+                        font: {
+                            size: 16,
+                        }
+                    },
+                },
+                x: {
+                    ticks: {
+                        color: cssvar('--main-color'),
+                    },
+                    title: {
+                        display: true,
+                        text: 'Uhrzeit',
+                        color: cssvar('--main-color'),
+                        font: {
+                            size: 16,
+                        }
+                    },
+                }
+            }
+        }
+    })
+};

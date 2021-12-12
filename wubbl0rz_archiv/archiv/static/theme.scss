@@ -41,6 +41,11 @@ $grid-gutter-width: 0.5rem;
     --toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0,0,0,1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
     --border: 1px solid var(--main-color) !important;
     --border-radius: 2rem;
+    --drop-shadow: 1px 1px 26px 0px rgba(0, 0, 0, 0.2);
+    --stats-bg-1: #4E79A7;
+    --stats-bg-2: #F28E2B;
+    --stats-bg-3: #E15759;
+    --stats-bg-4: #76B7B2;
     scrollbar-width: none;
 }
 
@@ -52,6 +57,7 @@ $grid-gutter-width: 0.5rem;
     --accordion-button: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
     --toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
     --border: 1px solid var(--main-color) !important;
+    --drop-shadow: 1px 1px 26px 0px rgba(0, 0, 0, 0.36);
 }
 
 ::-webkit-scrollbar {
@@ -148,8 +154,7 @@ hr {
     font-weight: 500;
 }
 
-.search-center {
-
+.search-form {
     input,
     button {
         border-radius: var(--border-radius);
@@ -302,15 +307,38 @@ hr {
 }
 
 .autocomplete-items div:hover {
-    /*when hovering an item:*/
     background-color: var(--hover-color);
 }
 
 .autocomplete-active {
-    /*when navigating through the items using the arrow keys:*/
     background-color: DodgerBlue !important;
     color: #ffffff;
 }
+
+.stats-box {
+    height: 100%;
+    border-radius: 1em;
+    box-shadow: var(--drop-shadow);
+    -webkit-box-shadow: var(--drop-shadow);
+    -moz-box-shadow: var(--drop-shadow);
+
+    &.bg-1 {
+        background-color: var(--stats-bg-1);
+    }
+
+    &.bg-2 {
+        background-color: var(--stats-bg-2);
+    }
+
+    &.bg-3 {
+        background-color: var(--stats-bg-3);
+    }
+
+    &.bg-4 {
+        background-color: var(--stats-bg-4);
+    }
+}
+
 
 
 // video.js overwrites
@@ -364,15 +392,6 @@ hr {
 @media screen and (min-width: 1200px) {
     .container-navbar {
         margin-top: 1.5rem;
-    }
-
-    .search-center {
-        position: absolute;
-        left: 0;
-        right: 0;
-        width: 500px;
-        margin-right: auto;
-        margin-left: auto;
     }
 
     #twitch-embed iframe {

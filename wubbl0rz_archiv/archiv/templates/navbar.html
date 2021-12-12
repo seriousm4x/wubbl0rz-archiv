@@ -18,10 +18,13 @@
                     <li class="nav-item">
                         <a class="nav-link fs-5" href="/years">Jahresansicht</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-5" href="/stats">Stats</a>
+                    </li>
                 </ul>
-                <form class="d-flex search-center" action='{% url "search" %}' autocomplete="off">
+                <form class="d-flex search-form" action='{% url "search" %}' autocomplete="off">
                     <div class="autocomplete me-2">
-                        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search" name="s" value="{{ searchquery }}" required>
+                        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ searchquery }}" required>
                     </div>
                     <button class="btn" type="submit">Search</button>
                 </form>

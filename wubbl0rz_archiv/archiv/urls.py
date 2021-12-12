@@ -9,4 +9,5 @@ urlpatterns = [
     path("v/<slug:uuid>/", views.single_vod, name="single_vod"),
     path("years/", views.years, name="years"),
     path("search/", views.search, name="search"),
+    path("stats/", views.stats, name="stats")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

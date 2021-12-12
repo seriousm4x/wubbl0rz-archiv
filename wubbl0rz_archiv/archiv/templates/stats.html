@@ -1,0 +1,155 @@
+{% load static %}
+{% load sass_tags %}
+{% load humanize %}
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>{{ vod.title }}</title>
+    <script>
+        // Set color mode before anyting else, to prevent flashing screen
+        if (localStorage.getItem("dark-mode") == "true") {
+            document.documentElement.classList.add("dark-mode");
+            let currentModeState = true;
+        }
+    </script>
+    <link rel="icon" type="image/png" href="{% static 'img/wubPog.png' %}" />
+    <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/video-js.css' %}" rel="stylesheet">
+    <link href="{% static 'css/videojs-seek-buttons.css' %}" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column h-100">
+    {% include 'navbar.html' %}
+    <main class="flex-shrink-0">
+        <div class="container mb-4">
+            <h1 class="display-3 fw-bolder pb-3">
+                Statistiken
+            </h1>
+            <section>
+                <div class="row">
+                    <div class="col p-2">
+                        <div class="stats-box bg-1 text-center p-3">
+                            <h2 class="display-2">
+                                <strong>{{ all_vods|length }}</strong>
+                            </h2>
+                            <p>Vods gesamt</p>
+                        </div>
+                    </div>
+                    <div class="col p-2">
+                        <div class="stats-box bg-2 text-center p-3">
+                            <h2 class="display-2">
+                                <strong>{{ vods_this_month|length }}</strong>
+                            </h2>
+                            <p>Vods in den letzten 30 Tagen</p>
+                        </div>
+                    </div>
+                    <div class="col p-2">
+                        <div class="stats-box bg-3 text-center p-3">
+                            <h2 class="display-2">
+                                <strong>{{ total_duration|intcomma }}</strong>
+                            </h2>
+                            <p>Stunden gestreamt</p>
+                        </div>
+                    </div>
+                    <div class="col p-2">
+                        <div class="stats-box bg-4 text-center p-3">
+                            <h2 class="display-2">
+                                <strong>{{ total_size|filesizeformat }}</strong>
+                            </h2>
+                            <p>Archivgröße</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="row">
+                    <div class="col-md-8 py-3">
+                        <h3 class="display-5 py-3">
+                            <strong>Vods pro Monat</strong>
+                        </h3>
+                        <canvas id="chart-vods-by-month"></canvas>
+                    </div>
+                    <div class="col-md-4 py-3">
+                        <h3 class="display-5 py-3">
+                            <strong>Vods pro Wochentag</strong>
+                        </h3>
+                        <canvas id="chart-vods-by-weekday" width="300" height="300"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col p-3">
+                        <h3 class="display-5 py-3">
+                            <strong>Streambeginn nach Uhrzeit</strong>
+                        </h3>
+                        <canvas id="chart-vods-by-hour" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <h3 class="display-5 py-3">
+                    <strong>Emotes</strong>
+                    <small>({{ emote_count }})</small>
+                </h3>
+                <h4 class="h4">
+                    Twitch
+                    <small>({{ all_twitch_emotes|length }})</small>
+                </h4>
+                <div class="row">
+                    {% for emote in all_twitch_emotes %}
+                        <div class="col-auto p-1">
+                            <img src="{{ emote.url }}" alt="{{ emote.name }}" loading="lazy" height="60" data-toggle="tooltip" title="{{ emote.name }}">
+                        </div>
+                    {% endfor %}
+                </div>
+                <h4 class="h4 pt-4">
+                    BetterTTV
+                    <small>({{ all_bttv_emotes|length }})</small>
+                </h4>
+                <div class="row">
+                    {% for emote in all_bttv_emotes %}
+                        <div class="col-auto p-1">
+                            <img src="{{ emote.url }}" alt="{{ emote.name }}" loading="lazy" height="60" data-toggle="tooltip" title="{{ emote.name }}">
+                        </div>
+                    {% endfor %}
+                </div>
+                <h4 class="h4 pt-4">
+                    FrankerFaceZ
+                    <small>({{ all_ffz_emotes|length }})</small>
+                </h4>
+                <div class="row">
+                    {% for emote in all_ffz_emotes %}
+                        <div class="col-auto p-1">
+                            <img src="{{ emote.url }}" alt="{{ emote.name }}" loading="lazy" height="60" data-toggle="tooltip" title="{{ emote.name }}">
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </main>
+    {% include 'footer.html' %}
+    <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/dark-light.js' %}"></script>
+    <script src="{% static 'js/chart.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        autocomplete(document.querySelector("#search"), {{ all_vod_titles|safe }});
+        drawDoughnut("chart-vods-by-weekday",
+            ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+            {{ vods_per_weekday|safe }}
+        )
+        drawBar("chart-vods-by-month",
+            {{ vods_per_month_labels|safe }},
+            {{ vods_per_month_values|safe }}
+        )
+        drawLine("chart-vods-by-hour",
+            {{ vods_per_hour_labels|safe }},
+            {{ vods_per_hour_values|safe }}
+        )
+    </script>
+</body>
+
+</html>
