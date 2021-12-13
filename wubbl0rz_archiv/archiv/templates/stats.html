@@ -1,5 +1,4 @@
 {% load static %}
-{% load sass_tags %}
 {% load humanize %}
 <!doctype html>
 <html lang="en" class="h-100">
@@ -17,7 +16,7 @@
         }
     </script>
     <link rel="icon" type="image/png" href="{% static 'img/wubPog.png' %}" />
-    <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'css/video-js.css' %}" rel="stylesheet">
     <link href="{% static 'css/videojs-seek-buttons.css' %}" rel="stylesheet">
 </head>
@@ -131,7 +130,7 @@
         </div>
     </main>
     {% include 'footer.html' %}
-    <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/dark-light.js' %}"></script>
     <script src="{% static 'js/chart.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>

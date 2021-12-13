@@ -1,11 +1,10 @@
 celery[redis]
 django
-django-compressor
-django-sass-processor
 git+https://github.com/fdintino/pillow-avif-plugin/
 gunicorn
-libsass
 Pillow
+psycopg2-binary
 pymediainfo
+python-dateutil
 requests
 yt-dlp

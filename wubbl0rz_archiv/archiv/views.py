@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Sum
 from django.db.models.functions import TruncYear
 from django.db.models.functions.datetime import ExtractHour, ExtractWeekDay
+from django.http.response import HttpResponse, HttpResponseServerError
 from django.shortcuts import get_object_or_404, render
 from django.template.defaultfilters import date as _date
 from django.utils import timezone
@@ -116,10 +117,10 @@ def stats(request):
         vods_per_month_labels.append(month)
         vods_per_month_values.append(amount)
 
-    vods_per_hour_values = list(Vod.objects.annotate(hour=ExtractHour("date")).values(
-        "hour").annotate(count=Count("uuid")).values_list("count", flat=True))
-    vods_per_hour_labels = list(Vod.objects.annotate(hour=ExtractHour("date")).values(
-        "hour").annotate(count=Count("uuid")).values_list("hour", flat=True))
+    vods_per_hour_values = list(Vod.objects.annotate(hour=ExtractHour("date")).order_by(
+        "hour").values("hour").annotate(count=Count("uuid")).values_list("count", flat=True))
+    vods_per_hour_labels = list(Vod.objects.annotate(hour=ExtractHour("date")).order_by(
+        "hour").values("hour").annotate(count=Count("uuid")).values_list("hour", flat=True))
 
     # emotes
     emote_count = Emote.objects.all().count()
@@ -146,3 +147,11 @@ def stats(request):
         "all_ffz_emotes": all_ffz_emotes,
     }
     return render(request, "stats.html", ctx)
+
+
+def health(request):
+    try:
+        ApiStorage.objects.all()
+        return HttpResponse("Ok")
+    except Exception:
+        return HttpResponseServerError("db: cannot connect to database.")

@@ -32,7 +32,7 @@ class Emote(models.Model):
 
 
 class ApiStorage(models.Model):
-    broadcaster_id = models.SlugField(blank=False, null=False)
+    broadcaster_id = models.SlugField(blank=False, null=False, default="108776574")
     ttv_client_id = models.SlugField(blank=False, null=False)
     ttv_client_secret = models.SlugField(blank=False, null=False)
     ttv_bearer_token = models.SlugField(blank=True, null=True)

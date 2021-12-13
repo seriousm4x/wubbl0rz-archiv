@@ -1,6 +1,4 @@
 {% load static %}
-{% load sass_tags %}
-
 <!doctype html>
 <html lang="en" class="h-100">
 
@@ -17,7 +15,7 @@
         }
     </script>
     <link rel="icon" type="image/png" href="{% static 'img/wubPog.png' %}" />
-    <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
 </head>
     
 <body class="d-flex flex-column h-100">
@@ -34,7 +32,7 @@
         </div>
     </main>
     {% include 'footer.html' %}
-    <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/dark-light.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script>

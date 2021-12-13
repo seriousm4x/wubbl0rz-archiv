@@ -1,9 +1,0 @@
-:8001 {
-	root * /mnt/nas/Archiv/wubbl0rz-twitch-vods/
-	@notStatic {
-        not path /media/*
-	}
-	reverse_proxy @notStatic :8000
-	file_server
-    encode gzip
-}
