@@ -81,8 +81,8 @@ Here is a example docker-compose.yml file.
 ```
 version: "3"
 services:
-	web:
-		container_name: wub-web
+    web:
+        container_name: wub-web
 		image: ghcr.io/AgileProggers/wub-archiv:latest
 		restart: unless-stopped
 		ports:
