@@ -144,9 +144,9 @@ The Django app won't serve static and media files. A reverse proxy is needed. Th
 
 ```
 :8001 {
-	root * /path/to/media/
-	@notStatic {
-        not path /static/* /media/*
+  root * /path/to/media/
+  @notStatic {
+    not path /static/* /media/*
 	}
 	reverse_proxy @notStatic :8000
 	file_server
