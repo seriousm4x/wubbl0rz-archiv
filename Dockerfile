@@ -4,7 +4,7 @@ FROM base as builder
 
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update && apt-get -y install build-essential libssl-dev libffi-dev python3-dev cargo libpq-dev git libavif-dev && \
+RUN apt-get update && apt-get -y install build-essential libssl-dev libffi-dev python3-dev python3-setuptools libjpeg-dev zlib1g-dev cargo libpq-dev git libavif-dev && \
     mkdir /install
 WORKDIR /install
 COPY requirements.txt .
