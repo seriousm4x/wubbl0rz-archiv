@@ -83,56 +83,56 @@ version: "3"
 services:
     web:
         container_name: wub-web
-		image: ghcr.io/AgileProggers/wub-archiv:latest
-		restart: unless-stopped
-		ports:
-			- 127.0.0.1:8000:${DJANGO_PORT}
-		volumes:
-			- ${WEB_STATIC}:/var/www/static/
-			- ${WEB_MEDIA}:/var/www/media/
-			- ${DB_BACKUP_DIR}:${DB_BACKUP_DIR}
-		environment:
-			- DJANGO_SUPERUSER_USER=<user>
-			- DJANGO_SUPERUSER_PASSWORD=<password>
-			- DJANGO_SECRET_KEY=<secret>
-			- DJANGO_DEBUG=False
-			- DJANGO_ALLOWED_HOSTS=localhost
-			- DJANGO_LANGUAGE_CODE=de
-			- DJANGO_TIME_ZONE=Europe/Berlin
-			- DJANGO_PORT=8000
-			- DB_HOST=db
-			- DB_NAME=wub
-			- DB_USER=wub
-			- DB_PASSWORD=wub
-			- DB_PORT=5432
-			- DB_BACKUP_DIR=/path/to/backup_dir/
-			- TWITCH_CLIENT_ID=<client-id>
-			- TWITCH_CLIENT_SECRET=<client-secret>
-			- WEB_STATIC=/path/to/static/
-			- WEB_MEDIA=/path/to/media/
-		depends_on:
-			- db
-			- redis
-	db:
-		container_name: wub-db
-		image: postgres:14-alpine
-		restart: always
-		environment:
-			- "POSTGRES_USER=wub"
-			- "POSTGRES_PASSWORD=wub"
-			- "POSTGRES_DB=wub"
-		volumes:
-			- wub_db:/var/lib/postgresql/data
-		healthcheck:
-		test: pg_isready -U wub
-		interval: 10s
-	redis:
-		container_name: wub-redis
-		image: redis:6-alpine
-		restart: unless-stopped
-		healthcheck:
-		test: redis-cli ping
-		interval: 10s
+        image: ghcr.io/AgileProggers/wub-archiv:latest
+        restart: unless-stopped
+        ports:
+            - 127.0.0.1:8000:${DJANGO_PORT}
+        volumes:
+            - ${WEB_STATIC}:/var/www/static/
+            - ${WEB_MEDIA}:/var/www/media/
+            - ${DB_BACKUP_DIR}:${DB_BACKUP_DIR}
+        environment:
+            - DJANGO_SUPERUSER_USER=<user>
+            - DJANGO_SUPERUSER_PASSWORD=<password>
+            - DJANGO_SECRET_KEY=<secret>
+            - DJANGO_DEBUG=False
+            - DJANGO_ALLOWED_HOSTS=localhost
+            - DJANGO_LANGUAGE_CODE=de
+            - DJANGO_TIME_ZONE=Europe/Berlin
+            - DJANGO_PORT=8000
+            - DB_HOST=db
+            - DB_NAME=wub
+            - DB_USER=wub
+            - DB_PASSWORD=wub
+            - DB_PORT=5432
+            - DB_BACKUP_DIR=/path/to/backup_dir/
+            - TWITCH_CLIENT_ID=<client-id>
+            - TWITCH_CLIENT_SECRET=<client-secret>
+            - WEB_STATIC=/path/to/static/
+            - WEB_MEDIA=/path/to/media/
+        depends_on:
+            - db
+            - redis
+    db:
+        container_name: wub-db
+        image: postgres:14-alpine
+        restart: always
+        environment:
+            - "POSTGRES_USER=wub"
+            - "POSTGRES_PASSWORD=wub"
+            - "POSTGRES_DB=wub"
+        volumes:
+            - wub_db:/var/lib/postgresql/data
+        healthcheck:
+        test: pg_isready -U wub
+        interval: 10s
+    redis:
+        container_name: wub-redis
+        image: redis:6-alpine
+        restart: unless-stopped
+        healthcheck:
+        test: redis-cli ping
+        interval: 10s
 
 volumes:
   wub_db:
@@ -144,12 +144,12 @@ The Django app won't serve static and media files. A reverse proxy is needed. Th
 
 ```
 :8001 {
-	root * /path/to/media/
-	@notStatic {
-		not path /static/* /media/*
-	}
-	reverse_proxy @notStatic :8000
-	file_server
-	encode gzip
+    root * /path/to/media/
+    @notStatic {
+        not path /static/* /media/*
+    }
+    reverse_proxy @notStatic :8000
+    file_server
+    encode gzip
 }
 ```
