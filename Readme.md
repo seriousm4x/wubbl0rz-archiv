@@ -81,7 +81,7 @@ version: "3"
 services:
   web:
     container_name: wub-web
-    image: ghcr.io/agileproggers/wubbl0rz-archiv
+    image: ghcr.io/agileproggers/wubbl0rz-archiv:latest
     restart: unless-stopped
     ports:
       - 127.0.0.1:8000:8000
@@ -130,6 +130,14 @@ services:
 volumes:
   wub_db:
 ```
+
+### Tags
+
+Available tags are
+
+* `latest`
+* `v{MAJOR}`
+* `v{MAJOR}.{MINOR}.{PATCH}`
 
 ## 🚪 Reverse Proxy
 
