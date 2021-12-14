@@ -9,13 +9,14 @@
 
 ## 🚀 Features
 
-* Automatically download Twitch vods
+* Automatically download Twitch vods. Vod downloads are scheduled for 3 a.m.
 * Vods go back until 2017
 * Pages: Recent streams, Search, Vods ordered by years, Statistics
 * Live vod search while typing
 * Dark/light mode by toggle, preferes-color-scheme and LocalStorage
 * Cross platform compatible (.ts/h264 videos with .avif thumbnails and.jpg fallback)
 * Live status check and Twitch stream embed on front page
+* Twitch, BetterTTV and FrankerFaceZ emotes in title. Emote updates are scheduled for 2 a.m.
 * Docker image
 
 ## 🕒 Coming soon
