@@ -109,7 +109,7 @@ services:
   db:
     container_name: wub-db
     image: postgres:14-alpine
-    restart: always
+    restart: unless-stopped
     environment:
       - "POSTGRES_USER=wub"
       - "POSTGRES_PASSWORD=wub"
