@@ -23,6 +23,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 HEALTHCHECK --interval=10s \
-    CMD curl -fs "http://localhost:$DJANGO_PORT/health/" || exit 1
+    CMD curl -fs "http://localhost:8000/health/" || exit 1
 
 CMD ["./run.sh"]

@@ -9,15 +9,14 @@
 
 ## 🚀 Features
 
-* Komplett autonome Webanwendung mit background tasks die sich um runterladen, files generieren und import kümmern
-* VODs zurück bis 2017
-* Ansichten: Kürzliche Streams, Suche, Jahresansicht
-* Live Suche beim tippen
-* Dark/Light Mode mit toggle/preferes-color-scheme/LocalStorage
-* 100% Cross Platform kompatibel (.ts/h264 Videos mit .avif Thumbnails und.jpg Fallback)
-* Live status check mit Twitchstream embed
-* Statistiken
-* Docker Image
+* Automatically download Twitch vods
+* Vods go back until 2017
+* Pages: Recent streams, Search, Vods ordered by years, Statistics
+* Live vod search while typing
+* Dark/light mode by toggle, preferes-color-scheme and LocalStorage
+* Cross platform compatible (.ts/h264 videos with .avif thumbnails and.jpg fallback)
+* Live status check and Twitch stream embed on front page
+* Docker image
 
 ## 🕒 Coming soon
 
@@ -35,7 +34,17 @@
 
 ## 🐳 Deploy
 
-### IMPORTANT VARIABLES TO CHANGE
+#### IMPORTANT VARIABLES TO CHANGE
+
+#### Volumes
+
+* static: Path where .js, .css, .jpg files live (small files).
+
+* media: Path where vod files, .m3u8, thumbnails etc. live. Make sure to use a larger drive, as the dir size will grow over time.
+
+* backups: Used for storing database backups every 24h in .json format.
+
+#### Environment
 
 * DJANGO_SUPERUSER_USER
 
@@ -60,56 +69,39 @@
 
   If you change them, make sure to change both entries, in web and db.
 
-* DB_BACKUP_DIR
-
-  Used for storing database backups every 24h in .json format.
-
 * TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET
 
   Create your api keys at https://dev.twitch.tv/console/apps
 
-* WEB_STATIC
-
-  Path where .js, .css, .jpg files live.
-
-* WEB_MEDIA
-
-  Path where vod files, .m3u8, thumbnails etc. live. Make sure to use a larger drive for WEB_MEDIA, as the dir size will grow over time.
-
-Here is a example docker-compose.yml file.
+### Example `docker-compose.yml`
 
 ```
 version: "3"
 services:
   web:
     container_name: wub-web
-    image: ghcr.io/AgileProggers/wub-archiv:latest
+    image: ghcr.io/agileproggers/wubbl0rz-archiv
     restart: unless-stopped
     ports:
-      - 127.0.0.1:8000:${DJANGO_PORT}
+      - 127.0.0.1:8000:8000
     volumes:
-      - ${WEB_STATIC}:/var/www/static/
-      - ${WEB_MEDIA}:/var/www/media/
-      - ${DB_BACKUP_DIR}:${DB_BACKUP_DIR}
+      - /path/to/static/:/var/www/static/
+      - /path/to/media/:/var/www/media/
+      - /path/to/backups/:/backups/
     environment:
       - DJANGO_SUPERUSER_USER=<user>
       - DJANGO_SUPERUSER_PASSWORD=<password>
       - DJANGO_SECRET_KEY=<secret>
       - DJANGO_DEBUG=False
-      - DJANGO_ALLOWED_HOSTS=localhost
       - DJANGO_LANGUAGE_CODE=de
       - DJANGO_TIME_ZONE=Europe/Berlin
-      - DJANGO_PORT=8000
       - DB_HOST=db
       - DB_NAME=wub
       - DB_USER=wub
       - DB_PASSWORD=wub
       - DB_PORT=5432
-      - DB_BACKUP_DIR=/path/to/backup_dir/
       - TWITCH_CLIENT_ID=<client-id>
       - TWITCH_CLIENT_SECRET=<client-secret>
-      - WEB_STATIC=/path/to/static/
-      - WEB_MEDIA=/path/to/media/
     depends_on:
       - db
       - redis
@@ -124,15 +116,15 @@ services:
     volumes:
       - wub_db:/var/lib/postgresql/data
     healthcheck:
-    test: pg_isready -U wub
-    interval: 10s
+      test: pg_isready -U wub
+      interval: 10s
   redis:
     container_name: wub-redis
     image: redis:6-alpine
     restart: unless-stopped
     healthcheck:
-    test: redis-cli ping
-    interval: 10s
+      test: redis-cli ping
+      interval: 10s
 
 volumes:
   wub_db:
@@ -140,11 +132,11 @@ volumes:
 
 ## 🚪 Reverse Proxy
 
-The Django app won't serve static and media files. A reverse proxy is needed. The easiest way is to use caddy. Here is an example config. Change the root path to the same as WEB_MEDIA in the `docker-compose.yml`. Then run `caddy run` from the same directory.
+The Django app won't serve static and media files. A reverse proxy is needed. The easiest way is to use caddy. Paste the following into a file called `Caddyfile`. Change the root path to the parent directory of media and static files from `docker-compose.yml` (/path/to/). Then run `caddy run` from the same directory.
 
 ```
 :8001 {
-  root * /path/to/media/
+  root * /path/to/
   @notStatic {
     not path /static/* /media/*
   }

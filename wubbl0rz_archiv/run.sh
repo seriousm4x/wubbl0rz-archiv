@@ -20,12 +20,12 @@ fi
 python -u manage.py shell -c "from archiv.models import ApiStorage; ApiStorage(ttv_client_id='$TWITCH_CLIENT_ID', ttv_client_secret='$TWITCH_CLIENT_SECRET').save() if ApiStorage.objects.filter().count() == 0 else print('ApiStorage exists')"
 
 # run webserver and celery tasks
-gunicorn --bind 0.0.0.0:"$DJANGO_PORT" --workers $(($(nproc) + 1)) wubbl0rz_archiv.wsgi:application &
+gunicorn --bind 0.0.0.0:8000 --workers $(($(nproc) + 1)) wubbl0rz_archiv.wsgi:application &
 celery -A wubbl0rz_archiv worker &
 celery -A wubbl0rz_archiv beat &
 
 # create backups every 24 hours
 while :; do
-    python -u manage.py dumpdata > "${DB_BACKUP_DIR}dump_$(date +%Y-%m-%d"_"%H_%M_%S).json"
+    python -u manage.py dumpdata > "/backups/dump_$(date +%Y-%m-%d"_"%H_%M_%S).json"
     sleep $(( 24 * 60 * 60 )) # 24 hours
 done
