@@ -1,52 +1,41 @@
-name: CI to Docker Hub
+name: Create and publish a Docker image
 
 on:
   push:
     tags:
-      - "v*.*.*"
+      - 'v*'
 
 jobs:
-  build:
-    runs-on: self-hosted
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Check Out Repo 
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Prepare tags
-        id: prep
-        run: |
-          DOCKER_IMAGE=ghcr.io/agileproggers/wubbl0rz-archiv
-          VERSION=${GITHUB_REF#refs/tags/}
-          TAGS="${DOCKER_IMAGE}:${VERSION},${DOCKER_IMAGE}:${VERSION:0:2},${DOCKER_IMAGE}:latest"
-          echo ::set-output name=tags::${TAGS}
-
-      - name: Cache Docker layers
-        uses: actions/cache@v2
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
+          images: agileproggers/wubbl0rz-archiv
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}
+      
       - name: Log in to the Container registry
-        uses: docker/login-action@v1 
+        uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
-        id: docker_build
+      - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./
-          file: ./Dockerfile
-          platforms: linux/amd64
-          builder: ${{ steps.buildx.outputs.name }}
+          context: .
           push: true
           tags: ${{ steps.prep.outputs.tags }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+          labels: ${{ steps.prep.outputs.labels }}
