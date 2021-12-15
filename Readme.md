@@ -66,6 +66,10 @@
 
   but you can also use [https://djecrety.ir/](https://djecrety.ir/).
 
+* DJANGO_DOMAIN
+
+  Set this to your domain.
+
 * DB_*
 
   If you change them, make sure to change both entries, in web and db.
@@ -93,6 +97,7 @@ services:
       - DJANGO_SUPERUSER_USER=<user>
       - DJANGO_SUPERUSER_PASSWORD=<password>
       - DJANGO_SECRET_KEY=<secret>
+      - DJANGO_DOMAIN=your-domain.com
       - DJANGO_DEBUG=False
       - DJANGO_LANGUAGE_CODE=de
       - DJANGO_TIME_ZONE=Europe/Berlin
