@@ -19,7 +19,7 @@ COPY --from=builder /install /usr/local
 COPY wubbl0rz_archiv /app
 WORKDIR /app
 RUN apt-get update && \
-    apt-get -y install ffmpeg curl && \
+    apt-get -y install ffmpeg mediainfo curl && \
     rm -rf /var/lib/apt/lists/*
 
 HEALTHCHECK --interval=10s \
