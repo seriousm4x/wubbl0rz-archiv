@@ -1,8 +1,6 @@
 celery[redis]
 django
-git+https://github.com/fdintino/pillow-avif-plugin/
 gunicorn
-Pillow
 psycopg2-binary
 pymediainfo
 python-dateutil

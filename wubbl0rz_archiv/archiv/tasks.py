@@ -3,14 +3,12 @@ import os
 import subprocess
 from datetime import datetime
 
-import pillow_avif
 import requests
 import yt_dlp
 from celery import shared_task
 from django.conf import settings
 from django.utils import timezone
 from django.utils.timezone import make_aware
-from PIL import Image
 from pymediainfo import MediaInfo
 
 from .models import ApiStorage, Emote, Vod
@@ -68,26 +66,40 @@ class VODDownloader:
     def create_thumbnail(self, vod_dir, id, duration):
         ts = os.path.join(vod_dir, id + ".ts")
 
-        # create lossless image to use as source for smaller thumbs
-        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(round(duration/2)), "-i",
-               ts, "-vframes", "1", "-f", "image2", "-y", os.path.join(vod_dir, id + ".png")]
+        # create large lossless image to use as source for larger thumbs
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(round(
+            duration/2)), "-i", ts, "-vframes", "1", "-f", "image2", "-y", os.path.join(vod_dir, id + ".png")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
 
         # jpg lg
-        lossless = Image.open(os.path.join(vod_dir, id + ".png"))
-        lossless.save(os.path.join(vod_dir, id + "-lg.jpg"), quality=90)
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-i",
+               os.path.join(vod_dir, id + ".png"), "-y", os.path.join(vod_dir, id + ".jpg")]
+        proc = subprocess.Popen(
+            cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        proc.communicate()
+
+        # create small lossless image to use as source for smaller thumbs
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", ts, "-vframes", "1",
+               "-vf", "scale=-1:270", "-f", "image2", "-y", os.path.join(vod_dir, id + ".png")]
+        proc = subprocess.Popen(
+            cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        proc.communicate()
 
         # jpg sm
-        lossless = Image.open(os.path.join(vod_dir, id + ".png"))
-        img = lossless.resize((480, 270), Image.ANTIALIAS)
-        img.save(os.path.join(vod_dir, id + "-sm.jpg"), quality=90)
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-i",
+               os.path.join(vod_dir, id + ".png"), "-y", os.path.join(vod_dir, id + "-sm.jpg")]
+        proc = subprocess.Popen(
+            cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        proc.communicate()
 
         # avif sm
-        lossless = Image.open(os.path.join(vod_dir, id + ".png"))
-        img = lossless.resize((480, 270), Image.ANTIALIAS)
-        img.save(os.path.join(vod_dir, id + "-sm.avif"), quality=90)
+        cmd = ["avifenc", os.path.join(
+            vod_dir, id + ".png"), os.path.join(vod_dir, id + "-sm.avif")]
+        proc = subprocess.Popen(
+            cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        proc.communicate()
 
         os.remove(os.path.join(vod_dir, id + ".png"))
 

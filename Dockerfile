@@ -1,21 +1,32 @@
 FROM python:3.10.1-slim-bullseye as base
 
-FROM base as builder
+
+FROM base as build-pip
 
 ENV PYTHONUNBUFFERED 1
-
-RUN apt-get update && apt-get -y install build-essential libssl-dev libffi-dev python3-dev python3-setuptools libjpeg-dev zlib1g-dev cargo libpq-dev git libavif-dev && \
-    mkdir /install
-WORKDIR /install
+WORKDIR /build-pip
 COPY requirements.txt .
 RUN python -m pip install --no-cache-dir --upgrade pip && \
-    pip install --prefix=/install --no-cache-dir -r requirements.txt && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean
+    pip install --prefix=/build-pip --no-cache-dir -r requirements.txt
+
+
+FROM base as build-avif
+
+WORKDIR /build-avif
+RUN apt-get update && apt-get -y install git build-essential zlib1g-dev libpng-dev libjpeg-dev cmake ninja-build yasm &&\
+    rm -rf /var/lib/apt/lists/* &&\
+    git clone -b v0.9.3 https://github.com/AOMediaCodec/libavif.git &&\
+    cd libavif/ext/ &&\
+    ./aom.cmd &&\
+    cd .. && mkdir build && cd build &&\
+    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=0 -DAVIF_CODEC_AOM=1 -DAVIF_LOCAL_AOM=1 -DAVIF_BUILD_APPS=1 .. &&\
+    make
+
 
 FROM base
 
-COPY --from=builder /install /usr/local
+COPY --from=build-pip /build-pip /usr/local
+COPY --from=build-avif /build-avif/libavif/build/avifenc /usr/bin/avifenc
 COPY wubbl0rz_archiv /app
 WORKDIR /app
 RUN apt-get update && \
