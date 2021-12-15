@@ -101,8 +101,8 @@ def stats(request):
     total_duration = int(all_vods.aggregate(
         Sum("duration"))["duration__sum"]/3600)
     total_size = int(all_vods.aggregate(Sum("size"))["size__sum"])
-    vods_per_weekday = list(Vod.objects.annotate(weekday=ExtractWeekDay("date")).values(
-        "weekday").annotate(count=Count("uuid")).values_list("count", flat=True))
+    vods_per_weekday = list(Vod.objects.annotate(weekday=ExtractWeekDay("date")).order_by(
+        "weekday").values("weekday").annotate(count=Count("uuid")).values_list("count", flat=True))
 
     # vods per month / weekday / hour
     vods_per_month_values = []
