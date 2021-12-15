@@ -30,7 +30,7 @@ COPY --from=build-avif /build-avif/libavif/build/avifenc /usr/bin/avifenc
 COPY wubbl0rz_archiv /app
 WORKDIR /app
 RUN apt-get update && \
-    apt-get -y install ffmpeg curl && \
+    apt-get -y install ffmpeg mediainfo curl && \
     rm -rf /var/lib/apt/lists/*
 
 HEALTHCHECK --interval=10s \
