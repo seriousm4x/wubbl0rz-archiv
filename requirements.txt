@@ -2,7 +2,6 @@ celery[redis]
 django
 gunicorn
 psycopg2-binary
-pymediainfo
 python-dateutil
 requests
 yt-dlp

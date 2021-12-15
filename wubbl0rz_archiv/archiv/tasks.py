@@ -9,7 +9,6 @@ from celery import shared_task
 from django.conf import settings
 from django.utils import timezone
 from django.utils.timezone import make_aware
-from pymediainfo import MediaInfo
 
 from .models import ApiStorage, Emote, Vod
 
@@ -108,24 +107,25 @@ class VODDownloader:
 
         # duration
         cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
-               "default=noprint_wrappers=1:nokey=1", os.path.join(vod_dir, entry["id"] + ".ts")]
+               "default=noprint_wrappers=1:nokey=1", ts]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         out, _ = proc.communicate()
         duration = float(out.decode().strip())
 
         # resolution
-        media_info = MediaInfo.parse(ts)
-        for track in media_info.tracks:
-            if track.track_type == "Video":
-                resolution = f"{track.width}x{track.height}"
-
-        # bitrate
-        bitrate = media_info.general_tracks[0].to_data()[
-            "overall_bit_rate"]
+        cmd = ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+               "stream=width,height", "-of", "csv=s=x:p=0", ts]
+        proc = subprocess.Popen(
+            cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        out, _ = proc.communicate()
+        resolution = out.decode().splitlines()[0].strip()
 
         # filesize
         filesize = os.path.getsize(ts)
+
+        # bitrate
+        bitrate = filesize*8/1000/1000/duration
 
         return duration, resolution, bitrate, filesize
 
