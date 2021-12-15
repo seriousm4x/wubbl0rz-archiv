@@ -74,14 +74,14 @@ class VODDownloader:
 
         # jpg lg
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-i",
-               os.path.join(vod_dir, id + ".png"), "-y", os.path.join(vod_dir, id + ".jpg")]
+               os.path.join(vod_dir, id + ".png"), "-y", os.path.join(vod_dir, id + "-lg.jpg")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
 
         # create small lossless image to use as source for smaller thumbs
-        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", ts, "-vframes", "1",
-               "-vf", "scale=-1:270", "-f", "image2", "-y", os.path.join(vod_dir, id + ".png")]
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(round(
+            duration/2)), "-i", ts, "-vframes", "1", "-vf", "scale=-1:270", "-f", "image2", "-y", os.path.join(vod_dir, id + ".png")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
