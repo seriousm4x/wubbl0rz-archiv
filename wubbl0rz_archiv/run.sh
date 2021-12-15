@@ -26,6 +26,6 @@ celery -A wubbl0rz_archiv beat &
 
 # create backups every 24 hours
 while :; do
-    python -u manage.py dumpdata > "/backups/dump_$(date +%Y-%m-%d"_"%H_%M_%S).json"
     sleep $(( 24 * 60 * 60 )) # 24 hours
+    python -u manage.py dumpdata > "/backups/dump_$(date +%Y-%m-%d"_"%H_%M_%S).json"
 done
