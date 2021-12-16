@@ -7,9 +7,9 @@
         <div class="card card-rounded h-100">
             <div class="position-relative">
                 <a href="/v/{{ vod.uuid }}">
-                    <picture>
-                        <source type="image/avif" srcset="{{ MEDIA_URL }}{{ vod.filename }}-sm.avif" class="card-img-top image-rounded-top" alt="{{ vod.filename }}" loading="lazy">
-                        <img src="{{ MEDIA_URL }}{{ vod.filename }}-sm.jpg" class="card-img-top image-rounded-top" alt="{{ vod.filename }}" loading="lazy">
+                    <picture id="{{ vod.filename }}" onmouseover="doMouseover(this)" onmouseout="doMouseout(this)">
+                        <source id="{{ vod.filename }}-avif" type="image/avif" srcset="{{ MEDIA_URL }}{{ vod.filename }}-sm.avif" class="card-img-top image-rounded-top" alt="{{ vod.filename }}" loading="lazy">
+                        <img id="{{ vod.filename }}-jpg" src="{{ MEDIA_URL }}{{ vod.filename }}-sm.jpg" class="card-img-top image-rounded-top" alt="{{ vod.filename }}" loading="lazy">
                     </picture>
                     <div class="timecode-overlay text-white">
                         {{ vod.duration|duration }}

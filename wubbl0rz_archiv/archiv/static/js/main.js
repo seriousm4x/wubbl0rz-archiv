@@ -193,3 +193,13 @@ function drawLine(id, labels, dataset) {
         }
     })
 };
+
+function doMouseover(elem) {
+    document.getElementById(elem.id + "-avif").srcset = "/media/" + elem.id + "-preview.webp";
+    document.getElementById(elem.id + "-jpg").src = "/media/" + elem.id + "-preview.webp";
+}
+
+function doMouseout(elem) {
+    document.getElementById(elem.id + "-avif").srcset = "/media/" + elem.id + '-sm.avif';
+    document.getElementById(elem.id + "-jpg").src = "/media/" + elem.id + '-sm.jpg';
+}

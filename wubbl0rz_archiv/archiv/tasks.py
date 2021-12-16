@@ -100,7 +100,17 @@ class VODDownloader:
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
 
+        # remove lossless image
         os.remove(os.path.join(vod_dir, id + ".png"))
+
+        # create .webp preview animation
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(round(duration/2)),
+            "-i", ts, "-c:v", "libwebp", "-vf", "scale=-1:146,fps=fps=15", "-lossless",
+            "0", "-compression_level", "3", "-q:v", "70", "-loop", "0", "-preset", "picture",
+            "-an", "-vsync", "0", "-t", "4", "-y", os.path.join(vod_dir, id + "-preview.webp")]
+        proc = subprocess.Popen(cmd, stderr=subprocess.PIPE,
+                                stdout=subprocess.PIPE)
+        proc.communicate()
 
     def get_metadata(self, vod_dir, entry):
         ts = os.path.join(vod_dir, entry["id"] + ".ts")
