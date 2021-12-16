@@ -194,12 +194,21 @@ function drawLine(id, labels, dataset) {
     })
 };
 
-function doMouseover(elem) {
+function showPrev(elem) {
     document.getElementById(elem.id + "-avif").srcset = "/media/" + elem.id + "-preview.webp";
     document.getElementById(elem.id + "-jpg").src = "/media/" + elem.id + "-preview.webp";
 }
 
-function doMouseout(elem) {
+function hidePrev(elem) {
     document.getElementById(elem.id + "-avif").srcset = "/media/" + elem.id + '-sm.avif';
     document.getElementById(elem.id + "-jpg").src = "/media/" + elem.id + '-sm.jpg';
 }
+
+function load() {
+    document.querySelectorAll("picture, .has-preview").forEach(function (elem) {
+        elem.addEventListener("touchstart", showPrev(elem), false);
+        elem.addEventListener("touchend", hidePrev(elem), false);
+    })
+}
+
+window.addEventListener("DOMContentLoaded", load);
