@@ -32,5 +32,9 @@
             </div>
         </div>
     </div>
+    {% empty %}
+    <div class="col">
+        <img src="{% static 'img/modcheck.gif' %}" alt="modcheck">
+    </div>
     {% endfor %}
 </div>
