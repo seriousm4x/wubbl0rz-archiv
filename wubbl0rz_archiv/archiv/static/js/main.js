@@ -195,13 +195,17 @@ function drawLine(id, labels, dataset) {
 };
 
 function showPrev(elem) {
-    document.getElementById(elem.id + "-avif").srcset = "/media/" + elem.id + "-preview.webp";
-    document.getElementById(elem.id + "-jpg").src = "/media/" + elem.id + "-preview.webp";
+    document.getElementById(elem.id + "-sm-avif").srcset = "/media/" + elem.id + "-preview.webp";
+    document.getElementById(elem.id + "-md-avif").srcset = "/media/" + elem.id + "-preview.webp";
+    document.getElementById(elem.id + "-sm-jpg").src = "/media/" + elem.id + "-preview.webp";
+    document.getElementById(elem.id + "-md-jpg").src = "/media/" + elem.id + "-preview.webp";
 }
 
 function hidePrev(elem) {
-    document.getElementById(elem.id + "-avif").srcset = "/media/" + elem.id + '-sm.avif';
-    document.getElementById(elem.id + "-jpg").src = "/media/" + elem.id + '-sm.jpg';
+    document.getElementById(elem.id + "-sm-avif").srcset = "/media/" + elem.id + '-sm.avif';
+    document.getElementById(elem.id + "-md-avif").srcset = "/media/" + elem.id + '-md.avif';
+    document.getElementById(elem.id + "-sm-jpg").src = "/media/" + elem.id + '-sm.jpg';
+    document.getElementById(elem.id + "-md-jpg").src = "/media/" + elem.id + '-md.jpg';
 }
 
 function load() {

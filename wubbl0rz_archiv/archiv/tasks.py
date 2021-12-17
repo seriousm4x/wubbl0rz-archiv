@@ -65,37 +65,56 @@ class VODDownloader:
     def create_thumbnail(self, vod_dir, id, duration):
         ts = os.path.join(vod_dir, id + ".ts")
 
-        # create large lossless image to use as source for larger thumbs
+        # thumbnail sizes
+        sm_width = "260"
+        md_width = "520"
+        lg_width = "1592"
+
+        # jpg sm
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(round(
-            duration/2)), "-i", ts, "-vframes", "1", "-f", "image2", "-y", os.path.join(vod_dir, id + ".png")]
+            duration/2)), "-i", ts, "-vframes", "1", "-vf", f"scale={sm_width}:-1", "-y", os.path.join(vod_dir, id + "-sm.jpg")]
+        proc = subprocess.Popen(
+            cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        proc.communicate()
+
+        # jpg md
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(round(
+            duration/2)), "-i", ts, "-vframes", "1", "-vf", f"scale={md_width}:-1", "-y", os.path.join(vod_dir, id + "-md.jpg")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
 
         # jpg lg
-        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-i",
-               os.path.join(vod_dir, id + ".png"), "-y", os.path.join(vod_dir, id + "-lg.jpg")]
-        proc = subprocess.Popen(
-            cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-        proc.communicate()
-
-        # create small lossless image to use as source for smaller thumbs
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(round(
-            duration/2)), "-i", ts, "-vframes", "1", "-vf", "scale=-1:270", "-f", "image2", "-y", os.path.join(vod_dir, id + ".png")]
+            duration/2)), "-i", ts, "-vframes", "1", "-vf", f"scale={lg_width}:-1", "-y", os.path.join(vod_dir, id + "-lg.jpg")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
 
-        # jpg sm
-        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-i",
-               os.path.join(vod_dir, id + ".png"), "-y", os.path.join(vod_dir, id + "-sm.jpg")]
+        # lossless source png for avif sm
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(round(
+            duration/2)), "-i", ts, "-vframes", "1", "-vf", f"scale={sm_width}:-1", "-f", "image2", "-y", os.path.join(vod_dir, id + ".png")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
 
-        # avif sm
+        # avif sm final
         cmd = ["avifenc", os.path.join(
             vod_dir, id + ".png"), os.path.join(vod_dir, id + "-sm.avif")]
+        proc = subprocess.Popen(
+            cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        proc.communicate()
+
+        # lossless source png for avif md
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(round(
+            duration/2)), "-i", ts, "-vframes", "1", "-vf", f"scale={md_width}:-1", "-f", "image2", "-y", os.path.join(vod_dir, id + ".png")]
+        proc = subprocess.Popen(
+            cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        proc.communicate()
+
+        # avif md final
+        cmd = ["avifenc", os.path.join(
+            vod_dir, id + ".png"), os.path.join(vod_dir, id + "-md.avif")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
@@ -105,9 +124,9 @@ class VODDownloader:
 
         # create .webp preview animation
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(round(duration/2)),
-            "-i", ts, "-c:v", "libwebp", "-vf", "scale=-1:146,fps=fps=15", "-lossless",
-            "0", "-compression_level", "3", "-q:v", "70", "-loop", "0", "-preset", "picture",
-            "-an", "-vsync", "0", "-t", "4", "-y", os.path.join(vod_dir, id + "-preview.webp")]
+               "-i", ts, "-c:v", "libwebp", "-vf", "scale=260:-1,fps=fps=15", "-lossless",
+               "0", "-compression_level", "3", "-q:v", "70", "-loop", "0", "-preset", "picture",
+               "-an", "-vsync", "0", "-t", "4", "-y", os.path.join(vod_dir, id + "-preview.webp")]
         proc = subprocess.Popen(cmd, stderr=subprocess.PIPE,
                                 stdout=subprocess.PIPE)
         proc.communicate()
