@@ -367,6 +367,25 @@ hr {
     background-color: rgba(0, 0, 0, 0.58) !important;
 }
 
+.vjs-big-play-centered .vjs-big-play-button {
+    margin-top: -0.75em !important;
+    margin-left: -0.8em !important;
+}
+
+.video-js .vjs-big-play-button {
+    height: 1.5em !important;
+    width: 1.5em !important;
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    color: rgba(26, 26, 26, 0.9) !important;
+    border-radius: 1em !important;
+    line-height: 1.4em !important;
+}
+
+.video-js:hover .vjs-big-play-button, .video-js .vjs-big-play-button:focus {
+    background-color: rgb(255, 255, 255) !important;
+    color: black !important;
+}
+
 
 // media queries
 
