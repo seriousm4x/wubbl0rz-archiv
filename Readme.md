@@ -15,13 +15,10 @@
 * Live vod search while typing
 * Dark/light mode by toggle, preferes-color-scheme and LocalStorage
 * Cross platform compatible (.ts/h264 videos with .avif thumbnails and.jpg fallback)
+* Thumbnail hover shows video preview (like Youtube)
 * Live status check and Twitch stream embed on front page
 * Twitch, BetterTTV and FrankerFaceZ emotes in title. Emote updates are scheduled for 2 a.m.
 * Docker image
-
-## 🕒 Coming soon
-
-* ❌ ~~Rechat Fenster neben dem VOD um den Chat mitlesen zu können~~ ([#3](https://github.com/AgileProggers/wubbl0rz-archiv/issues/3))
 
 ## 📸 Screenshots
 
@@ -159,3 +156,11 @@ The Django app won't serve static and media files. A reverse proxy is needed. Th
   encode gzip
 }
 ```
+
+## Contributing
+
+Any help is always appreciated. Especially if you know Django and Javascript.
+
+**Things I don't know how to do, but maybe you do?**
+
+* Create a chat replay window in javascript. I've already build a [chatlogger in python](wubbl0rz_archiv/archiv/management/commands/run_chatlog.py) which is not used at the moment. The idea is to log messages to the database and the frontend (js) checks the current position of the video.js player and inserts the messages at the correct time with emotes, names and badges. See [#3](https://github.com/AgileProggers/wubbl0rz-archiv/issues/3) if you are interested.
