@@ -13,6 +13,7 @@
 * Vods go back until 2017
 * Pages: Recent streams, Search, Vods ordered by years, Statistics
 * Live vod search while typing
+* Share videos at current player time with url parameter
 * Dark/light mode by toggle, preferes-color-scheme and LocalStorage
 * Cross platform compatible (.ts/h264 videos with .avif thumbnails and.jpg fallback)
 * Thumbnail hover shows video preview (like Youtube)
