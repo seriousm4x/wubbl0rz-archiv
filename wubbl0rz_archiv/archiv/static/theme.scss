@@ -47,6 +47,7 @@ $grid-gutter-width: 0.5rem;
     --stats-bg-3: #E15759;
     --stats-bg-4: #76B7B2;
     --text-muted: #6c757d;
+    --input-checkbox: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
     scrollbar-width: none;
 }
 
@@ -60,6 +61,7 @@ $grid-gutter-width: 0.5rem;
     --border: 1px solid var(--main-color) !important;
     --drop-shadow: 1px 1px 26px 0px rgba(0, 0, 0, 0.36);
     --text-muted: #7f8a94;
+    --input-checkbox: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
 }
 
 ::-webkit-scrollbar {
@@ -136,7 +138,7 @@ hr {
     }
 }
 
-.chat_embed {
+.chat-embed {
     min-height: 400px;
 }
 
@@ -157,6 +159,7 @@ hr {
 }
 
 .search-form {
+
     input,
     button {
         border-radius: var(--border-radius);
@@ -234,6 +237,52 @@ hr {
 
 .text-muted {
     color: var(--text-muted) !important;
+}
+
+.form-check-input:checked[type="checkbox"] {
+    background-image: var(--input-checkbox);
+}
+
+.form-check-label {
+    color: var(--main-color);
+    user-select: none;
+}
+
+.form-check-input {
+    border-color: var(--main-color);
+
+    &:focus {
+        border-color: var(--main-color);
+        box-shadow: none;
+    }
+
+    &:focus-visible {
+        border-color: var(--main-color);
+    }
+
+    &:checked {
+        border-color: var(--main-color);
+    }
+}
+
+.share-input {
+    padding: .25rem .5rem;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.dropdown-menu {
+    background-color: var(--hover-color);
+    border-radius: 1rem;
+    width: 450px !important;
+    max-width: 100vw;
+}
+
+#icon-clipboard {
+    display: block;
+}
+
+#icon-clipboard-checked {
+    display: none;
 }
 
 
@@ -345,6 +394,9 @@ hr {
     }
 }
 
+.share-button {
+    margin-left: auto;
+}
 
 
 // video.js overwrites
@@ -387,7 +439,8 @@ hr {
     line-height: 1.4em !important;
 }
 
-.video-js:hover .vjs-big-play-button, .video-js .vjs-big-play-button:focus {
+.video-js:hover .vjs-big-play-button,
+.video-js .vjs-big-play-button:focus {
     background-color: rgb(255, 255, 255) !important;
     color: black !important;
 }
@@ -398,6 +451,14 @@ hr {
 @media screen and (max-width: 767px) {
     #twitch-embed iframe {
         height: 300px;
+    }
+
+    .title-container {
+        display: block !important;
+    }
+
+    .share-button {
+        margin-bottom: 1rem;
     }
 }
 
