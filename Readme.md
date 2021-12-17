@@ -4,7 +4,7 @@
 
 <div align="center" width="100%">
     <h2>wubbl0rz VOD Archiv</h2>
-    <p>Stack: Django, Celery, Redis, yt-dlp, Pillow, FFmpeg, Bootstrap</p>
+    <p>Stack: Django, Celery, Redis, yt-dlp, FFmpeg, Bootstrap</p>
 </div>
 
 ## 🚀 Features
