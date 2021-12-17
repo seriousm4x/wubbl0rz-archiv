@@ -46,6 +46,7 @@ $grid-gutter-width: 0.5rem;
     --stats-bg-2: #F28E2B;
     --stats-bg-3: #E15759;
     --stats-bg-4: #76B7B2;
+    --text-muted: #6c757d;
     scrollbar-width: none;
 }
 
@@ -58,6 +59,7 @@ $grid-gutter-width: 0.5rem;
     --toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
     --border: 1px solid var(--main-color) !important;
     --drop-shadow: 1px 1px 26px 0px rgba(0, 0, 0, 0.36);
+    --text-muted: #7f8a94;
 }
 
 ::-webkit-scrollbar {
@@ -228,6 +230,10 @@ hr {
         background-image: var(--accordion-button);
         filter: invert(1);
     }
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
 }
 
 
