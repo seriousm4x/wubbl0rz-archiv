@@ -18,10 +18,14 @@ class Vod(models.Model):
     date = models.DateTimeField()
     filename = models.SlugField(null=False, blank=False)
     resolution = models.TextField(null=True, blank=True)
-    bitrate = models.PositiveIntegerField(null=True, blank=True)
     fps = models.FloatField(null=True, blank=True)
     size = models.PositiveBigIntegerField(null=True, blank=True)
 
+    @property
+    def bitrate(self):
+        return int(self.size * 8 / self.duration)
+    
+    readonly_fieldds = ["bitrate"]
 
 class Emote(models.Model):
     id = models.SlugField(primary_key=True, blank=False, null=False)

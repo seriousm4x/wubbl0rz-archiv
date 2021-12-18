@@ -6,6 +6,8 @@ from .models import ApiStorage, ChatMessage, Emote, Vod
 class VodAdmin(admin.ModelAdmin):
     list_display = ["title", "uuid", "duration", "date", "filename"]
     search_fields = ["title", "uuid", "duration", "date", "filename"]
+    readonly_fields = ["bitrate"]
+    ordering = ["-date"]
 
 
 class EmoteAdmin(admin.ModelAdmin):

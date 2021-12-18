@@ -153,12 +153,9 @@ class VODDownloader:
         # filesize
         filesize = os.path.getsize(ts)
 
-        # bitrate
-        bitrate = filesize*8/1000/1000/duration
+        return duration, resolution, filesize
 
-        return duration, resolution, bitrate, filesize
-
-    def update_db(self, id, title, duration, timestamp, resolution, bitrate, fps, filesize):
+    def update_db(self, id, title, duration, timestamp, resolution, fps, filesize):
         Vod.objects.update_or_create(
             filename=id,
             defaults={
@@ -166,7 +163,6 @@ class VODDownloader:
                 "duration": duration,
                 "date": make_aware(datetime.fromtimestamp(timestamp)),
                 "resolution": resolution,
-                "bitrate": bitrate,
                 "fps": fps,
                 "size": filesize
             })
@@ -301,14 +297,14 @@ def download_vods():
         print("post processing")
         vodd.dl_post_processing(vod_dir, entry)
         print("get metadata")
-        duration, resolution, bitrate, filesize = vodd.get_metadata(
+        duration, resolution, filesize = vodd.get_metadata(
             vod_dir, entry)
         print("create thumbnail")
         vodd.create_thumbnail(vod_dir, entry["id"], duration)
         filesize = os.path.getsize(os.path.join(vod_dir, entry["id"] + ".ts"))
         print("update db")
         vodd.update_db(entry["id"], entry["title"], duration,
-                       entry["timestamp"], resolution, bitrate, entry["fps"], filesize)
+                       entry["timestamp"], resolution, entry["fps"], filesize)
 
 
 @shared_task
