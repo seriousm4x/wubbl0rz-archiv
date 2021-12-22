@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # wait for db and redis
-/usr/bin/env bash ./wait-for-it.sh wub-db:"${DB_PORT}"
-/usr/bin/env bash ./wait-for-it.sh wub-redis:6379
+/usr/bin/env bash ./wait-for-it.sh wub-db:"${DB_PORT}" -t 300 -s
+/usr/bin/env bash ./wait-for-it.sh wub-redis:6379 -t 300 -s
 
 # init django
 python manage.py makemigrations
