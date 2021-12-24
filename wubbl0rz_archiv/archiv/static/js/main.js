@@ -211,4 +211,8 @@ function load() {
     })
 }
 
-window.addEventListener("DOMContentLoaded", load);
+if (document.readyState !== "loading") {
+    load();
+} else {
+    document.addEventListener("DOMContentLoaded", load);
+}
