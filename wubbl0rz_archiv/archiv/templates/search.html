@@ -29,7 +29,7 @@
     {% else %}
         <title>Suche</title>
     {% endif %}
-    <script>
+    <script data-cfasync="false">
         // Set color mode before anyting else, to prevent flashing screen
         if (localStorage.getItem("dark-mode") == "true") {
             document.documentElement.classList.add("dark-mode");
