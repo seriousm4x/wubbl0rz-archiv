@@ -21,7 +21,7 @@ def match_emotes(vod):
             this_emote = Emote.objects.filter(
                 name__iexact=possible_emote).first()
             vod.emote_title = vod.title.replace(
-                possible_emote, f'<img src="{this_emote.url}" width="20" height="20" data-toggle="tooltip" title="{this_emote.name}">')
+                possible_emote, f'<img src="{this_emote.url}" data-toggle="tooltip" title="{this_emote.name}">')
 
 
 def index(request):
