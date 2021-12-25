@@ -59,7 +59,7 @@
                 <ul class="pagination justify-content-center">
                     {% if vods.has_previous %}
                         <li class="page-item">
-                            <a class="page-link" href="?p=1">First</a>
+                            <a class="page-link" href="?p=1">Erste</a>
                         </li>
                         <li class="page-item pagination-ellipsis text-center">
                             <span>&hellip;</span>
@@ -83,7 +83,7 @@
                             <span>&hellip;</span>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="?p={{ vods.paginator.num_pages }}">Last</a>
+                            <a class="page-link" href="?p={{ vods.paginator.num_pages }}">Letzte</a>
                         </li>
                     {% endif %}
                 </ul>
