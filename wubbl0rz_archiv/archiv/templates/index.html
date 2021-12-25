@@ -41,7 +41,7 @@
     {% include 'navbar.html' %}
     <main class="flex-shrink-0">
         <div class="container">
-            {% if api_obj.is_live %}
+            {% if api_obj.is_live and vods.number == 1 %}
                 <h1 class="display-3 fw-bolder pb-3">
                     Max ist live!
                 </h1>
