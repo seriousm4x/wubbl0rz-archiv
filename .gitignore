@@ -289,4 +289,4 @@ $RECYCLE.BIN/
 db.json
 docker-compose.yml
 Caddyfile
-settings.json
+.vscode
