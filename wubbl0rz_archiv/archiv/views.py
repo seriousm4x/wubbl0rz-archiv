@@ -1,11 +1,15 @@
+import os
 import re
+import subprocess
 
 from dateutil import relativedelta
+from django.conf import settings
 from django.core.paginator import Paginator
 from django.db.models import Count, Sum
 from django.db.models.functions import TruncYear
 from django.db.models.functions.datetime import ExtractHour, ExtractWeekDay
-from django.http.response import HttpResponse, HttpResponseServerError
+from django.http.response import (HttpResponse, HttpResponseServerError,
+                                  StreamingHttpResponse)
 from django.shortcuts import get_object_or_404, render
 from django.template.defaultfilters import date as _date
 from django.utils import timezone
@@ -42,9 +46,28 @@ def index(request):
 
 
 def single_vod(request, uuid):
+    vod = get_object_or_404(Vod, uuid=uuid)
+
+    if request.GET.get("dl") == "1" and vod:
+        cmd = ["ffmpeg", "-i", os.path.join(settings.MEDIA_ROOT, vod.filename + ".ts"),
+               "-c", "copy", "-bsf:a", "aac_adtstoasc", "-movflags", "frag_keyframe+empty_moov", "-f", "mp4", "-"]
+        proc = subprocess.Popen(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        def iterator():
+            while True:
+                data = proc.stdout.read(4096)
+                if not data:
+                    proc.stdout.close()
+                    break
+                yield data
+
+        response = StreamingHttpResponse(iterator(), content_type="video/mp4")
+        response["Content-Disposition"] = f"attachment; filename={uuid}.mp4'"
+        return response
+
     all_vods = Vod.objects.all()
     api_obj = ApiStorage.objects.first()
-    vod = get_object_or_404(Vod, uuid=uuid)
     match_emotes(vod)
 
     ctx = {
