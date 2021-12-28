@@ -24,7 +24,7 @@ fi
 python -u manage.py shell -c "from archiv.models import ApiStorage; ApiStorage(ttv_client_id='$TWITCH_CLIENT_ID', ttv_client_secret='$TWITCH_CLIENT_SECRET').save() if ApiStorage.objects.filter().count() == 0 else print('ApiStorage exists')"
 
 # run webserver and celery tasks
-gunicorn --bind 0.0.0.0:8000 --workers $(($(nproc) + 1)) wubbl0rz_archiv.wsgi:application &
+gunicorn --bind 0.0.0.0:8000 --workers $(($(nproc) + 1)) -k gevent wubbl0rz_archiv.wsgi:application &
 celery -A wubbl0rz_archiv worker &
 celery -A wubbl0rz_archiv beat &
 

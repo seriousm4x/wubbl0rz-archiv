@@ -1,6 +1,8 @@
 celery[redis]
 django
+greenlet
 gunicorn
+gunicorn[gevent]
 psycopg2-binary
 python-dateutil
 requests
