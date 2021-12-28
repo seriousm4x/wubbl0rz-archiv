@@ -30,7 +30,7 @@ def match_emotes(vod):
 
 def index(request):
     all_vods = Vod.objects.all()
-    paginator = Paginator(all_vods.order_by("-date"), 30)
+    paginator = Paginator(all_vods.order_by("-date"), 36)
     page_number = request.GET.get("p")
     vods = paginator.get_page(page_number)
     api_obj = ApiStorage.objects.first()
