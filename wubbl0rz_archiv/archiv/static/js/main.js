@@ -216,7 +216,7 @@ function load() {
     })
 
     document.onkeydown = function(event) {
-        if (event.key === "/") {
+        if (event.key === "/" && ! (document.getElementById("search") == document.activeElement)) {
             document.querySelector("#search").select();
             return false;
         }
