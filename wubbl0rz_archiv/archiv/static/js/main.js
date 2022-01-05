@@ -33,6 +33,11 @@ function autocomplete(inp, arr) {
                 }
             }
         }
+        if (document.querySelectorAll("#searchautocomplete-list > div").length == 0) {
+            document.getElementById("searchautocomplete-list").style.opacity = 0;
+        } else {
+            document.getElementById("searchautocomplete-list").style.opacity = 1;
+        }
     });
     inp.addEventListener("keydown", function (e) {
         var x = document.getElementById(this.id + "autocomplete-list");
