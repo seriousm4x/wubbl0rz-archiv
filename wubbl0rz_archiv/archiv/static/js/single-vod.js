@@ -66,17 +66,6 @@ function load() {
             iconClipChecked.style.display = "none";
         }, 1000);
     })
-
-    document.onkeydown = function(event) {
-        if (event.key === "f" && ! (document.getElementById("search") == document.activeElement)) {
-            if (player.isFullscreen()) {
-                player.exitFullscreen();
-            } else {
-                player.requestFullscreen();
-            }
-            return false;
-        }
-    }
 }
 
 if (document.readyState !== "loading") {

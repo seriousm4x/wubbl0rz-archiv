@@ -215,9 +215,17 @@ function load() {
         elem.addEventListener("touchend", hidePrev(elem), false);
     })
 
-    document.onkeydown = function(event) {
-        if (event.key === "/" && ! (document.getElementById("search") == document.activeElement)) {
+    document.onkeydown = function (event) {
+        let searchActive = document.getElementById("search") == document.activeElement;
+        if (event.key === "/" && !searchActive) {
             document.querySelector("#search").select();
+            return false;
+        } else if (typeof player !== "undefined" && event.key === "f" && ! searchActive) {
+            if (player.isFullscreen()) {
+                player.exitFullscreen();
+            } else {
+                player.requestFullscreen();
+            }
             return false;
         }
     }
