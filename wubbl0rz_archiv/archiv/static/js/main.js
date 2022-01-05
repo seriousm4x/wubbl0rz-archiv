@@ -209,6 +209,13 @@ function load() {
         elem.addEventListener("touchstart", showPrev(elem), false);
         elem.addEventListener("touchend", hidePrev(elem), false);
     })
+
+    document.onkeydown = function(event) {
+        if (event.key === "/") {
+            document.querySelector("#search").select();
+            return false;
+        }
+    }
 }
 
 if (document.readyState !== "loading") {
