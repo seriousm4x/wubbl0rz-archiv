@@ -218,13 +218,47 @@ function load() {
     document.onkeydown = function (event) {
         let searchActive = document.getElementById("search") == document.activeElement;
         if (event.key === "/" && !searchActive) {
+            // highlight search
             document.querySelector("#search").select();
             return false;
-        } else if (typeof player !== "undefined" && event.key === "f" && ! searchActive) {
+        } else if (typeof player !== "undefined" && event.key === "f" && !searchActive) {
+            // toggle video fullscreen
             if (player.isFullscreen()) {
                 player.exitFullscreen();
             } else {
                 player.requestFullscreen();
+            }
+            return false;
+        } else if (typeof player !== "undefined" && event.key === " " && !searchActive) {
+            // toggle video play pause
+            if (player.paused()) {
+                player.play();
+            } else {
+                player.pause();
+            }
+            return false;
+        } else if (typeof player !== "undefined" && event.key === "ArrowRight" && !searchActive) {
+            // seek video forward 30s
+            player.currentTime(player.currentTime() + 30)
+            return false;
+        } else if (typeof player !== "undefined" && event.key === "ArrowLeft" && !searchActive) {
+            // seek video back 10s
+            player.currentTime(player.currentTime() - 10)
+            return false;
+        } else if (typeof player !== "undefined" && event.key === "ArrowUp" && !searchActive) {
+            // add 5% to volume
+            player.volume(Math.round(player.volume() * 100) / 100 + 0.05)
+            return false;
+        } else if (typeof player !== "undefined" && event.key === "ArrowDown" && !searchActive) {
+            // substract 5% from volume
+            player.volume(Math.round(player.volume() * 100) / 100 - 0.05)
+            return false;
+        } else if (typeof player !== "undefined" && event.key === "m" && !searchActive) {
+            // mute player
+            if (player.muted()) {
+                player.muted(false)
+            } else {
+                player.muted(true)
             }
             return false;
         }
