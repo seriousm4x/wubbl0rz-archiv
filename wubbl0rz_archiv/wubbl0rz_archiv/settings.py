@@ -152,3 +152,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery
 CELERY_BROKER_URL = "redis://wub-redis:6379"
+
+# DRF
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
