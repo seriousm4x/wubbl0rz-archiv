@@ -1,5 +1,6 @@
 celery[redis]
 django
+djangorestframework
 greenlet
 gunicorn
 gunicorn[gevent]
