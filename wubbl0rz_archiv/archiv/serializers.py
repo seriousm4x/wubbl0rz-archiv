@@ -7,7 +7,7 @@ from rest_framework import mixins, serializers, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from archiv.models import Emote, Vod
+from archiv.models import Emote, Vod, ApiStorage
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -80,10 +80,10 @@ class StatsViewSet(viewsets.ViewSet):
             day=1) - relativedelta.relativedelta(months=i)
         month = _date(timezone.now() -
                       relativedelta.relativedelta(months=i), "M y")
-        amount = Vod.objects.filter(date__range=[
-                                    first_day_of_month, first_day_of_month +
-                                    relativedelta.relativedelta(months=1)]).count()
-        return month, amount
+        count = Vod.objects.filter(date__range=[
+            first_day_of_month, first_day_of_month +
+            relativedelta.relativedelta(months=1)]).count()
+        return month, count
 
     def list(self, request):
         all_vods = Vod.objects.all()
@@ -96,12 +96,15 @@ class StatsViewSet(viewsets.ViewSet):
         ctx["archiv_size_bytes"] = int(
             all_vods.aggregate(Sum("size"))["size__sum"])
 
-        ctx["vods_per_month"] = {}
+        ctx["vods_per_month"] = []
         for i in range(11, -1, -1):
-            month, amount = self.get_vods_per_month(i)
-            ctx["vods_per_month"][month] = amount
+            month, count = self.get_vods_per_month(i)
+            ctx["vods_per_month"].append({
+                "month": month,
+                "count": count
+            })
 
-        ctx["vods_per_weekday"] = {}
+        ctx["vods_per_weekday"] = []
         weekdays = [(1, "Sonntag"),
                     (2, "Montag"),
                     (3, "Dienstag"),
@@ -110,10 +113,20 @@ class StatsViewSet(viewsets.ViewSet):
                     (6, "Freitag"),
                     (7, "Samstag")]
         for day in weekdays:
-            ctx["vods_per_weekday"][day[1]] = Vod.objects.filter(
-                date__week_day=day[0]).count()
+            ctx["vods_per_weekday"].append({
+                "weekday": day[1],
+                "count": Vod.objects.filter(date__week_day=day[0]).count()
+            })
 
         ctx["start_by_time"] = Vod.objects.annotate(hour=ExtractHour("date")).order_by(
             "hour").values("hour").annotate(count=Count("uuid"))
 
+        return Response(ctx)
+
+
+class DBViewSet(viewsets.ViewSet):
+    def list(self, request):
+        ctx = {}
+        ctx["last_vod_sync"] = ApiStorage.objects.first().date_vods_updated
+        ctx["last_emote_sync"] = ApiStorage.objects.first().date_emotes_updated
         return Response(ctx)

@@ -44,8 +44,7 @@ Returns vod infos.
             "resolution": "1920x1080",
             "fps": 47.995,
             "size": 6212785240
-        },
-        ...
+        }
     ]
 }
 ```
@@ -59,7 +58,7 @@ Returns vod infos.
 
 ## GET `/api/years/`
 
-Returns years with count.
+Returns years with vod count.
 
 ```json
 [
@@ -74,8 +73,7 @@ Returns years with count.
     {
         "year": 2020,
         "count": 210
-    },
-    ...
+    }
 ]
 ```
 
@@ -100,8 +98,7 @@ Returns twitch, bttv and ffz emotes.
             "name": "HotGrill",
             "url": "https://cdn.frankerfacez.com/emote/14761/4",
             "provider": "ffz"
-        },
-        ....
+        }
     ]
 }
 ```
@@ -125,18 +122,34 @@ Returns stats about the archive.
     "count_vods_1m": 21,
     "count_h_streamed": 1695,
     "archiv_size_bytes": 4268057583164,
-    "vods_per_month": {
-        "Feb 21": 13,
-        "Mär 21": 14,
-        "Apr 21": 18,
-        ...
-    },
-    "vods_per_weekday": {
-        "Sonntag": 177,
-        "Montag": 106,
-        "Dienstag": 61,
-        ...
-    },
+    "vods_per_month": [
+        {
+            "month": "Feb 21",
+            "count": 12
+        },
+        {
+            "month": "Mär 21",
+            "count": 15
+        },
+        {
+            "month": "Apr 21",
+            "count": 17
+        }
+    ],
+    "vods_per_weekday": [
+        {
+            "weekday": "Sonntag",
+            "count": 178
+        },
+        {
+            "weekday": "Montag",
+            "count": 105
+        },
+        {
+            "weekday": "Dienstag",
+            "count": 61
+        }
+    ],
     "start_by_time": [
         {
             "hour": 8,
@@ -149,8 +162,18 @@ Returns stats about the archive.
         {
             "hour": 10,
             "count": 61
-        },
-        ...
+        }
     ]
+}
+```
+
+## GET `/api/stats/db`
+
+Returns info about last vod and emote update in UTC.
+
+```json
+{
+    "last_vod_sync": "2022-01-06T02:00:00.038000Z",
+    "last_emote_sync": "2022-01-06T01:00:00.101000Z"
 }
 ```

@@ -10,6 +10,7 @@ router.register(r"vods", serializers.VodViewSet, basename="vods")
 router.register(r"years", serializers.YearsList, basename="years")
 router.register(r"emotes", serializers.EmoteViewSet, basename="emotes")
 router.register(r"stats", serializers.StatsViewSet, basename="stats")
+router.register(r"stats/db", serializers.DBViewSet, basename="stats/db")
 
 urlpatterns = [
     path("", views.index, name="index"),
