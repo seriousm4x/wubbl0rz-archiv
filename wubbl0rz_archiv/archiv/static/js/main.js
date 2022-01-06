@@ -171,15 +171,7 @@ function drawLine(id, labels, dataset) {
                 y: {
                     ticks: {
                         color: cssvar('--main-color'),
-                    },
-                    title: {
-                        display: true,
-                        text: 'Anzahl Streams',
-                        color: cssvar('--main-color'),
-                        font: {
-                            size: 16,
-                        }
-                    },
+                    }
                 },
                 x: {
                     ticks: {
@@ -210,16 +202,93 @@ function hidePrev(elem) {
 }
 
 function load() {
+    // dark light toggle
+    const toggleBtn = document.querySelector(".toggle-dark");
+    const preferesDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+    function toggleDarkMode(state) {
+        document.documentElement.classList.toggle("dark-mode", state);
+        localStorage.setItem("dark-mode", state);
+        currentModeState = state;
+        toggleBtn.classList.toggle("active", state);
+
+        // change chart colors
+        if (typeof Chart !== "undefined") {
+            Chart.helpers.each(Chart.instances, function (instance) {
+                if (instance.config._config.type == "doughnut") {
+                    instance.options = {
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: cssvar('--main-color'),
+                                }
+                            }
+                        }
+                    }
+                    instance.update();
+                } else {
+                    instance.options.scales = {
+                        y: {
+                            ticks: {
+                                color: cssvar("--main-color"),
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: cssvar("--main-color"),
+                            },
+                            title: {
+                                color: cssvar("--main-color"),
+                            }
+                        }
+                    }
+                    instance.update();
+                }
+            })
+        }
+    }
+
+    if (localStorage.getItem("dark-mode") === null) {
+        toggleDarkMode(preferesDark.matches);
+    } else {
+        toggleDarkMode(localStorage.getItem("dark-mode") == "true");
+    }
+
+    preferesDark.addEventListener("change", e => {
+        toggleDarkMode(e.matches);
+    })
+
+    toggleBtn.addEventListener("click", () => {
+        currentModeState = !currentModeState;
+        toggleDarkMode(currentModeState);
+    });
+
+    // thumbnail hover
     document.querySelectorAll("picture, .has-preview").forEach(function (elem) {
         elem.addEventListener("touchstart", showPrev(elem), false);
         elem.addEventListener("touchend", hidePrev(elem), false);
     })
 
+    // hotkey events
     document.onkeydown = function (event) {
         let searchActive = document.getElementById("search") == document.activeElement;
-        if (event.key === "/" && !searchActive) {
+        if (event.key === "h" && !searchActive) {
+            // toggle hotkey modal
+            let hotkeyModal = document.getElementById("hotkeyModal");
+            var modal = bootstrap.Modal.getInstance(hotkeyModal);
+            if (!modal) {
+                var modal = new bootstrap.Modal(hotkeyModal);
+            }
+            modal.toggle();
+            return false;
+        } else if (event.key === "/" && !searchActive) {
             // highlight search
             document.querySelector("#search").select();
+            return false;
+        } else if (event.key === "t" && !searchActive) {
+            // toggle theme
+            currentModeState = !currentModeState;
+            toggleDarkMode(currentModeState);
             return false;
         } else if (typeof player !== "undefined" && event.key === "f" && !searchActive) {
             // toggle video fullscreen
