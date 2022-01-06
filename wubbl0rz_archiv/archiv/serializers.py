@@ -43,7 +43,7 @@ class YearsSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["year", "count"]
 
 
-class YearsList(mixins.ListModelMixin, viewsets.GenericViewSet):
+class YearsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Vod.objects.annotate(year=Func(
         F("date"),
         Value("yyyy"),
