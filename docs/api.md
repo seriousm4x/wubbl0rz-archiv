@@ -52,7 +52,7 @@ Returns vod infos.
 ### Examples
 
 * `/api/vods/` - returns all vods with default page size of 50
-* `/api/vods/<uuid>` - returns single vod by uuid
+* `/api/vods/c7e167` - returns single vod by uuid
 * `/api/vods/?year=2019` - returns vods filtered by year
 * `/api/vods/?page_size=100` - extend results to 100 (max. 500)
 * `/api/vods/?page=2` - returns page 2
