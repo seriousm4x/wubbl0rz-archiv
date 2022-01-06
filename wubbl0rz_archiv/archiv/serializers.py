@@ -51,7 +51,6 @@ class YearsList(mixins.ListModelMixin, viewsets.GenericViewSet):
         output_field=CharField()
     )).values("year").annotate(count=Count("year")).order_by("-year")
     serializer_class = YearsSerializer
-    http_method_names = ["get"]
 
 
 class EmoteSerializer(serializers.HyperlinkedModelSerializer):
