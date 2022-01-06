@@ -8,10 +8,10 @@ Returns all available routes.
 
 ```json
 {
-    "vods": "http://localhost:8001/api/vods/",
-    "years": "http://localhost:8001/api/years/",
-    "emotes": "http://localhost:8001/api/emotes/",
-    "stats": "http://localhost:8001/api/stats/"
+    "vods": "https://archiv.wubbl0rz.tv/api/vods/",
+    "years": "https://archiv.wubbl0rz.tv/api/years/",
+    "emotes": "https://archiv.wubbl0rz.tv/api/emotes/",
+    "stats": "https://archiv.wubbl0rz.tv/api/stats/"
 }
 ```
 
@@ -22,7 +22,7 @@ Returns vod infos.
 ```json
 {
     "count": 620,
-    "next": "http://localhost:8001/api/vods/?page=2",
+    "next": "https://archiv.wubbl0rz.tv/api/vods/?page=2",
     "previous": null,
     "results": [
         {
@@ -86,7 +86,7 @@ Returns twitch, bttv and ffz emotes.
 ```json
 {
     "count": 151,
-    "next": "http://localhost:8001/api/emotes/?page=2",
+    "next": "https://archiv.wubbl0rz.tv/api/emotes/?page=2",
     "previous": null,
     "results": [
         {
