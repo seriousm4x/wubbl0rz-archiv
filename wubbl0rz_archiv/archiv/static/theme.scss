@@ -24,30 +24,26 @@ $container-max-widths: (sm: 540px,
 $card-border-width: 0px;
 $grid-gutter-width: 0.5rem;
 
-
-// bootstrap import
-
-@import "bootstrap/scss/bootstrap";
-
-
-// bootstrap overwrites
-
 :root {
     --main-color: #222222;
     --bg-color: white;
     --accent-color: #b3b3b3;
     --hover-color: #eeeeee;
-    --accordion-button: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000000'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
-    --toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0,0,0,1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
-    --border: 1px solid var(--main-color) !important;
-    --border-radius: 2rem;
-    --drop-shadow: 1px 1px 26px 0px rgba(0, 0, 0, 0.2);
     --stats-bg-1: #4E79A7;
     --stats-bg-2: #F28E2B;
     --stats-bg-3: #E15759;
     --stats-bg-4: #76B7B2;
     --text-muted: #6c757d;
+
+    --border: 1px solid var(--main-color) !important;
+    --border-radius: 2rem;
+    --drop-shadow: 1px 1px 26px 0px rgba(0, 0, 0, 0.2);
+
+    --toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0,0,0,1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    --accordion-button: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000000'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
     --input-checkbox: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+    --modal-btn-close: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+
     scrollbar-width: none;
 }
 
@@ -56,13 +52,27 @@ $grid-gutter-width: 0.5rem;
     --bg-color: #1a1a1a;
     --accent-color: #464646;
     --hover-color: #2c2c2c;
-    --accordion-button: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
-    --toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    --text-muted: #7f8a94;
+
     --border: 1px solid var(--main-color) !important;
     --drop-shadow: 1px 1px 26px 0px rgba(0, 0, 0, 0.36);
-    --text-muted: #7f8a94;
+
+    --toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    --accordion-button: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
     --input-checkbox: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+    --modal-btn-close: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
 }
+
+$modal-content-color: var(--main-color);
+$modal-content-bg: var(--bg-color);
+
+
+// bootstrap import
+
+@import "bootstrap/scss/bootstrap";
+
+
+// bootstrap overwrites
 
 ::-webkit-scrollbar {
     display: none;
@@ -87,6 +97,11 @@ input {
 
 hr {
     margin: 0.5rem;
+}
+
+kbd {
+    color: var(--bg-color);
+    background-color: var(--main-color);
 }
 
 .border-top {
@@ -167,6 +182,15 @@ hr {
     border-radius: var(--border-radius);
     background-color: var(--main-color);
     color: var(--bg-color) !important;
+
+    &:focus {
+        box-shadow: none;
+    }
+}
+
+.btn-close {
+    background: var(--modal-btn-close);
+    opacity: 1;
 
     &:focus {
         box-shadow: none;
@@ -273,6 +297,9 @@ hr {
     max-width: 100vw;
 }
 
+
+// custom classes
+
 #icon-clipboard {
     display: block;
 }
@@ -280,9 +307,6 @@ hr {
 #icon-clipboard-checked {
     display: none;
 }
-
-
-// custom classes
 
 .emote-title {
     img {
