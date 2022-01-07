@@ -158,6 +158,10 @@ The Django app won't serve static and media files. A reverse proxy is needed. Th
 }
 ```
 
+## Documentation
+
+Check out [the docs folder](https://github.com/AgileProggers/wubbl0rz-archiv/tree/master/docs) for more documentation.
+
 ## Contributing
 
 Any help is always appreciated. Especially if you know Django and Javascript.
