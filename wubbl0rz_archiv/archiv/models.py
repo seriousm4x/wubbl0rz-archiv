@@ -20,6 +20,7 @@ class Vod(models.Model):
     resolution = models.TextField(null=True, blank=True)
     fps = models.FloatField(null=True, blank=True)
     size = models.PositiveBigIntegerField(null=True, blank=True)
+    publish = models.BooleanField(default=True)
 
     @property
     def bitrate(self):

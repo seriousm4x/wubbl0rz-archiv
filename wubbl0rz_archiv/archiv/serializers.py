@@ -25,7 +25,7 @@ class VodSerializer(serializers.HyperlinkedModelSerializer):
 
 class VodViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
-        queryset = Vod.objects.all().order_by("-date")
+        queryset = Vod.objects.filter(publish=True).order_by("-date")
         year = self.request.query_params.get("year")
         if year is not None:
             queryset = queryset.filter(date__year=year)
@@ -85,7 +85,7 @@ class StatsViewSet(viewsets.ViewSet):
         return month, count
 
     def list(self, request):
-        all_vods = Vod.objects.all()
+        all_vods = Vod.objects.filter(publish=True)
         ctx = {}
         ctx["count_vods_total"] = all_vods.count()
         ctx["count_vods_1m"] = all_vods.filter(date__range=[timezone.now(

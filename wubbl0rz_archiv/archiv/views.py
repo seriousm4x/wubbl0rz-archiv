@@ -29,7 +29,7 @@ def match_emotes(vod):
 
 
 def index(request):
-    all_vods = Vod.objects.all()
+    all_vods = Vod.objects.filter(publish=True)
     paginator = Paginator(all_vods.order_by("-date"), 36)
     page_number = request.GET.get("p")
     vods = paginator.get_page(page_number)
@@ -66,7 +66,7 @@ def single_vod(request, uuid):
         response["Content-Disposition"] = f"attachment; filename={uuid}.mp4'"
         return response
 
-    all_vods = Vod.objects.all()
+    all_vods = Vod.objects.filter(publish=True)
     api_obj = ApiStorage.objects.first()
     match_emotes(vod)
 
@@ -79,8 +79,8 @@ def single_vod(request, uuid):
 
 
 def years(request):
-    all_vods = Vod.objects.all()
-    vods = Vod.objects.all().order_by("-date")
+    all_vods = Vod.objects.filter(publish=True)
+    vods = Vod.objects.filter(publish=True).order_by("-date")
     grouped_years = Vod.objects.annotate(year=TruncYear("date")).values(
         "year").annotate(c=Count('uuid')).values('year', 'c').order_by("-year")
     api_obj = ApiStorage.objects.first()
@@ -101,7 +101,7 @@ def search(request):
     search = request.GET.get("q")
     if not search:
         return render(request, "search.html", {"api_obj": api_obj})
-    all_vods = Vod.objects.all()
+    all_vods = Vod.objects.filter(publish=True)
     vods = Vod.objects.filter(title__icontains=search).order_by("-date")
     for v in vods:
         match_emotes(v)
@@ -116,7 +116,7 @@ def search(request):
 
 
 def stats(request):
-    all_vods = Vod.objects.all()
+    all_vods = Vod.objects.filter(publish=True)
     all_vod_titles = list(all_vods.values_list("title", flat=True))
     api_obj = ApiStorage.objects.first()
     vods_this_month = all_vods.filter(date__range=[
