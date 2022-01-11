@@ -4,7 +4,7 @@ from .models import ApiStorage, Emote, Vod
 
 
 class VodAdmin(admin.ModelAdmin):
-    list_display = ["title", "uuid", "duration", "date", "filename"]
+    list_display = ["title", "uuid", "duration", "date", "filename", "publish"]
     search_fields = ["title", "uuid", "duration", "date", "filename"]
     readonly_fields = ["bitrate"]
     ordering = ["-date"]
