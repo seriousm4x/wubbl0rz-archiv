@@ -45,9 +45,3 @@ class ApiStorage(models.Model):
     date_vods_updated = models.DateTimeField(blank=True, null=True)
     date_emotes_updated = models.DateTimeField(blank=True, null=True)
     is_live = models.BooleanField(blank=True, null=True, default=False)
-
-
-class ChatMessage(models.Model):
-    timestamp = models.DateTimeField(
-        blank=False, null=False, default=timezone.now)
-    raw = models.TextField(blank=False, null=False)

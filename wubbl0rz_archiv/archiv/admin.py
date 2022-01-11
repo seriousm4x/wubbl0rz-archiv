@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ApiStorage, ChatMessage, Emote, Vod
+from .models import ApiStorage, Emote, Vod
 
 
 class VodAdmin(admin.ModelAdmin):
@@ -22,12 +22,6 @@ class ApiStorageAdmin(admin.ModelAdmin):
                      "ttv_client_secret", "ttv_bearer_token"]
 
 
-class ChatMessageAdmin(admin.ModelAdmin):
-    list_display = ["timestamp", "raw"]
-    search_fields = ["timestamp", "raw"]
-
-
 admin.site.register(Vod, VodAdmin)
 admin.site.register(Emote, EmoteAdmin)
 admin.site.register(ApiStorage, ApiStorageAdmin)
-admin.site.register(ChatMessage, ChatMessageAdmin)

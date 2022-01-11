@@ -165,7 +165,3 @@ Check out [the docs folder](https://github.com/AgileProggers/wubbl0rz-archiv/tre
 ## Contributing
 
 Any help is always appreciated. Especially if you know Django and Javascript.
-
-**Things I don't know how to do, but maybe you do?**
-
-* Create a chat replay window in javascript. I've already build a [chatlogger in python](wubbl0rz_archiv/archiv/management/commands/run_chatlog.py) which is not used at the moment. The idea is to log messages to the database and the frontend (js) checks the current position of the video.js player and inserts the messages at the correct time with emotes, names and badges. See [#3](https://github.com/AgileProggers/wubbl0rz-archiv/issues/3) if you are interested.
