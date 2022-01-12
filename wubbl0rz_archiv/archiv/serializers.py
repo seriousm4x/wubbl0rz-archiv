@@ -26,7 +26,10 @@ class VodSerializer(serializers.HyperlinkedModelSerializer):
 class VodViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         queryset = Vod.objects.filter(publish=True).order_by("-date")
+        title = self.request.query_params.get("title")
         year = self.request.query_params.get("year")
+        if title is not None:
+            queryset = queryset.filter(title__icontains=title)
         if year is not None:
             queryset = queryset.filter(date__year=year)
         return queryset
