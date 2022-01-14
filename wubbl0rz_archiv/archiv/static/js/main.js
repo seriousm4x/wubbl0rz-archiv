@@ -134,7 +134,7 @@ function drawBar(id, labels, dataset) {
                         color: cssvar('--main-color'),
                     },
                     grid: {
-                        color: "#333333"
+                        color: cssvar("--stats-grid"),
                     }
                 },
                 x: {
@@ -142,7 +142,7 @@ function drawBar(id, labels, dataset) {
                         color: cssvar('--main-color'),
                     },
                     grid: {
-                        color: "#333333"
+                        color: cssvar("--stats-grid"),
                     }
                 }
             }
@@ -179,7 +179,7 @@ function drawLine(id, labels, dataset) {
                         color: cssvar('--main-color'),
                     },
                     grid: {
-                        color: "#333333"
+                        color: cssvar("--stats-grid"),
                     }
                 },
                 x: {
@@ -195,7 +195,7 @@ function drawLine(id, labels, dataset) {
                         }
                     },
                     grid: {
-                        color: "#333333"
+                        color: cssvar("--stats-grid"),
                     }
                 }
             }
@@ -245,7 +245,7 @@ function load() {
                                 color: cssvar("--main-color"),
                             },
                             grid: {
-                                color: "#333333"
+                                color: cssvar("--stats-grid"),
                             }
                         },
                         x: {
@@ -256,7 +256,7 @@ function load() {
                                 color: cssvar("--main-color"),
                             },
                             grid: {
-                                color: "#333333"
+                                color: cssvar("--stats-grid"),
                             }
                         }
                     }
