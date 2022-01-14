@@ -132,11 +132,17 @@ function drawBar(id, labels, dataset) {
                 y: {
                     ticks: {
                         color: cssvar('--main-color'),
-                    }
+                    },
+                    grid: {
+                        color: "#333333"
+                    },
                 },
                 x: {
                     ticks: {
                         color: cssvar('--main-color'),
+                    },
+                    grid: {
+                        color: "#333333"
                     }
                 }
             }
@@ -171,6 +177,9 @@ function drawLine(id, labels, dataset) {
                 y: {
                     ticks: {
                         color: cssvar('--main-color'),
+                    },
+                    grid: {
+                        color: "#333333"
                     }
                 },
                 x: {
@@ -185,6 +194,9 @@ function drawLine(id, labels, dataset) {
                             size: 16,
                         }
                     },
+                    grid: {
+                        color: "#333333"
+                    }
                 }
             }
         }
