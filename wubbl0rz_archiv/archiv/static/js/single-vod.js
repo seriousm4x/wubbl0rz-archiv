@@ -16,6 +16,16 @@ String.prototype.toHHMMSS = function () {
     return hours + ':' + minutes + ':' + seconds;
 }
 
+function getWatchedProgress(uuid) {
+    if (localStorage.getItem("watched")) {
+        let watched = JSON.parse(localStorage.getItem("watched"));
+        if (uuid in watched) {
+            return watched[uuid];
+        }
+    }
+    return false
+}
+
 function load() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -24,6 +34,7 @@ function load() {
     const shareCheckbox = document.querySelector("#share-checkbox");
     const btnClipboard = document.querySelector("#btn-copy-clipboard");
 
+    // set share time
     if (urlParams.get("t")) {
         player.currentTime(urlParams.get("t"));
         shareURL.value = window.location.href;
@@ -33,6 +44,12 @@ function load() {
         shareURL.value = location.protocol + '//' + location.host + location.pathname;
         shareLabel.innerHTML = "Teilen bei 0:00:00";
         shareCheckbox.checked = false;
+
+        // set player position if watched progress in local storage
+        let vod_progress = getWatchedProgress(player.uuid)
+        if (vod_progress) {
+            player.currentTime(vod_progress)
+        }
     }
 
     // prevent dropdown close on click
@@ -40,13 +57,24 @@ function load() {
         e.stopPropagation();
     })
 
-    // set share time on player time update
     player.on('timeupdate', () => {
+        // set share time on player time update
         let timeRounded = Math.round(player.currentTime())
         if (shareCheckbox.checked) {
             shareURL.value = location.protocol + '//' + location.host + location.pathname + "?t=" + timeRounded;
         }
         shareLabel.innerHTML = "Teilen bei " + String(timeRounded).toHHMMSS();
+
+        // set watched vods progress
+        let watched = {}
+        if (localStorage.getItem("watched")) {
+            watched = localStorage.getItem("watched");
+        } else {
+            localStorage.setItem("watched", JSON.stringify(watched));
+        }
+        let data = JSON.parse(watched);
+        data[player.uuid] = timeRounded;
+        localStorage.setItem("watched", JSON.stringify(data));
     });
 
     // set share url on radio click

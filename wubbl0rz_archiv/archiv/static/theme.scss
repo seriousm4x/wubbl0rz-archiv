@@ -35,6 +35,8 @@ $grid-gutter-width: 0.5rem;
     --stats-bg-4: #76B7B2;
     --text-muted: #6c757d;
     --stats-grid: #cccccc;
+    --progress-bar-fg: #F28E2B;
+    --progress-bar-bg: #222222;
 
     --border: 1px solid var(--main-color) !important;
     --border-radius: 2rem;
@@ -418,6 +420,19 @@ kbd {
 
 .share-button {
     margin-left: auto;
+}
+
+.progress-overlay {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    height: 0.4rem;
+    border-radius: unset;
+    background-color: var(--progress-bar-bg);
+
+    .progress-bar {
+        background-color: var(--progress-bar-fg);
+    }
 }
 
 
