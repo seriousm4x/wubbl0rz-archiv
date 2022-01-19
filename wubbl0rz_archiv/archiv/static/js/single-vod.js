@@ -46,7 +46,7 @@ function load() {
         shareCheckbox.checked = false;
 
         // set player position if watched progress in local storage
-        let vod_progress = getWatchedProgress(player.uuid)
+        let vod_progress = getWatchedProgress(player.getAttribute("uuid"))
         if (vod_progress) {
             player.currentTime(vod_progress)
         }
@@ -73,7 +73,7 @@ function load() {
             localStorage.setItem("watched", JSON.stringify(watched));
         }
         let data = JSON.parse(watched);
-        data[player.uuid] = timeRounded;
+        data[player.getAttribute("uuid")] = timeRounded;
         localStorage.setItem("watched", JSON.stringify(data));
     });
 
