@@ -7,7 +7,7 @@ from rest_framework import mixins, serializers, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from archiv.models import Emote, Vod, ApiStorage
+from vods.models import Emote, Vod, ApiStorage
 
 
 class StandardResultsSetPagination(PageNumberPagination):

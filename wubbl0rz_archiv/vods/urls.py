@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import include, path
 from rest_framework import routers
 
-from archiv import serializers, views
+from vods import serializers, views
 
 router = routers.DefaultRouter()
 router.register(r"vods", serializers.VodViewSet, basename="vods")

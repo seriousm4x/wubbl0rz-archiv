@@ -1,5 +1,5 @@
 **/.git
 **/__pycache__
-wubbl0rz_archiv/archiv/static/bootstrap
-wubbl0rz_archiv/archiv/static/fonts.scss
-wubbl0rz_archiv/archiv/static/theme.scss
+wubbl0rz_archiv/vods/static/bootstrap
+wubbl0rz_archiv/vods/static/fonts.scss
+wubbl0rz_archiv/vods/static/theme.scss

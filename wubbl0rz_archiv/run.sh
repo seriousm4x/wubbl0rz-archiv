@@ -21,12 +21,12 @@ if [ -n "$DJANGO_SUPERUSER_USER" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ]; then
 fi
 
 # Create twitch settings if none exists
-python -u manage.py shell -c "from archiv.models import ApiStorage; ApiStorage(ttv_client_id='$TWITCH_CLIENT_ID', ttv_client_secret='$TWITCH_CLIENT_SECRET').save() if ApiStorage.objects.filter().count() == 0 else print('ApiStorage exists')"
+python -u manage.py shell -c "from vods.models import ApiStorage; ApiStorage(ttv_client_id='$TWITCH_CLIENT_ID', ttv_client_secret='$TWITCH_CLIENT_SECRET').save() if ApiStorage.objects.filter().count() == 0 else print('ApiStorage exists')"
 
 # run webserver and celery tasks
-gunicorn --bind 0.0.0.0:8000 --workers $(($(nproc) + 1)) -k gevent wubbl0rz_archiv.wsgi:application &
-celery -A wubbl0rz_archiv worker &
-celery -A wubbl0rz_archiv beat &
+gunicorn --bind 0.0.0.0:8000 --workers $(($(nproc) + 1)) -k gevent settings.wsgi:application &
+celery -A settings worker &
+celery -A settings beat &
 
 # create backups every 24 hours
 while :; do

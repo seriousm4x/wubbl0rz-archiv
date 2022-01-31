@@ -1,5 +1,5 @@
 """
-ASGI config for wubbl0rz_archiv project.
+ASGI config for settings project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wubbl0rz_archiv.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.settings')
 
 application = get_asgi_application()
