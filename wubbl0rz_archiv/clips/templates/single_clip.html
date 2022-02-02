@@ -8,23 +8,23 @@
     <meta name="color-scheme" content="light dark">
     <meta property="og:locale" content="de_DE">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{{ vod.title }}">
+    <meta property="og:title" content="{{ clip.title }}">
     <meta property="og:site_name" content="Wubbl0rz Archiv">
-    <meta property="og:description" content="{{ vod.date|date }} - {{ vod.date|time }} Uhr">
+    <meta property="og:description" content="{{ clip.date|date }} - {{ clip.date|time }} Uhr">
     <meta property="og:url" content="https://{{ request.META.HTTP_HOST }}{{ request.path }}">
     <meta property="og:updated_time" content="{{ api_obj.date_vods_updated|date:'c' }}">
-    <meta property="og:image" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/vods/{{ vod.filename }}-lg.jpg">
-    <meta property="og:image:url" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/vods/{{ vod.filename }}-lg.jpg">
-    <meta property="og:image:secure_url" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/vods/{{ vod.filename }}-lg.jpg">
+    <meta property="og:image" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-lg.jpg">
+    <meta property="og:image:url" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-lg.jpg">
+    <meta property="og:image:secure_url" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-lg.jpg">
     <meta property="og:image:width" content="1520">
     <meta property="og:image:height" content="896">
-    <meta property="og:image:alt" content="{{ vod.title }}">
-    <meta name="twitter:title" content="{{ vod.title }} ">
-    <meta name="twitter:description" content="{{ vod.date|date }} - {{ vod.date|time }} Uhr">
-    <meta name="twitter:image" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/vods/{{ vod.filename }}-lg.jpg">
+    <meta property="og:image:alt" content="{{ clip.title }}">
+    <meta name="twitter:title" content="{{ clip.title }} ">
+    <meta name="twitter:description" content="{{ clip.date|date }} - {{ clip.date|time }} Uhr">
+    <meta name="twitter:image" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-lg.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image:alt" content="{{ vod.title }}">
-    <title>{{ vod.title }}</title>
+    <meta name="twitter:image:alt" content="{{ clip.title }}">
+    <title>{{ clip.title }}</title>
     <script data-cfasync="false">
         // Set color mode before anyting else, to prevent flashing screen
         if (localStorage.getItem("dark-mode") == "true") {
@@ -46,7 +46,7 @@
                 <div class="row">
                     <div class="col-12">
                         <video id="vod" class="video-js vjs-big-play-centered" controls preload="auto" width="100%" height="100%"
-                            poster="{{ MEDIA_URL }}/vods/{{ vod.filename }}-lg.jpg"
+                            poster="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-lg.jpg"
                             data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2]}'>
                             <p class="vjs-no-js">
                                 To view this video please enable JavaScript, and consider upgrading to a
@@ -61,14 +61,15 @@
                 <div class="d-flex title-container">
                     <div>
                         <p class="display-6 fw-bolder emote-title large">
-                            {% if vod.emote_title %}
-                                {{ vod.emote_title|safe }}
+                            {% if clip.emote_title %}
+                                {{ clip.emote_title|safe }}
                             {% else %}
-                                {{ vod.title }}
+                                {{ clip.title }}
                             {% endif %}
                         </p>
                         <p class="text-muted">
-                            {{ vod.date|date }} - {{ vod.date|time }} Uhr
+                            {{ clip.created_at|date }} - {{ clip.created_at|time }} Uhr<br>
+                            {{ clip.view_count }} Views, erstellt von: {{ clip.creator_name }}
                         </p>
                     </div>
                     <div class="share-button">
@@ -106,7 +107,7 @@
                         data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                         Mehr anzeigen
                     </button>
-                    <a href="/vods/watch/{{ vod.uuid }}?dl=1" class="btn btn-sm">
+                    <a href="/clips/watch/{{ clip.uuid }}?dl=1" class="btn btn-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                             <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                             <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
@@ -122,10 +123,9 @@
                     </button>
                 </p>
                 <div class="collapse text-muted" id="collapseExample">
-                    Auslösung: {{ vod.resolution }}<br>
-                    Bitrate: {{ vod.bitrate|filesizeformat }}it/s<br>
-                    FPS: {{ vod.fps|floatformat:0 }}<br>
-                    Größe: {{ vod.size|filesizeformat }}
+                    Auslösung: {{ clip.resolution }}<br>
+                    Bitrate: {{ clip.bitrate|filesizeformat }}it/s<br>
+                    Größe: {{ clip.size|filesizeformat }}
                 </div>
             </div>
             <script src="https://utteranc.es/client.js"
@@ -151,9 +151,9 @@
             },
         };
         var player = videojs('vod', options);
-        player.setAttribute("uuid", "{{ vod.uuid }}");
+        player.setAttribute("uuid", "{{ clip.uuid }}");
         player.src({
-            src: "{{ MEDIA_URL|safe }}/vods/{{ vod.filename|safe }}.m3u8",
+            src: "{{ MEDIA_URL|safe }}/clips/{{ clip.clip_id|safe }}.m3u8",
             type: "application/x-mpegURL"
         })
         player.fluid(true);

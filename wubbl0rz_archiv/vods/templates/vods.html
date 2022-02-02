@@ -41,20 +41,10 @@
     {% include 'navbar.html' %}
     <main class="flex-shrink-0">
         <div class="container">
-            {% if api_obj.is_live and vods.number == 1 %}
-                <h1 class="display-3 fw-bolder pb-3">
-                    Max ist live!
-                </h1>
-                <div class="row pb-3">
-                    <div class="col">
-                        <div id="twitch-embed"></div>
-                    </div>
-                </div>
-            {% endif %}
             <h1 class="display-3 fw-bolder pb-3">
-                Kürzliche Streams
+                Kürzliche Vods
             </h1>
-            {% include 'grid.html' %}
+            {% include 'vods_grid.html' %}
             <nav aria-label="Pagination">
                 <ul class="pagination justify-content-center">
                     {% if vods.has_previous %}
@@ -97,16 +87,6 @@
     <script>
         autocomplete(document.querySelector("#search"), {{ all_vod_titles|safe }});
     </script>
-    {% if api_obj.is_live %}
-        <script src="https://player.twitch.tv/js/embed/v1.js"></script>
-        <script type="text/javascript">
-            new Twitch.Player("twitch-embed", {
-                channel: "wubbl0rz",
-                width: "100%",
-                height: "500px"
-            });
-        </script>
-    {% endif %}
     <script src="{% static 'js/watched-progress.js' %}"></script>
 </body>
 

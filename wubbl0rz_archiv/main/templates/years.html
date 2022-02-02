@@ -40,8 +40,8 @@
 <body class="d-flex flex-column h-100">
     {% include 'navbar.html' %}
     <main class="flex-shrink-0">
-        <div class="container p-4">
-            <h1 class="fw-bold pb-3">
+        <div class="container">
+            <h1 class="display-3 fw-bold pb-3">
                 Jahresansicht
                 <small class="text-muted">Gesamt: {{ vods|length }}</small>
             </h1>
@@ -66,7 +66,7 @@
                                                 {{ vod.date|date:"d.m.Y" }} - {{ vod.date|time }} Uhr
                                             </div>
                                             <div class="col order-first order-md-last fw-bold">
-                                                <a href="/v/{{ vod.uuid }}" class="emote-title">
+                                                <a href="/vods/watch/{{ vod.uuid }}" class="emote-title">
                                                     {% if vod.emote_title %}
                                                         {{ vod.emote_title|safe }}
                                                     {% else %}

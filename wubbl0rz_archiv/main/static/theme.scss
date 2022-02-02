@@ -69,7 +69,16 @@ $grid-gutter-width: 0.5rem;
 
 $modal-content-color: var(--main-color);
 $modal-content-bg: var(--bg-color);
-
+$dropdown-bg: var(--bg-color);
+$dropdown-border-color: var(--main-color);
+$dropdown-border-radius: 1rem;
+$dropdown-border-width: 1px;
+$dropdown-link-color: var(--main-color);
+$dropdown-link-hover-color: var(--main-color);
+$dropdown-link-hover-bg: var(--hover-color);
+$dropdown-padding-y: 0;
+$dropdown-link-active-color: var(--main-color);
+$dropdown-link-active-bg: var(--hover-color);
 
 // bootstrap import
 
@@ -294,11 +303,27 @@ kbd {
     border-radius: var(--border-radius) 0 0 var(--border-radius);
 }
 
-.dropdown-menu {
+.share-button-list {
     background-color: var(--hover-color);
     border-radius: 1rem;
     width: 450px !important;
     max-width: 100vw;
+}
+
+.dropdown-menu {
+    li:first-child>a {
+        border-radius: 1rem 1rem 0 0;
+        padding-top: 0.5rem;
+    }
+
+    li:last-child>a {
+        border-radius: 0 0 1rem 1rem;
+        padding-bottom: 0.5rem;
+    }
+
+    li:only-child>a {
+        border-radius: 1rem;
+    }
 }
 
 

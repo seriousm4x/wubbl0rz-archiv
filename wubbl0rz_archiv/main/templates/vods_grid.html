@@ -6,11 +6,11 @@
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2 pb-3">
         <div class="card card-rounded h-100">
             <div class="position-relative">
-                <a href="/v/{{ vod.uuid }}">
-                    <picture id="{{ vod.filename }}" class="has-preview" onmouseover="showPrev(this)" onmouseout="hidePrev(this)">
-                        <source id="{{ vod.filename }}-sm-avif" type="image/avif" srcset="{{ MEDIA_URL }}{{ vod.filename }}-sm.avif" media="(min-width: 576px)" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
-                        <source id="{{ vod.filename }}-md-avif" type="image/avif" srcset="{{ MEDIA_URL }}{{ vod.filename }}-md.avif" media="(max-width: 575px)" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
-                        <img id="{{ vod.filename }}-jpg" srcset="{{ MEDIA_URL }}{{ vod.filename }}-sm.jpg 576w, {{ MEDIA_URL }}{{ vod.filename }}-md.jpg 575w" src="{{ MEDIA_URL }}{{ vod.filename }}-md.jpg" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
+                <a href="/vods/watch/{{ vod.uuid }}">
+                    <picture id="{{ vod.filename }}" class="has-preview" data-type="vods" onmouseover="showPrev(this)" onmouseout="hidePrev(this)">
+                        <source id="{{ vod.filename }}-sm-avif" type="image/avif" srcset="{{ MEDIA_URL }}/vods/{{ vod.filename }}-sm.avif" media="(min-width: 576px)" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
+                        <source id="{{ vod.filename }}-md-avif" type="image/avif" srcset="{{ MEDIA_URL }}/vods/{{ vod.filename }}-md.avif" media="(max-width: 575px)" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
+                        <img id="{{ vod.filename }}-jpg" srcset="{{ MEDIA_URL }}/vods/{{ vod.filename }}-sm.jpg 576w, {{ MEDIA_URL }}/vods/{{ vod.filename }}-md.jpg 575w" src="{{ MEDIA_URL }}/vods/{{ vod.filename }}-md.jpg" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
                     </picture>
                     <div class="timecode-overlay text-white">
                         {{ vod.duration|duration }}
@@ -21,7 +21,7 @@
                 </a>
             </div>
             <div class="card-body">
-                <a href="/v/{{ vod.uuid }}">
+                <a href="/vods/watch/{{ vod.uuid }}">
                     <p class="h5 m-0 emote-title">
                         {% if vod.emote_title %}
                             {{ vod.emote_title|safe }}

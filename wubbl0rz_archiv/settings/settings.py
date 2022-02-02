@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'rest_framework',
+    'main',
     'vods',
+    'clips'
 ]
 
 STATICFILES_FINDERS = (

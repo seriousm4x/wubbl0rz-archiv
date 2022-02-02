@@ -52,8 +52,8 @@ function load() {
         }
     }
 
-    // prevent dropdown close on click
-    document.querySelector('.dropdown-menu').addEventListener("click", (e) => {
+    // prevent share dropdown close on click
+    document.querySelector('#share-button-list').addEventListener("click", (e) => {
         e.stopPropagation();
     })
 

@@ -17,11 +17,11 @@ app.conf.beat_schedule = {
         "schedule": crontab(hour=3, minute=0)
     },
     "update_emotes": {
-        "task": "vods.tasks.update_emotes",
+        "task": "main.tasks.update_emotes",
         "schedule": crontab(hour=2, minute=0)
     },
     "check_live": {
-        "task": "vods.tasks.check_live",
+        "task": "main.tasks.check_live",
         "schedule": crontab(minute="*/3")
     }
 }
