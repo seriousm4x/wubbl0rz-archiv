@@ -117,6 +117,11 @@ kbd {
     background-color: var(--main-color);
 }
 
+table {
+    color: var(--main-color) !important;
+    border-color: var(--accent-color) !important;
+}
+
 .border-top {
     border-top: var(--border) !important;
 }

@@ -10,6 +10,7 @@ from django.shortcuts import render
 from django.template.defaultfilters import date as _date
 from django.utils import timezone
 from vods.models import Vod
+from clips.models import Clip
 
 from main.models import ApiStorage, Emote
 
@@ -38,13 +39,13 @@ def index(request):
 
 def stats(request):
     all_vods = Vod.objects.filter(publish=True)
+    all_clips = Clip.objects.filter()
     all_vod_titles = list(all_vods.values_list("title", flat=True))
     api_obj = ApiStorage.objects.first()
-    vods_this_month = all_vods.filter(date__range=[
-        timezone.now() - relativedelta.relativedelta(months=1), timezone.now()])
     total_duration = int(all_vods.aggregate(
         Sum("duration"))["duration__sum"]/3600)
-    total_size = int(all_vods.aggregate(Sum("size"))["size__sum"])
+    vod_size = int(all_vods.aggregate(Sum("size"))["size__sum"])
+    clip_size = int(all_clips.aggregate(Sum("size"))["size__sum"])
     vods_per_weekday = list(Vod.objects.annotate(weekday=ExtractWeekDay("date")).order_by(
         "weekday").values("weekday").annotate(count=Count("uuid")).values_list("count", flat=True))
 
@@ -66,6 +67,12 @@ def stats(request):
     vods_per_hour_labels = list(Vod.objects.annotate(hour=ExtractHour("date")).order_by(
         "hour").values("hour").annotate(count=Count("uuid")).values_list("hour", flat=True))
 
+    # clips per user
+    most_clips_per_user = Clip.objects.values("creator__name").annotate(
+        amount=Count("creator__name")).order_by("-amount")[:10]
+    most_views_per_user = Clip.objects.values("creator__name").annotate(
+        amount=Sum("view_count")).order_by("-amount")[:10]
+
     # emotes
     emote_count = Emote.objects.all().count()
     all_twitch_emotes = Emote.objects.filter(
@@ -75,16 +82,18 @@ def stats(request):
 
     ctx = {
         "all_vods": all_vods,
+        "all_clips": all_clips,
         "api_obj": api_obj,
         "all_vod_titles": all_vod_titles,
-        "vods_this_month": vods_this_month,
         "total_duration": total_duration,
-        "total_size": total_size,
+        "total_size": vod_size+clip_size,
         "vods_per_weekday": vods_per_weekday,
         "vods_per_month_labels": vods_per_month_labels,
         "vods_per_month_values": vods_per_month_values,
         "vods_per_hour_values": vods_per_hour_values,
         "vods_per_hour_labels": vods_per_hour_labels,
+        "most_clips_per_user": most_clips_per_user,
+        "most_views_per_user": most_views_per_user,
         "emote_count": emote_count,
         "all_twitch_emotes": all_twitch_emotes,
         "all_bttv_emotes": all_bttv_emotes,
