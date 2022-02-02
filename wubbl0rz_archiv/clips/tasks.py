@@ -60,7 +60,7 @@ class ClipDownloader:
                 self.downloader.update_clip(data)
 
                 # save game of clip
-                if Game.objects.filter(game_id=data["game_id"]).exists():
+                if Game.objects.filter(game_id=data["game_id"]).exists() or not data["game_id"]:
                     continue
                 game_req = requests.get("https://api.twitch.tv/helix/games?id={}".format(
                     data["game_id"]), headers=self.helix_header)

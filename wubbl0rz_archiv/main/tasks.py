@@ -81,10 +81,6 @@ class Downloader:
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
-        if os.path.isfile(os.path.join(dir, id + "-sm.jpg")):
-            print(os.path.join(dir, id + "-sm.jpg"), "exists")
-        else:
-            print(os.path.join(dir, id + "-sm.jpg"), "does not exists")
 
         # jpg md
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", ts,
@@ -92,10 +88,6 @@ class Downloader:
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
-        if os.path.isfile(os.path.join(dir, id + "-md.jpg")):
-            print(os.path.join(dir, id + "-md.jpg"), "exists")
-        else:
-            print(os.path.join(dir, id + "-md.jpg"), "does not exists")
 
         # jpg lg
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", ts,
@@ -103,10 +95,6 @@ class Downloader:
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
-        if os.path.isfile(os.path.join(dir, id + "-lg.jpg")):
-            print(os.path.join(dir, id + "-lg.jpg"), "exists")
-        else:
-            print(os.path.join(dir, id + "-lg.jpg"), "does not exists")
 
         # lossless source png for avif sm
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", ts,
@@ -114,10 +102,6 @@ class Downloader:
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
-        if os.path.isfile(os.path.join(dir, id + ".png")):
-            print(os.path.join(dir, id + ".png"), "exists")
-        else:
-            print(os.path.join(dir, id + ".png"), "does not exists")
 
         # avif sm final
         cmd = ["avifenc", os.path.join(
@@ -125,10 +109,6 @@ class Downloader:
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
-        if os.path.isfile(os.path.join(dir, id + "-sm.avif")):
-            print(os.path.join(dir, id + "-sm.avif"), "exists")
-        else:
-            print(os.path.join(dir, id + "-sm.avif"), "does not exists")
 
         # lossless source png for avif md
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", ts,
@@ -136,10 +116,6 @@ class Downloader:
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
-        if os.path.isfile(os.path.join(dir, id + ".png")):
-            print(os.path.join(dir, id + ".png"), "exists")
-        else:
-            print(os.path.join(dir, id + ".png"), "does not exists")
 
         # avif md final
         cmd = ["avifenc", os.path.join(
@@ -147,15 +123,9 @@ class Downloader:
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
-        if os.path.isfile(os.path.join(dir, id + "-md.avif")):
-            print(os.path.join(dir, id + "-md.avif"), "exists")
-        else:
-            print(os.path.join(dir, id + "-md.avif"), "does not exists")
 
         # remove lossless image
         os.remove(os.path.join(dir, id + ".png"))
-        if os.path.isfile(os.path.join(dir, id + ".png")):
-            print(os.path.join(dir, id + ".png"), "was not deleted")
 
         # create .webp preview animation
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab,
@@ -165,10 +135,6 @@ class Downloader:
         proc = subprocess.Popen(cmd, stderr=subprocess.PIPE,
                                 stdout=subprocess.PIPE)
         proc.communicate()
-        if os.path.isfile(os.path.join(dir, id + "-preview.webp")):
-            print(os.path.join(dir, id + "-preview.webp"), "exists")
-        else:
-            print(os.path.join(dir, id + "-preview.webp"), "does not exists")
 
     def get_metadata(self, dir, id):
         ts = os.path.join(dir, id + ".ts")
@@ -207,6 +173,8 @@ class Downloader:
             })
 
     def update_clip(self, data):
+        if data["game_id"] == "":
+            data["game_id"] = None
         Clip.objects.update_or_create(
             clip_id=data["id"],
             defaults={
