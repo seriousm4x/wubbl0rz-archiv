@@ -1,6 +1,5 @@
 from django.db import models
 
-
 def gen_id():
     from uuid import uuid4
     while True:
@@ -26,3 +25,6 @@ class Vod(models.Model):
         return int(self.size * 8 / self.duration)
 
     readonly_fields = ["bitrate"]
+
+    def __str__(self):
+        return self.filename

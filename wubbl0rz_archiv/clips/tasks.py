@@ -1,7 +1,6 @@
 import datetime
 import json
 import os
-import shutil
 
 import requests
 from celery import shared_task
@@ -11,7 +10,6 @@ from main.tasks import Downloader
 from main.twitch_api import TwitchApi
 
 from clips.models import Clip, Game
-
 
 class ClipDownloader:
     def __init__(self):
@@ -59,22 +57,6 @@ class ClipDownloader:
                     self.clipdir, data["id"], data["duration"])
                 self.downloader.update_clip(data)
 
-                # save game of clip
-                if Game.objects.filter(game_id=data["game_id"]).exists() or not data["game_id"]:
-                    continue
-                game_req = requests.get("https://api.twitch.tv/helix/games?id={}".format(
-                    data["game_id"]), headers=self.helix_header)
-                game_title = game_req.json()["data"][0]["name"]
-                game_box_art_url = game_req.json()["data"][0]["box_art_url"].replace(
-                    r"{width}x{height}", "70x93")
-                Game.objects.update_or_create(
-                    game_id=data["game_id"],
-                    defaults={
-                        "name": game_title,
-                        "box_art_url": game_box_art_url
-                    }
-                )
-
             try:
                 cursor = clips["pagination"]["cursor"]
                 api_url = "https://api.twitch.tv/helix/clips?broadcaster_id={}&first=100&started_at={}&after={}".format(
@@ -91,35 +73,24 @@ class ClipDownloader:
                 api_url = "https://api.twitch.tv/helix/clips?broadcaster_id={}&first=100&started_at={}".format(
                     self.broadcaster_id, cursor_week)
 
-    def games(self):
-        for game in Game.objects.all():
-            game_req = requests.get(
-                "https://api.twitch.tv/helix/games?id={}".format(game.game_id), headers=self.helix_header)
-            try:
-                game_title = game_req.json()["data"][0]["name"]
-                game_box_art_url = game_req.json()["data"][0]["box_art_url"].replace(
-                    r"{width}x{height}", "70x93")
-                Game.objects.update_or_create(
-                    game_id=game.game_id,
-                    defaults={
-                        "name": game_title,
-                        "box_art_url": game_box_art_url
-                    }
-                )
-            except IndexError:
-                print(game.name, "got deleted on Twitch")
-
-            try:
-                response = requests.get(game.box_art_url, stream=True)
-                with open(os.path.join(self.gamedir, str(game.game_id) + ".jpg"), "wb") as out_file:
-                    shutil.copyfileobj(response.raw, out_file)
-                del response
-            except requests.HTTPError as err:
-                print(err)
+    def game(self, obj):
+        game_req = requests.get(
+            f"https://api.twitch.tv/helix/games?id={obj.game_id}", headers=self.helix_header)
+        try:
+            game_title = game_req.json()["data"][0]["name"]
+            Game.objects.update_or_create(
+                game_id=obj.game_id,
+                defaults={
+                    "name": game_title
+                }
+            )
+        except IndexError:
+            print(f"Game ID {obj.game_id} got deleted on Twitch")
 
 
 @shared_task
 def download_clips():
     cd = ClipDownloader()
     cd.clips()
-    cd.games()
+    for g in Game.objects.all():
+        cd.game(g)

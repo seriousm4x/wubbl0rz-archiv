@@ -1,3 +1,4 @@
+from fileinput import filename
 import os
 import subprocess
 from datetime import datetime
@@ -5,7 +6,7 @@ from datetime import datetime
 import requests
 import yt_dlp
 from celery import shared_task
-from clips.models import Clip
+from clips.models import Clip, Game, Creator
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from vods.models import Vod
@@ -33,6 +34,11 @@ class Downloader:
         obj = ApiStorage.objects.first()
         obj.date_vods_updated = timezone.now()
         obj.save()
+        TwitchApi().update_bearer()
+        self.helix_header = {
+            "Client-ID": ApiStorage.objects.get().ttv_client_id,
+            "Authorization": f"Bearer {ApiStorage.objects.get().ttv_bearer_token}"
+        }
 
     def get_vod_infos(self):
         ydl_opts = {
@@ -174,18 +180,39 @@ class Downloader:
 
     def update_clip(self, data):
         if data["game_id"] == "":
-            data["game_id"] = None
+            game_obj = None
+        else:
+            game_obj, created = Game.objects.get_or_create(game_id=data["game_id"])
+            if created:
+                game_req = requests.get(
+                    f"https://api.twitch.tv/helix/games?id={data['game_id']}", headers=self.helix_header)
+                try:
+                    game_title = game_req.json()["data"][0]["name"]
+                    Game.objects.update_or_create(
+                        game_id=data["game_id"],
+                        defaults={
+                            "name": game_title
+                        }
+                    )
+                except IndexError:
+                    print(f"Game ID {data['game_id']} got deleted on Twitch")
+
+        creator, _ = Creator.objects.get_or_create(
+            creator_id=data["creator_id"], name=data["creator_name"])
+        vod = Vod.objects.filter(filename=f"v{data['video_id']}").first()
+
         Clip.objects.update_or_create(
             clip_id=data["id"],
             defaults={
-                "creator_name": data["creator_name"],
-                "game_id": data["game_id"],
+                "creator": creator,
+                "game": game_obj,
                 "title": data["title"],
                 "view_count": data["view_count"],
                 "created_at": data["created_at"],
                 "duration": data["duration"],
                 "resolution": data["resolution"],
-                "size": data["size"]
+                "size": data["size"],
+                "vod": vod
             }
         )
 
@@ -203,7 +230,7 @@ class EmoteUpdater:
             emote.save()
 
     def twitch(self):
-        TwitchApi.update_bearer()
+        TwitchApi().update_bearer()
         client_id = ApiStorage.objects.get().ttv_client_id
         bearer = ApiStorage.objects.get().ttv_bearer_token
 

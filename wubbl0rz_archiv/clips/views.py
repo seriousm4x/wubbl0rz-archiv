@@ -1,17 +1,21 @@
-from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404
-from main.models import ApiStorage
+import datetime
 import os
-from clips.models import Clip
 import subprocess
-from main.views import match_emotes
-from django.conf import settings
 
+from django.conf import settings
+from django.core.paginator import Paginator
 from django.http.response import StreamingHttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.utils import timezone
+from main.models import ApiStorage
+from main.views import match_emotes
+
+from clips.models import Clip
+
 
 def all(request):
-    all_clips = Clip.objects.all()
-    paginator = Paginator(all_clips.order_by("-created_at"), 36)
+    all_clips = Clip.objects.all().order_by("-view_count")
+    paginator = Paginator(all_clips, 36)
     page_number = request.GET.get("p")
     clips = paginator.get_page(page_number)
     api_obj = ApiStorage.objects.first()
@@ -19,6 +23,7 @@ def all(request):
         match_emotes(c)
 
     ctx = {
+        "title": "Alle Clips",
         "clips": clips,
         "api_obj": api_obj
     }
@@ -27,7 +32,23 @@ def all(request):
 
 
 def top30(request):
-    return render(request, "clips.html", {})
+    last_month = datetime.datetime.now(
+        tz=timezone.get_current_timezone()) - datetime.timedelta(weeks=4)
+    all_clips = Clip.objects.filter(created_at__gte=last_month)
+    paginator = Paginator(all_clips.order_by("-view_count"), 36)
+    page_number = request.GET.get("p")
+    clips = paginator.get_page(page_number)
+    api_obj = ApiStorage.objects.first()
+    for c in clips:
+        match_emotes(c)
+
+    ctx = {
+        "title": "Top Clips 30 Tage",
+        "clips": clips,
+        "api_obj": api_obj
+    }
+
+    return render(request, "clips.html", ctx)
 
 
 def single_clip(request, uuid):
