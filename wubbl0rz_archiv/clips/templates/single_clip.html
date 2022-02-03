@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 <!doctype html>
 <html lang="en" class="h-100">
 
@@ -57,7 +58,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card vod-infos mb-4">
+            <div class="vod-infos mb-4">
                 <div class="d-flex title-container">
                     <div>
                         <p class="display-6 fw-bolder emote-title large">
@@ -102,6 +103,11 @@
                         </div>
                     </div>
                 </div>
+                <p class="collapse text-muted" id="collapseExample">
+                    Auslösung: {{ clip.resolution }}<br>
+                    Bitrate: {{ clip.bitrate|filesizeformat }}it/s<br>
+                    Größe: {{ clip.size|filesizeformat }}
+                </p>
                 <p>
                     <button class="btn btn-sm" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
@@ -122,12 +128,47 @@
                             Hotkeys
                     </button>
                 </p>
-                <div class="collapse text-muted" id="collapseExample">
-                    Auslösung: {{ clip.resolution }}<br>
-                    Bitrate: {{ clip.bitrate|filesizeformat }}it/s<br>
-                    Größe: {{ clip.size|filesizeformat }}
-                </div>
             </div>
+            {% if clip.vod %}
+                <hr class="my-4">
+                <p class="display-6 fw-bolder emote-title large">
+                    Clip stammt aus folgendem Vod:
+                </p>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
+                        <div class="position-relative">
+                            <a href="/vods/watch/{{ clip.vod.uuid }}">
+                                <picture id="{{ clip.vod.filename }}" class="has-preview" data-type="vods" onmouseover="showPrev(this)" onmouseout="hidePrev(this)">
+                                    <source id="{{ clip.vod.filename }}-sm-avif" type="image/avif" srcset="{{ MEDIA_URL }}/vods/{{ clip.vod.filename }}-sm.avif" media="(min-width: 576px)" class="card-img-top image-rounded-top" alt="{{ clip.vod.title }}" loading="lazy">
+                                    <source id="{{ clip.vod.filename }}-md-avif" type="image/avif" srcset="{{ MEDIA_URL }}/vods/{{ clip.vod.filename }}-md.avif" media="(max-width: 575px)" class="card-img-top image-rounded-top" alt="{{ clip.vod.title }}" loading="lazy">
+                                    <img id="{{ clip.vod.filename }}-jpg" srcset="{{ MEDIA_URL }}/vods/{{ clip.vod.filename }}-sm.jpg 576w, {{ MEDIA_URL }}/vods/{{ clip.vod.filename }}-md.jpg 575w" src="{{ MEDIA_URL }}/vods/{{ clip.vod.filename }}-md.jpg" class="card-img-top image-rounded-top" alt="{{ clip.vod.title }}" loading="lazy">
+                                </picture>
+                                <div class="timecode-overlay text-white">
+                                    {{ clip.vod.duration|duration }}
+                                </div>
+                                <div id="watched-progress" data-id="{{ clip.vod.uuid }}" class="progress progress-overlay d-none">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{ clip.vod.duration }}"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <a href="/vods/watch/{{ clip.vod.uuid }}">
+                                <p class="h5 m-0 emote-title">
+                                    {% if clip.vod.emote_title %}
+                                        {{ clip.vod.emote_title|safe }}
+                                    {% else %}
+                                        {{ clip.vod.title }}
+                                    {% endif %}
+                                </p>
+                            </a>
+                            <p class="card-text text-muted">
+                                {{ clip.vod.date|date }} - {{ clip.vod.date|time }} Uhr
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-4">
+            {% endif %}
             <script src="https://utteranc.es/client.js"
                 repo="AgileProggers/wubbl0rz-archiv-comments"
                 issue-term="url"
@@ -165,6 +206,7 @@
     </script>
     <script src="{% static 'js/single.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/watched-progress.js' %}"></script>
 </body>
 
 </html>

@@ -119,7 +119,7 @@
                                 {% for user in most_clips_per_user %}
                                 <tr>
                                     <td>{{ user.creator__name }}</td>
-                                    <td>{{ user.amount }}</td>
+                                    <td>{{ user.amount|intcomma }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -135,7 +135,7 @@
                                 {% for user in most_views_per_user %}
                                 <tr>
                                     <td>{{ user.creator__name }}</td>
-                                    <td>{{ user.amount }}</td>
+                                    <td>{{ user.amount|intcomma }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
