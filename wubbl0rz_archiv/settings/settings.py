@@ -103,7 +103,7 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
+        'LOCATION': 'redis://wub-redis:6379',
     }
 }
 
@@ -159,7 +159,7 @@ MEDIA_ROOT = "/mnt/nas/Archiv/wubbl0rz-twitch-vods/media/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery
-CELERY_BROKER_URL = "redis://127.0.0.1:6379"
+CELERY_BROKER_URL = "redis://wub-redis:6379"
 
 # DRF
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
