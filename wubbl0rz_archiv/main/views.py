@@ -31,7 +31,6 @@ def index(request):
     ctx = {
         "vods": vods,
         "clips": clips,
-        "all_vod_titles": list(all_vods.values_list("title", flat=True)),
         "api_obj": api_obj
     }
     return render(request, "main_index.html", ctx)
@@ -40,7 +39,6 @@ def index(request):
 def stats(request):
     all_vods = Vod.objects.filter(publish=True)
     all_clips = Clip.objects.filter()
-    all_vod_titles = list(all_vods.values_list("title", flat=True))
     api_obj = ApiStorage.objects.first()
     total_duration = int(all_vods.aggregate(
         Sum("duration"))["duration__sum"]/3600)
@@ -84,7 +82,6 @@ def stats(request):
         "all_vods": all_vods,
         "all_clips": all_clips,
         "api_obj": api_obj,
-        "all_vod_titles": all_vod_titles,
         "total_duration": total_duration,
         "total_size": vod_size+clip_size,
         "vods_per_weekday": vods_per_weekday,
@@ -107,14 +104,12 @@ def search(request):
     search = request.GET.get("q")
     if not search:
         return render(request, "search.html", {"api_obj": api_obj})
-    all_vods = Vod.objects.filter(publish=True)
     vods = Vod.objects.filter(title__icontains=search).order_by("-date")
     for v in vods:
         match_emotes(v)
 
     ctx = {
         "vods": vods,
-        "all_vod_titles": list(all_vods.values_list("title", flat=True)),
         "searchquery": search,
         "api_obj": api_obj
     }

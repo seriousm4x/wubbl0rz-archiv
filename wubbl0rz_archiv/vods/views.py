@@ -24,7 +24,6 @@ def vods(request):
 
     ctx = {
         "vods": vods,
-        "all_vod_titles": list(all_vods.values_list("title", flat=True)),
         "api_obj": api_obj
     }
     return render(request, "vods.html", ctx)
@@ -51,20 +50,17 @@ def single_vod(request, uuid):
         response["Content-Disposition"] = f"attachment; filename={uuid}.mp4"
         return response
 
-    all_vods = Vod.objects.filter(publish=True)
     api_obj = ApiStorage.objects.first()
     match_emotes(vod)
 
     ctx = {
         "vod": vod,
-        "all_vod_titles": list(all_vods.values_list("title", flat=True)),
         "api_obj": api_obj
     }
     return render(request, "single_vod.html", ctx)
 
 
 def years(request):
-    all_vods = Vod.objects.filter(publish=True)
     vods = Vod.objects.filter(publish=True).order_by("-date")
     grouped_years = Vod.objects.annotate(year=TruncYear("date")).values(
         "year").annotate(c=Count('uuid')).values('year', 'c').order_by("-year")
@@ -74,7 +70,6 @@ def years(request):
 
     ctx = {
         "vods": vods,
-        "all_vod_titles": list(all_vods.values_list("title", flat=True)),
         "grouped_years": grouped_years,
         "api_obj": api_obj
     }
