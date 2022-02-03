@@ -1,7 +1,7 @@
 function autocomplete() {
-    var currentFocus;
-    const inp = document.querySelector("#search");
-    inp.addEventListener("input", function (e) {
+    let currentFocus;
+    const inputField = document.querySelector("#search");
+    inputField.addEventListener("input", function (e) {
         if (this.value.length < 2) {
             return
         }
@@ -12,29 +12,26 @@ function autocomplete() {
                     removeActive(x);
                     return
                 }
-                var a, b, i, val = this.value;
                 closeAllLists();
-                if (!val) {
+                if (!this.value) {
                     return false;
                 }
                 currentFocus = -1;
-                a = document.createElement("DIV");
-                a.setAttribute("id", this.id + "autocomplete-list");
-                a.setAttribute("class", "autocomplete-items");
-                this.parentNode.appendChild(a);
+                const autocompleteDiv = document.createElement("DIV");
+                autocompleteDiv.setAttribute("id", this.id + "autocomplete-list");
+                autocompleteDiv.setAttribute("class", "autocomplete-items");
+                this.parentNode.appendChild(autocompleteDiv);
                 for (i = 0; i < data.results.length; i++) {
-                    if (document.querySelectorAll("#searchautocomplete-list > div").length < 10) {
-                        if (data.results[i].title.toUpperCase().includes(val.toUpperCase())) {
-                            b = document.createElement("DIV");
-                            b.innerHTML = data.results[i].title.substr(0, val.length);
-                            b.innerHTML += data.results[i].title.substr(val.length);
-                            b.innerHTML += "<input type='hidden' value='" + data.results[i].title + "'>";
-                            b.addEventListener("click", function (e) {
-                                inp.value = this.getElementsByTagName("input")[0].value;
-                                closeAllLists();
-                            });
-                            a.appendChild(b);
-                        }
+                    if (data.results[i].title.toUpperCase().includes(this.value.toUpperCase())) {
+                        const resultDiv = document.createElement("DIV");
+                        resultDiv.innerHTML = data.results[i].title.substr(0, this.value.length);
+                        resultDiv.innerHTML += data.results[i].title.substr(this.value.length);
+                        resultDiv.innerHTML += "<input type='hidden' value='" + data.results[i].title + "'>";
+                        const uuid = data.results[i].uuid;
+                        resultDiv.addEventListener("click", function(e) {
+                            window.location.href = "/vods/watch/" + uuid;
+                        });
+                        autocompleteDiv.appendChild(resultDiv);
                     }
                 }
                 if (document.querySelectorAll("#searchautocomplete-list > div").length == 0) {
@@ -44,8 +41,8 @@ function autocomplete() {
                 }
             });
     });
-    inp.addEventListener("keydown", function (e) {
-        var x = document.getElementById(this.id + "autocomplete-list");
+    inputField.addEventListener("keydown", function (e) {
+        let x = document.getElementById(this.id + "autocomplete-list");
         if (x) x = x.getElementsByTagName("div");
         if (e.keyCode == 40) {
             currentFocus++;
@@ -69,15 +66,15 @@ function autocomplete() {
     }
 
     function removeActive(x) {
-        for (var i = 0; i < x.length; i++) {
+        for (let i = 0; i < x.length; i++) {
             x[i].classList.remove("autocomplete-active");
         }
     }
 
     function closeAllLists(elmnt) {
-        var x = document.getElementsByClassName("autocomplete-items");
-        for (var i = 0; i < x.length; i++) {
-            if (elmnt != x[i] && elmnt != inp) {
+        let x = document.getElementsByClassName("autocomplete-items");
+        for (let i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inputField) {
                 x[i].parentNode.removeChild(x[i]);
             }
         }
@@ -301,9 +298,9 @@ function load() {
         if (event.key === "h" && !searchActive) {
             // toggle hotkey modal
             let hotkeyModal = document.getElementById("hotkeyModal");
-            var modal = bootstrap.Modal.getInstance(hotkeyModal);
+            let modal = bootstrap.Modal.getInstance(hotkeyModal);
             if (!modal) {
-                var modal = new bootstrap.Modal(hotkeyModal);
+                let modal = new bootstrap.Modal(hotkeyModal);
             }
             modal.toggle();
             return false;
