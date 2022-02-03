@@ -12,17 +12,21 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.timezone = "Europe/Berlin"
 
 app.conf.beat_schedule = {
-    "download_vods": {
-        "task": "vods.tasks.download_vods",
-        "schedule": crontab(hour=3, minute=0)
+    "check_live": {
+        "task": "main.tasks.check_live",
+        "schedule": crontab(minute="*/3")
     },
     "update_emotes": {
         "task": "main.tasks.update_emotes",
         "schedule": crontab(hour=2, minute=0)
     },
-    "check_live": {
-        "task": "main.tasks.check_live",
-        "schedule": crontab(minute="*/3")
+    "download_vods": {
+        "task": "vods.tasks.download_vods",
+        "schedule": crontab(hour=3, minute=0)
+    },
+    "download_clips": {
+        "task": "clips.tasks.download_clips",
+        "schedule": crontab(hour=5, minute=0)
     }
 }
 
