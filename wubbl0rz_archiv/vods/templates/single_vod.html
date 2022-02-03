@@ -130,45 +130,47 @@
                 </p>
             </div>
             {% if vod.clip_set.all %}
+                <hr class="my-4">
                 <p class="display-6 fw-bolder emote-title large mt-5">
                     Clips für dieses Vod:
                 </p>
                 <div class="row">
                 {% for clip in vod.clip_set.all %}
-                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
-                            <div class="position-relative">
-                                <a href="/clips/watch/{{ clip.uuid }}">
-                                    <picture id="{{ clip.clip_id }}" class="has-preview" data-type="clips" onmouseover="showPrev(this)" onmouseout="hidePrev(this)">
-                                        <source id="{{ clip.clip_id }}-sm-avif" type="image/avif" srcset="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-sm.avif" media="(min-width: 576px)" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
-                                        <source id="{{ clip.clip_id }}-md-avif" type="image/avif" srcset="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-md.avif" media="(max-width: 575px)" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
-                                        <img id="{{ clip.clip_id }}-jpg" srcset="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-sm.jpg 576w, {{ MEDIA_URL }}/clips/{{ clip.clip_id }}-md.jpg 575w" src="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-md.jpg" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
-                                    </picture>
-                                    <div class="timecode-overlay text-white">
-                                        {{ clip.duration|duration }}
-                                    </div>
-                                    <div id="watched-progress" data-id="{{ clip.uuid }}" class="progress progress-overlay d-none">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{ clip.duration }}"></div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="card-body">
-                                <a href="/clips/watch/{{ clip.uuid }}">
-                                    <p class="h5 m-0 emote-title">
-                                        {% if clip.emote_title %}
-                                            {{ clip.emote_title|safe }}
-                                        {% else %}
-                                            {{ clip.title }}
-                                        {% endif %}
-                                    </p>
-                                </a>
-                                <p class="card-text text-muted">
-                                    {{ clip.date|date }} - {{ clip.date|time }} Uhr<br>
-                                    {{ clip.view_count }} Views - {{ clip.creator.name }}
-                                </p>
-                            </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
+                        <div class="position-relative">
+                            <a href="/clips/watch/{{ clip.uuid }}">
+                                <picture id="{{ clip.clip_id }}" class="has-preview" data-type="clips" onmouseover="showPrev(this)" onmouseout="hidePrev(this)">
+                                    <source id="{{ clip.clip_id }}-sm-avif" type="image/avif" srcset="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-sm.avif" media="(min-width: 576px)" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
+                                    <source id="{{ clip.clip_id }}-md-avif" type="image/avif" srcset="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-md.avif" media="(max-width: 575px)" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
+                                    <img id="{{ clip.clip_id }}-jpg" srcset="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-sm.jpg 576w, {{ MEDIA_URL }}/clips/{{ clip.clip_id }}-md.jpg 575w" src="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-md.jpg" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
+                                </picture>
+                                <div class="timecode-overlay text-white">
+                                    {{ clip.duration|duration }}
+                                </div>
+                                <div id="watched-progress" data-id="{{ clip.uuid }}" class="progress progress-overlay d-none">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{ clip.duration }}"></div>
+                                </div>
+                            </a>
                         </div>
-                        {% endfor %}
+                        <div class="card-body">
+                            <a href="/clips/watch/{{ clip.uuid }}">
+                                <p class="h5 m-0 emote-title">
+                                    {% if clip.emote_title %}
+                                        {{ clip.emote_title|safe }}
+                                    {% else %}
+                                        {{ clip.title }}
+                                    {% endif %}
+                                </p>
+                            </a>
+                            <p class="card-text text-muted">
+                                {{ clip.date|date }} - {{ clip.date|time }} Uhr<br>
+                                {{ clip.view_count }} Views - {{ clip.creator.name }}
+                            </p>
+                        </div>
                     </div>
+                {% endfor %}
+                </div>
+                <hr class="my-4">
             {% endif %}
             <script src="https://utteranc.es/client.js"
                 repo="AgileProggers/wubbl0rz-archiv-comments"
