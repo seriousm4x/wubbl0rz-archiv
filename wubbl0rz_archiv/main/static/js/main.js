@@ -1,43 +1,45 @@
-function autocomplete(inp, arr) {
-    if (arr == undefined) {
-        return
-    }
-    if (arr.length == null) {
-        removeActive(x);
-        return
-    }
+function autocomplete() {
     var currentFocus;
+    const inp = document.querySelector("#search");
     inp.addEventListener("input", function (e) {
-        var a, b, i, val = this.value;
-        closeAllLists();
-        if (!val) {
-            return false;
-        }
-        currentFocus = -1;
-        a = document.createElement("DIV");
-        a.setAttribute("id", this.id + "autocomplete-list");
-        a.setAttribute("class", "autocomplete-items");
-        this.parentNode.appendChild(a);
-        for (i = 0; i < arr.length; i++) {
-            if (document.querySelectorAll("#searchautocomplete-list > div").length < 10) {
-                if (arr[i].toUpperCase().includes(val.toUpperCase())) {
-                    b = document.createElement("DIV");
-                    b.innerHTML = arr[i].substr(0, val.length);
-                    b.innerHTML += arr[i].substr(val.length);
-                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-                    b.addEventListener("click", function (e) {
-                        inp.value = this.getElementsByTagName("input")[0].value;
-                        closeAllLists();
-                    });
-                    a.appendChild(b);
+        fetch(`/api/vods/?page_size=10&title=${this.value}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.results.length == null) {
+                    removeActive(x);
+                    return
                 }
-            }
-        }
-        if (document.querySelectorAll("#searchautocomplete-list > div").length == 0) {
-            document.getElementById("searchautocomplete-list").style.opacity = 0;
-        } else {
-            document.getElementById("searchautocomplete-list").style.opacity = 1;
-        }
+                var a, b, i, val = this.value;
+                closeAllLists();
+                if (!val) {
+                    return false;
+                }
+                currentFocus = -1;
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                this.parentNode.appendChild(a);
+                for (i = 0; i < data.results.length; i++) {
+                    if (document.querySelectorAll("#searchautocomplete-list > div").length < 10) {
+                        if (data.results[i].title.toUpperCase().includes(val.toUpperCase())) {
+                            b = document.createElement("DIV");
+                            b.innerHTML = data.results[i].title.substr(0, val.length);
+                            b.innerHTML += data.results[i].title.substr(val.length);
+                            b.innerHTML += "<input type='hidden' value='" + data.results[i].title + "'>";
+                            b.addEventListener("click", function (e) {
+                                inp.value = this.getElementsByTagName("input")[0].value;
+                                closeAllLists();
+                            });
+                            a.appendChild(b);
+                        }
+                    }
+                }
+                if (document.querySelectorAll("#searchautocomplete-list > div").length == 0) {
+                    document.getElementById("searchautocomplete-list").style.opacity = 0;
+                } else {
+                    document.getElementById("searchautocomplete-list").style.opacity = 1;
+                }
+            });
     });
     inp.addEventListener("keydown", function (e) {
         var x = document.getElementById(this.id + "autocomplete-list");
@@ -280,6 +282,9 @@ function load() {
         currentModeState = !currentModeState;
         toggleDarkMode(currentModeState);
     });
+
+    // init autocomplete
+    autocomplete();
 
     // thumbnail hover
     document.querySelectorAll("picture, .has-preview").forEach(function (elem) {

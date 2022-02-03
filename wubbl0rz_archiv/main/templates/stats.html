@@ -190,7 +190,6 @@
     <script src="{% static 'js/chart.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script>
-        autocomplete(document.querySelector("#search"), {{ all_vod_titles|safe }});
         drawDoughnut("chart-vods-by-weekday",
             ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
             {{ vods_per_weekday|safe }}
