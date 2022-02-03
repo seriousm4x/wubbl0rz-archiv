@@ -1,5 +1,5 @@
 <div align="center" width="100%">
-    <img src="wubbl0rz_archiv/vods/static/img/wubPog.png" width="128"/>
+    <img src="wubbl0rz_archiv/main/static/img/wubPog.png" width="128"/>
 </div>
 
 <div align="center" width="100%">
