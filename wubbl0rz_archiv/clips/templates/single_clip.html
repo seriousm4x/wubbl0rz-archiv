@@ -69,7 +69,7 @@
                             {% endif %}
                         </p>
                         <p class="text-muted">
-                            {{ clip.created_at|date }} - {{ clip.created_at|time }} Uhr<br>
+                            {{ clip.date|date }} - {{ clip.date|time }} Uhr<br>
                             {{ clip.view_count }} Views, erstellt von: {{ clip.creator.name }}
                         </p>
                     </div>

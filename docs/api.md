@@ -9,9 +9,11 @@ Returns all available routes.
 ```json
 {
     "vods": "https://archiv.wubbl0rz.tv/api/vods/",
+    "clips": "https://archiv.wubbl0rz.tv/api/clips/",
     "years": "https://archiv.wubbl0rz.tv/api/years/",
     "emotes": "https://archiv.wubbl0rz.tv/api/emotes/",
-    "stats": "https://archiv.wubbl0rz.tv/api/stats/"
+    "stats": "https://archiv.wubbl0rz.tv/api/stats/",
+    "stats/db": "https://archiv.wubbl0rz.tv/api/stats/db/"
 }
 ```
 
@@ -26,36 +28,78 @@ Returns vod infos.
     "previous": null,
     "results": [
         {
-            "uuid": "c7e167",
-            "title": "🚀 wir contributen zu open source projekt auf github 👀",
-            "duration": 14050,
-            "date": "2022-01-04T18:25:57+01:00",
-            "filename": "v1252822335",
+            "uuid": "176658",
+            "title": "😴 Aufwachen Stream 😴",
+            "duration": 12584,
+            "date": "2022-01-30T08:58:22+01:00",
+            "filename": "v1281016761",
             "resolution": "1920x1080",
-            "fps": 47.997,
-            "size": 9182102360
+            "fps": 47.992,
+            "size": 8219765328,
+            "clip_set": [
+                "5e8869",
+                "215b35",
+                "437d5b"
+            ]
         },
         {
-            "uuid": "975406",
-            "title": "😴 Aufwachen Stream 😴",
-            "duration": 9517,
-            "date": "2022-01-02T09:21:09+01:00",
-            "filename": "v1250522854",
+            "uuid": "99a11f",
+            "title": "😊 Svelte Autocomplete + PostgreSQL Text Search 😎🔍 | C# / JS",
+            "duration": 14959,
+            "date": "2022-01-24T13:44:39+01:00",
+            "filename": "v1274355715",
             "resolution": "1920x1080",
-            "fps": 47.995,
-            "size": 6212785240
+            "fps": 47.997,
+            "size": 9776643524,
+            "clip_set": [
+                "66118c"
+            ]
+        }
+    ]
+}
+```
+
+## GET `/api/clips/`
+
+Returns clip infos.
+
+```json
+{
+    "count": 2084,
+    "next": "https://archiv.wubbl0rz.tv/api/clips/?page=2",
+    "previous": null,
+    "results": [
+        {
+            "uuid": "437d5b",
+            "title": "KEKW",
+            "clip_id": "AthleticObedientCrocodileCclamChamp-Sc-YFtu08q0BNApT",
+            "creator": "maracujaxd",
+            "view_count": 10,
+            "date": "2022-01-30T11:43:58+01:00",
+            "duration": 27,
+            "vod": "176658"
+        },
+        {
+            "uuid": "5e8869",
+            "title": "😴 Aufwachen Stream 😴",
+            "clip_id": "DignifiedPolitePelicanCclamChamp-HtIEVCKNQId0lpq7",
+            "creator": "niceiiiiii",
+            "view_count": 3,
+            "date": "2022-01-30T10:25:17+01:00",
+            "duration": 29,
+            "vod": "176658"
         }
     ]
 }
 ```
 ### Examples
 
-* `/api/vods/` - returns all vods with default page size of 50
-* `/api/vods/c7e167` - returns single vod by uuid
-* `/api/vods/?title=kekw` - returns vods with title containing parameter
-* `/api/vods/?year=2019` - returns vods filtered by year
-* `/api/vods/?page_size=100` - extend results to 100 (max. 500)
-* `/api/vods/?page=2` - returns page 2
+* `/api/clips/` - returns all clips with default page size of 50
+* `/api/clips/437d5b` - returns single clip by uuid
+* `/api/clips/?title=kekw` - returns vods with title containing parameter
+* `/api/clips/?year=2019` - returns vods filtered by year
+* `/api/clips/?page_size=100` - extend results to 100 (max. 500)
+* `/api/clips/?page=2` - returns page 2
 
 ## GET `/api/years/`
 

@@ -36,7 +36,7 @@ class Clip(models.Model):
         Game, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=150)
     view_count = models.PositiveIntegerField()
-    created_at = models.DateTimeField()
+    date = models.DateTimeField()
     duration = models.PositiveIntegerField(null=True, blank=True)
     resolution = models.TextField(null=True, blank=True)
     size = models.PositiveBigIntegerField(null=True, blank=True)

@@ -1,15 +1,16 @@
 from django.urls import include, path
 from rest_framework import routers
-from vods import serializers as vods_serializers
 
+from main import serializers
 from main import views as main_views
 
 router = routers.DefaultRouter()
-router.register(r"vods", vods_serializers.VodViewSet, basename="vods")
-router.register(r"years", vods_serializers.YearsViewSet, basename="years")
-router.register(r"emotes", vods_serializers.EmoteViewSet, basename="emotes")
-router.register(r"stats", vods_serializers.StatsViewSet, basename="stats")
-router.register(r"stats/db", vods_serializers.DBViewSet, basename="stats/db")
+router.register(r"vods", serializers.VodViewSet, basename="vods")
+router.register(r"clips", serializers.ClipViewSet, basename="clips")
+router.register(r"years", serializers.YearsViewSet, basename="years")
+router.register(r"emotes", serializers.EmoteViewSet, basename="emotes")
+router.register(r"stats", serializers.StatsViewSet, basename="stats")
+router.register(r"stats/db", serializers.DBViewSet, basename="stats/db")
 
 
 urlpatterns = [

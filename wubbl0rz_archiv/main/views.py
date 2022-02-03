@@ -22,7 +22,7 @@ def index(request):
     last_month = datetime.datetime.now(
         tz=timezone.get_current_timezone()) - datetime.timedelta(weeks=4)
     clips = Clip.objects.filter(
-        created_at__gte=last_month).order_by("-view_count")[:12]
+        date__gte=last_month).order_by("-view_count")[:12]
 
     api_obj = ApiStorage.objects.first()
     for v in vods:

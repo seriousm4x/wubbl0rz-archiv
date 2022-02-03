@@ -208,7 +208,7 @@ class Downloader:
                 "game": game_obj,
                 "title": data["title"],
                 "view_count": data["view_count"],
-                "created_at": data["created_at"],
+                "date": data["created_at"],
                 "duration": data["duration"],
                 "resolution": data["resolution"],
                 "size": data["size"],

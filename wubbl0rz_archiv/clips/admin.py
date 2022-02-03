@@ -5,11 +5,11 @@ from clips.models import Clip, Creator, Game
 
 class ClipAdmin(admin.ModelAdmin):
     list_display = ["title", "uuid", "clip_id",
-                    "creator", "view_count", "created_at", "duration", "vod"]
+                    "creator", "view_count", "date", "duration", "vod"]
     search_fields = ["title", "uuid", "clip_id",
-                     "creator", "created_at", "vod"]
+                     "creator", "date", "vod"]
     readonly_fields = ["bitrate"]
-    ordering = ["-created_at"]
+    ordering = ["-date"]
 
 
 class GameAdmin(admin.ModelAdmin):

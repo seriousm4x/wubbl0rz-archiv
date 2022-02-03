@@ -3,12 +3,13 @@ from django.db.models import CharField, Count, F, Func, Sum, Value
 from django.db.models.functions.datetime import ExtractHour
 from django.template.defaultfilters import date as _date
 from django.utils import timezone
-from main.models import ApiStorage, Emote
 from rest_framework import mixins, serializers, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-
 from vods.models import Vod
+from clips.models import Clip
+
+from main.models import ApiStorage, Emote
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -18,10 +19,15 @@ class StandardResultsSetPagination(PageNumberPagination):
 
 
 class VodSerializer(serializers.HyperlinkedModelSerializer):
+    clip_set = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="uuid"
+    )
     class Meta:
         model = Vod
         fields = ["uuid", "title", "duration",
-                  "date", "filename", "resolution", "fps", "size"]
+                  "date", "filename", "resolution", "fps", "size", "clip_set"]
 
 
 class VodViewSet(viewsets.ReadOnlyModelViewSet):
@@ -35,6 +41,36 @@ class VodViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(date__year=year)
         return queryset
     serializer_class = VodSerializer
+    pagination_class = StandardResultsSetPagination
+
+
+class ClipSerializer(serializers.HyperlinkedModelSerializer):
+    creator = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field="name"
+    )
+    vod = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field="uuid"
+    )
+
+    class Meta:
+        model = Clip
+        fields = ["uuid", "title", "clip_id",
+                  "creator", "view_count", "date", "duration", "vod"]
+
+
+class ClipViewSet(viewsets.ReadOnlyModelViewSet):
+    def get_queryset(self):
+        queryset = Clip.objects.filter().order_by("-date")
+        title = self.request.query_params.get("title")
+        year = self.request.query_params.get("year")
+        if title is not None:
+            queryset = queryset.filter(title__icontains=title)
+        if year is not None:
+            queryset = queryset.filter(date__year=year)
+        return queryset
+    serializer_class = ClipSerializer
     pagination_class = StandardResultsSetPagination
 
 

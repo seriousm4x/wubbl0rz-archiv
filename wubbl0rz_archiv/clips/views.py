@@ -34,7 +34,7 @@ def all(request):
 def top30(request):
     last_month = datetime.datetime.now(
         tz=timezone.get_current_timezone()) - datetime.timedelta(weeks=4)
-    all_clips = Clip.objects.filter(created_at__gte=last_month)
+    all_clips = Clip.objects.filter(date__gte=last_month)
     paginator = Paginator(all_clips.order_by("-view_count"), 36)
     page_number = request.GET.get("p")
     clips = paginator.get_page(page_number)
