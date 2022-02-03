@@ -77,6 +77,8 @@ Returns clip infos.
             "view_count": 10,
             "date": "2022-01-30T11:43:58+01:00",
             "duration": 27,
+            "resolution": "1920x1080",
+            "size": 12264180,
             "vod": "176658"
         },
         {
@@ -87,6 +89,8 @@ Returns clip infos.
             "view_count": 3,
             "date": "2022-01-30T10:25:17+01:00",
             "duration": 29,
+            "resolution": "1920x1080",
+            "size": 19584336,
             "vod": "176658"
         }
     ]
