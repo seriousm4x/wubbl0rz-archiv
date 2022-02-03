@@ -49,6 +49,10 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
         slug_field="name"
     )
+    game = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field="name"
+    )
     vod = serializers.SlugRelatedField(
         read_only=True,
         slug_field="uuid"
@@ -56,7 +60,7 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Clip
-        fields = ["uuid", "title", "clip_id", "creator", "view_count", "date", "duration", "resolution", "size", "vod"]
+        fields = ["uuid", "title", "clip_id", "creator", "view_count", "date", "duration", "resolution", "size", "game", "vod"]
 
 
 class ClipViewSet(viewsets.ReadOnlyModelViewSet):

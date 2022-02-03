@@ -79,6 +79,7 @@ Returns clip infos.
             "duration": 27,
             "resolution": "1920x1080",
             "size": 12264180,
+            "game": "Just Chatting",
             "vod": "176658"
         },
         {
@@ -91,6 +92,7 @@ Returns clip infos.
             "duration": 29,
             "resolution": "1920x1080",
             "size": 19584336,
+            "game": "Just Chatting",
             "vod": "176658"
         }
     ]

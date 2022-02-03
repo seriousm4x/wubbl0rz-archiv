@@ -70,7 +70,8 @@
                         </p>
                         <p class="text-muted">
                             {{ clip.date|date }} - {{ clip.date|time }} Uhr<br>
-                            {{ clip.view_count }} Views, erstellt von: {{ clip.creator.name }}
+                            {{ clip.view_count }} Views, erstellt von: {{ clip.creator.name }}<br>
+                            Kategorie: {{ clip.game.name }}
                         </p>
                     </div>
                     <div class="share-button">
