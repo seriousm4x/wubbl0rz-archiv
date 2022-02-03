@@ -2,6 +2,9 @@ function autocomplete() {
     var currentFocus;
     const inp = document.querySelector("#search");
     inp.addEventListener("input", function (e) {
+        if (this.value.length < 2) {
+            return
+        }
         fetch(`/api/vods/?page_size=10&title=${this.value}`)
             .then(response => response.json())
             .then(data => {
