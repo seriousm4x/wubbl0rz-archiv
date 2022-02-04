@@ -8,9 +8,9 @@
             <div class="position-relative">
                 <a href="/vods/watch/{{ vod.uuid }}">
                     <picture id="{{ vod.filename }}" class="has-preview" data-type="vods" onmouseover="showPrev(this)" onmouseout="hidePrev(this)">
-                        <source id="{{ vod.filename }}-sm-avif" type="image/avif" srcset="{{ MEDIA_URL }}/vods/{{ vod.filename }}-sm.avif" media="(min-width: 576px)" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
-                        <source id="{{ vod.filename }}-md-avif" type="image/avif" srcset="{{ MEDIA_URL }}/vods/{{ vod.filename }}-md.avif" media="(max-width: 575px)" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
-                        <img id="{{ vod.filename }}-jpg" srcset="{{ MEDIA_URL }}/vods/{{ vod.filename }}-sm.jpg 576w, {{ MEDIA_URL }}/vods/{{ vod.filename }}-md.jpg 575w" src="{{ MEDIA_URL }}/vods/{{ vod.filename }}-md.jpg" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
+                        <source id="{{ vod.filename }}-sm-avif" type="image/avif" srcset="{{ MEDIA_URL }}vods/{{ vod.filename }}-sm.avif" media="(min-width: 576px)" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
+                        <source id="{{ vod.filename }}-md-avif" type="image/avif" srcset="{{ MEDIA_URL }}vods/{{ vod.filename }}-md.avif" media="(max-width: 575px)" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
+                        <img id="{{ vod.filename }}-jpg" srcset="{{ MEDIA_URL }}vods/{{ vod.filename }}-sm.jpg 576w, {{ MEDIA_URL }}vods/{{ vod.filename }}-md.jpg 575w" src="{{ MEDIA_URL }}vods/{{ vod.filename }}-md.jpg" class="card-img-top image-rounded-top" alt="{{ vod.title }}" loading="lazy">
                     </picture>
                     <div class="timecode-overlay text-white">
                         {{ vod.duration|duration }}

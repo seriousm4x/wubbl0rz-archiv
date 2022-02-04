@@ -14,15 +14,15 @@
     <meta property="og:description" content="{{ vod.date|date }} - {{ vod.date|time }} Uhr">
     <meta property="og:url" content="https://{{ request.META.HTTP_HOST }}{{ request.path }}">
     <meta property="og:updated_time" content="{{ api_obj.date_vods_updated|date:'c' }}">
-    <meta property="og:image" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/vods/{{ vod.filename }}-lg.jpg">
-    <meta property="og:image:url" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/vods/{{ vod.filename }}-lg.jpg">
-    <meta property="og:image:secure_url" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/vods/{{ vod.filename }}-lg.jpg">
+    <meta property="og:image" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}vods/{{ vod.filename }}-lg.jpg">
+    <meta property="og:image:url" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}vods/{{ vod.filename }}-lg.jpg">
+    <meta property="og:image:secure_url" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}vods/{{ vod.filename }}-lg.jpg">
     <meta property="og:image:width" content="1520">
     <meta property="og:image:height" content="896">
     <meta property="og:image:alt" content="{{ vod.title }}">
     <meta name="twitter:title" content="{{ vod.title }} ">
     <meta name="twitter:description" content="{{ vod.date|date }} - {{ vod.date|time }} Uhr">
-    <meta name="twitter:image" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}/vods/{{ vod.filename }}-lg.jpg">
+    <meta name="twitter:image" content="https://{{ request.META.HTTP_HOST }}{{ MEDIA_URL }}vods/{{ vod.filename }}-lg.jpg">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image:alt" content="{{ vod.title }}">
     <title>{{ vod.title }}</title>
@@ -47,7 +47,7 @@
                 <div class="row">
                     <div class="col-12">
                         <video id="vod" class="video-js vjs-big-play-centered" controls preload="auto" width="100%" height="100%"
-                            poster="{{ MEDIA_URL }}/vods/{{ vod.filename }}-lg.jpg"
+                            poster="{{ MEDIA_URL }}vods/{{ vod.filename }}-lg.jpg"
                             data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 1.75, 2]}'>
                             <p class="vjs-no-js">
                                 To view this video please enable JavaScript, and consider upgrading to a
@@ -140,9 +140,9 @@
                         <div class="position-relative">
                             <a href="/clips/watch/{{ clip.uuid }}">
                                 <picture id="{{ clip.clip_id }}" class="has-preview" data-type="clips" onmouseover="showPrev(this)" onmouseout="hidePrev(this)">
-                                    <source id="{{ clip.clip_id }}-sm-avif" type="image/avif" srcset="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-sm.avif" media="(min-width: 576px)" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
-                                    <source id="{{ clip.clip_id }}-md-avif" type="image/avif" srcset="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-md.avif" media="(max-width: 575px)" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
-                                    <img id="{{ clip.clip_id }}-jpg" srcset="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-sm.jpg 576w, {{ MEDIA_URL }}/clips/{{ clip.clip_id }}-md.jpg 575w" src="{{ MEDIA_URL }}/clips/{{ clip.clip_id }}-md.jpg" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
+                                    <source id="{{ clip.clip_id }}-sm-avif" type="image/avif" srcset="{{ MEDIA_URL }}clips/{{ clip.clip_id }}-sm.avif" media="(min-width: 576px)" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
+                                    <source id="{{ clip.clip_id }}-md-avif" type="image/avif" srcset="{{ MEDIA_URL }}clips/{{ clip.clip_id }}-md.avif" media="(max-width: 575px)" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
+                                    <img id="{{ clip.clip_id }}-jpg" srcset="{{ MEDIA_URL }}clips/{{ clip.clip_id }}-sm.jpg 576w, {{ MEDIA_URL }}clips/{{ clip.clip_id }}-md.jpg 575w" src="{{ MEDIA_URL }}clips/{{ clip.clip_id }}-md.jpg" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
                                 </picture>
                                 <div class="timecode-overlay text-white">
                                     {{ clip.duration|duration }}
