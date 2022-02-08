@@ -13,7 +13,7 @@ class ClipAdmin(admin.ModelAdmin):
 
 
 class GameAdmin(admin.ModelAdmin):
-    list_display = ["name", "game_id"]
+    list_display = ["name", "game_id", "box_art"]
     search_fields = ["name", "game_id"]
     ordering = ["name"]
 

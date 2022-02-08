@@ -1,3 +1,4 @@
+from pyexpat import model
 from django.db import models
 from vods.models import Vod
 
@@ -13,6 +14,7 @@ def gen_id():
 class Game(models.Model):
     game_id = models.PositiveIntegerField()
     name = models.CharField(max_length=150, default="Unknown")
+    box_art = models.URLField(null=True)
 
     def __str__(self):
         return self.name

@@ -8,8 +8,10 @@ from django.conf import settings
 from main.models import ApiStorage
 from main.tasks import Downloader
 from main.twitch_api import TwitchApi
+import shutil
 
 from clips.models import Clip, Game
+
 
 class ClipDownloader:
     def __init__(self):
@@ -81,10 +83,16 @@ class ClipDownloader:
             f"https://api.twitch.tv/helix/games?id={obj.game_id}", headers=self.helix_header)
         try:
             game_title = game_req.json()["data"][0]["name"]
+            box_art = game_req.json()["data"][0]["box_art_url"].replace(
+                r"{width}x{height}", "100x133")
+            resp = requests.get(box_art, stream=True)
+            with open(os.path.join(self.gamedir, str(obj.game_id) + ".jpg"), "wb") as f:
+                shutil.copyfileobj(resp.raw, f)
             Game.objects.update_or_create(
                 game_id=obj.game_id,
                 defaults={
-                    "name": game_title
+                    "name": game_title,
+                    "box_art": box_art
                 }
             )
         except IndexError:
