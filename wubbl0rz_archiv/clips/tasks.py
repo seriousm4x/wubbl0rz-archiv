@@ -45,7 +45,7 @@ class ClipDownloader:
                 if data["view_count"] < 3:
                     continue
                 if Clip.objects.filter(clip_id=data["id"]).exists():
-                    c = Clip.objects.filter(clip_id=data["id"])
+                    c = Clip.objects.filter(clip_id=data["id"]).first()
                     data["duration"] = c.duration
                     data["resolution"] = c.resolution
                     data["size"] = c.size
