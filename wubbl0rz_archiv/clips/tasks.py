@@ -45,8 +45,10 @@ class ClipDownloader:
                 if data["view_count"] < 3:
                     continue
                 if Clip.objects.filter(clip_id=data["id"]).exists():
-                    data["duration"], data["resolution"], data["size"] = self.downloader.get_metadata(
-                        self.clipdir, data["id"])
+                    c = Clip.objects.filter(clip_id=data["id"])
+                    data["duration"] = c.duration
+                    data["resolution"] = c.resolution
+                    data["size"] = c.size
                     self.downloader.update_clip(data)
                     continue
 
