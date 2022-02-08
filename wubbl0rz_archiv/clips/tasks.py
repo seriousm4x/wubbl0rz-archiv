@@ -42,7 +42,10 @@ class ClipDownloader:
                 # save clip
                 if data["view_count"] < 3:
                     continue
-                if Clip.objects.filter(clip_id=data["id"]).exists() or os.path.isfile(os.path.join(self.clipdir, data["id"] + ".ts")):
+                if Clip.objects.filter(clip_id=data["id"]).exists():
+                    data["duration"], data["resolution"], data["size"] = self.downloader.get_metadata(
+                        self.clipdir, data["id"])
+                    self.downloader.update_clip(data)
                     continue
 
                 if not os.path.isfile(os.path.join(self.clipdir, data["id"] + ".json")):
