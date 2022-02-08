@@ -79,6 +79,8 @@ class ClipDownloader:
                     self.broadcaster_id, cursor_week)
 
     def game(self, obj):
+        if not os.path.isdir(self.gamedir):
+            os.mkdir(self.gamedir)
         game_req = requests.get(
             f"https://api.twitch.tv/helix/games?id={obj.game_id}", headers=self.helix_header)
         try:
