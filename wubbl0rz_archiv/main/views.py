@@ -117,12 +117,11 @@ def search(request):
 
 
 def match_emotes(item):
-    all_emotes = Emote.objects.all().values_list("name", flat=True)
+    all_emotes = map(str.lower, Emote.objects.all().values_list("name", flat=True))
     findemotes = re.compile(r'([A-Z]\w*)', re.IGNORECASE)
     for possible_emote in set(findemotes.findall(item.title)):
-        if possible_emote in all_emotes:
-            this_emote = Emote.objects.filter(
-                name__iexact=possible_emote).first()
+        if possible_emote.lower() in all_emotes:
+            this_emote = Emote.objects.filter(name__icontains=possible_emote).first()
             item.emote_title = item.title.replace(
                 possible_emote, f'<img src="{this_emote.url}" data-toggle="tooltip" title="{this_emote.name}" loading="lazy">')
 
