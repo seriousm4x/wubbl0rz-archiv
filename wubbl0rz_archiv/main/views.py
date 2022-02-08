@@ -118,7 +118,7 @@ def search(request):
 
 def match_emotes(item):
     all_emotes = Emote.objects.all().values_list("name", flat=True)
-    findemotes = re.compile(r'([A-Z]\w*)')
+    findemotes = re.compile(r'([A-Z]\w*)', re.IGNORECASE)
     for possible_emote in set(findemotes.findall(item.title)):
         if possible_emote in all_emotes:
             this_emote = Emote.objects.filter(
