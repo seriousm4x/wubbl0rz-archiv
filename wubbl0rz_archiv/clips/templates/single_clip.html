@@ -68,10 +68,17 @@
                                 {{ clip.title }}
                             {% endif %}
                         </p>
+                        <div class="row align-items-center">
+                            <div class="col-auto me-3">
+                                <img src="{{ MEDIA_URL }}games/{{ clip.game.game_id }}.jpg" alt="{{ clip.game }}" loading="lazy">
+                            </div>
+                            <div class="col-auto">
+                                {{ clip.date|date }} - {{ clip.date|time }} Uhr<br>
+                                {{ clip.view_count }} Views, erstellt von: {{ clip.creator.name }}<br>
+                                Kategorie: {{ clip.game.name }}
+                            </div>
+                        </div>
                         <p class="text-muted">
-                            {{ clip.date|date }} - {{ clip.date|time }} Uhr<br>
-                            {{ clip.view_count }} Views, erstellt von: {{ clip.creator.name }}<br>
-                            Kategorie: {{ clip.game.name }}
                         </p>
                     </div>
                     <div class="share-button">
