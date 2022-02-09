@@ -9,13 +9,13 @@
                 <picture id="{{ clip.clip_id }}" class="has-preview" data-type="clips" onmouseover="showPrev(this)" onmouseout="hidePrev(this)">
                     <source id="{{ clip.clip_id }}-sm-avif" type="image/avif" srcset="{{ MEDIA_URL }}clips/{{ clip.clip_id }}-sm.avif" media="(min-width: 576px)" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
                     <source id="{{ clip.clip_id }}-md-avif" type="image/avif" srcset="{{ MEDIA_URL }}clips/{{ clip.clip_id }}-md.avif" media="(max-width: 575px)" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
-                    <img id="{{ clip.clip_id }}-jpg" srcset="{{ MEDIA_URL }}clips/{{ clip.clip_id }}-sm.jpg 576w, {{ MEDIA_URL }}clips/{{ clip.clip_id }}-md.jpg 575w" src="{{ MEDIA_URL }}clips/{{ clip.clip_id }}-md.jpg" class="card-img-top image-rounded-top" alt="{{ clip.title }}" loading="lazy">
+                    <img id="{{ clip.clip_id }}-jpg" srcset="{{ MEDIA_URL }}clips/{{ clip.clip_id }}-sm.jpg 576w, {{ MEDIA_URL }}clips/{{ clip.clip_id }}-md.jpg 575w" src="{{ MEDIA_URL }}clips/{{ clip.clip_id }}-md.jpg" class="card-img-top image-rounded-top img-fluid" alt="{{ clip.title }}" loading="lazy">
                 </picture>
                 <div class="timecode-overlay text-white">
                     {{ clip.duration|duration }}
                 </div>
                 <div id="watched-progress" data-id="{{ clip.uuid }}" class="progress progress-overlay d-none">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{ clip.duration }}"></div>
+                    <div class="progress-bar" role="progressbar" aria-label="{{ clip.uuid }}-progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{ clip.duration }}"></div>
                 </div>
             </a>
         </div>
