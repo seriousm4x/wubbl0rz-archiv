@@ -33,7 +33,7 @@ def all(request):
 
 def top30(request):
     last_month = datetime.datetime.now(
-        tz=timezone.get_current_timezone()) - datetime.timedelta(weeks=4)
+        tz=timezone.get_current_timezone()) - datetime.timedelta(days=30)
     all_clips = Clip.objects.filter(date__gte=last_month)
     paginator = Paginator(all_clips.order_by("-view_count"), 36)
     page_number = request.GET.get("p")
@@ -72,8 +72,10 @@ def single_clip(request, uuid):
         response["Content-Disposition"] = f"attachment; filename={uuid}.mp4"
         return response
 
+    if clip:
+        match_emotes(clip)
+
     api_obj = ApiStorage.objects.first()
-    match_emotes(clip)
 
     ctx = {
         "clip": clip,

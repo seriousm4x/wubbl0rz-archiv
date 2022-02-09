@@ -15,8 +15,8 @@ class TwitchApi:
             # get bearer token
             token_response = requests.post(tokenurl)
             token_response.raise_for_status()
-            token_jsonResponse = token_response.json()
-            bearer = token_jsonResponse["access_token"]
+            token_json_response = token_response.json()
+            bearer = token_json_response["access_token"]
 
             # write to database
             ApiStorage.objects.update_or_create(

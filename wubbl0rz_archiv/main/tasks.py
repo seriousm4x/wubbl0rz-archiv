@@ -313,6 +313,8 @@ def update_emotes():
 
 @shared_task
 def check_live():
+    live = False
+
     try:
         ydl_opts = {
             'logger': MyLogger()
@@ -321,7 +323,7 @@ def check_live():
             ydl.extract_info("https://www.twitch.tv/wubbl0rz/", download=False)
         live = True
     except yt_dlp.DownloadError:
-        live = False
+        pass
     finally:
         obj = ApiStorage.objects.first()
         obj.is_live = live

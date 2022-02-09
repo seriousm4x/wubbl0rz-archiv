@@ -50,8 +50,10 @@ def single_vod(request, uuid):
         response["Content-Disposition"] = f"attachment; filename={uuid}.mp4"
         return response
 
+    if vod:
+        match_emotes(vod)
+
     api_obj = ApiStorage.objects.first()
-    match_emotes(vod)
 
     ctx = {
         "vod": vod,
