@@ -7,7 +7,7 @@ class ClipAdmin(admin.ModelAdmin):
     list_display = ["title", "uuid", "clip_id",
                     "creator", "view_count", "date", "duration", "vod"]
     search_fields = ["title", "uuid", "clip_id",
-                     "creator", "date", "vod"]
+                     "creator__name", "date", "vod__uuid"]
     readonly_fields = ["bitrate"]
     ordering = ["-date"]
 

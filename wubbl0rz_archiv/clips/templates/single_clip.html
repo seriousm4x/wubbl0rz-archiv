@@ -70,14 +70,22 @@
                         </p>
                         <div class="row align-items-center">
                             <div class="col-auto me-3">
-                                <img src="{{ MEDIA_URL }}games/{{ clip.game.game_id }}.jpg" alt="{{ clip.game }}" loading="lazy">
+                                {% if clip.game %}
+                                    <img src="{{ MEDIA_URL }}games/{{ clip.game.game_id }}.jpg" alt="{{ clip.game }}" loading="lazy">
+                                {% else %}
+                                    <img src="{% static 'img/modcheck.gif' %}" alt="Unbekanntes Spiel" loading="lazy">
+                                {% endif %}
                             </div>
                             <div class="col-auto">
                                 <div class="row">
                                     <div class="col">
                                         {{ clip.date|date }} - {{ clip.date|time }} Uhr<br>
                                         {{ clip.view_count }} Views, erstellt von: {{ clip.creator.name }}<br>
-                                        Kategorie: {{ clip.game.name }}
+                                        {% if clip.game %}
+                                            Kategorie: {{ clip.game.name }}
+                                        {% else %}
+                                            Kategorie: Unbekannt
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="row">

@@ -8,7 +8,7 @@ from vods.models import Vod
 class VodAdmin(admin.ModelAdmin):
     list_display = ["title", "uuid", "duration", "date", "filename", "publish", "clip_count"]
     search_fields = ["title", "uuid", "duration",
-                     "date", "filename", "clip_count"]
+                     "date", "filename", "_clip_count"]
     readonly_fields = ["bitrate"]
     ordering = ["-date"]
     inlines = [ClipInline]
