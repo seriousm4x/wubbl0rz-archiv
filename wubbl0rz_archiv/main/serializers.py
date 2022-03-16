@@ -36,7 +36,7 @@ class StandardResultsSetPagination(PageNumberPagination):
                 "last": self.get_last_page()
             },
             "count": self.page.paginator.count,
-            "current_page": self.page.paginator,
+            "current_page": self.page.number,
             "total_pages": self.page.paginator.num_pages,
             "results": data
         })
