@@ -8,6 +8,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from vods.models import Vod
 from clips.models import Clip
+from rest_framework.utils.urls import replace_query_param
 
 from main.models import ApiStorage, Emote
 
@@ -17,11 +18,17 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 500
     page_size_query_param = "page_size"
 
+    def get_last_page(self):
+        url = self.request.build_absolute_uri()
+        final = self.page.paginator.num_pages
+        return replace_query_param(url, self.page_query_param, final)
+
     def get_paginated_response(self, data):
         return Response({
             "links": {
                 "next": self.get_next_link(),
-                "previous": self.get_previous_link()
+                "previous": self.get_previous_link(),
+                "last": self.get_last_page()
             },
             "count": self.page.paginator.count,
             "total_pages": self.page.paginator.num_pages,
