@@ -3,7 +3,7 @@ from django.db.models import CharField, Count, F, Func, Sum, Value
 from django.db.models.functions.datetime import ExtractHour
 from django.template.defaultfilters import date as _date
 from django.utils import timezone
-from rest_framework import mixins, serializers, viewsets
+from rest_framework import mixins, serializers, viewsets, filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from vods.models import Vod
@@ -65,14 +65,21 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
 
 class ClipViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
-        queryset = Clip.objects.filter().order_by("-date")
+        queryset = Clip.objects.filter()
         title = self.request.query_params.get("title")
         year = self.request.query_params.get("year")
+        sort = self.request.query_params.get("sort")
+        order = self.request.query_params.get("order")
         if title is not None:
             queryset = queryset.filter(title__icontains=title)
         if year is not None:
             queryset = queryset.filter(date__year=year)
-        return queryset
+        if sort is not None and sort in ["view_count", "date", "duration", "size"]:
+            if order == "asc":
+                return queryset.order_by(f"{sort}")
+            else:
+                return queryset.order_by(f"-{sort}")
+        return queryset.order_by("-date")
     serializer_class = ClipSerializer
     pagination_class = StandardResultsSetPagination
 
