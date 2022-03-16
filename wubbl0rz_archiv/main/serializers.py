@@ -18,6 +18,10 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 500
     page_size_query_param = "page_size"
 
+    def get_first_page(self):
+        url = self.request.build_absolute_uri()
+        return replace_query_param(url, self.page_query_param, 1)
+
     def get_last_page(self):
         url = self.request.build_absolute_uri()
         final = self.page.paginator.num_pages
@@ -28,6 +32,7 @@ class StandardResultsSetPagination(PageNumberPagination):
             "links": {
                 "next": self.get_next_link(),
                 "previous": self.get_previous_link(),
+                "first": self.get_first_page(),
                 "last": self.get_last_page()
             },
             "count": self.page.paginator.count,
