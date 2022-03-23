@@ -50,7 +50,7 @@ class VodSerializer(serializers.HyperlinkedModelSerializer):
     )
     class Meta:
         model = Vod
-        fields = ["uuid", "title", "duration",
+        fields = ["uuid", "title", "duration", "bitrate",
                   "date", "filename", "resolution", "fps", "size", "clip_set"]
 
 
