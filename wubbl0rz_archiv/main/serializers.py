@@ -84,7 +84,7 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Clip
-        fields = ["uuid", "title", "clip_id", "creator", "view_count", "date", "duration", "resolution", "size", "game", "vod"]
+        fields = ["uuid", "title", "clip_id", "creator", "view_count", "date", "duration", "resolution", "size", "game", "vod", "bitrate"]
 
 
 class ClipViewSet(viewsets.ReadOnlyModelViewSet):
