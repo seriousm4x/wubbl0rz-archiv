@@ -7,7 +7,7 @@ from rest_framework import mixins, serializers, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from vods.models import Vod
-from clips.models import Clip
+from clips.models import Clip, Game
 from rest_framework.utils.urls import replace_query_param
 
 from main.models import ApiStorage, Emote
@@ -68,15 +68,18 @@ class VodViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = StandardResultsSetPagination
 
 
+class GameSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Game
+        fields = ["game_id", "name"]
+
+
 class ClipSerializer(serializers.HyperlinkedModelSerializer):
     creator = serializers.SlugRelatedField(
         read_only=True,
         slug_field="name"
     )
-    game = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field="name"
-    )
+    game = GameSerializer()
     vod = serializers.SlugRelatedField(
         read_only=True,
         slug_field="uuid"
