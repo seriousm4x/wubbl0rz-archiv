@@ -20,8 +20,11 @@ def main(media_dir):
                 proc = subprocess.Popen(
                     cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
                 proc.communicate()
-                os.remove(full_path)
-                os.remove(os.path.join(media_path, filename + ".m3u8"))
+                try:
+                    os.remove(full_path)
+                    os.remove(os.path.join(media_path, filename + ".m3u8"))
+                except:
+                    pass
         print(media_type, "done")
 
 
