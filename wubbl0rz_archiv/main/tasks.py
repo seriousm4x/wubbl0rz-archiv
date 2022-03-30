@@ -61,9 +61,8 @@ class Downloader:
 
     def dl_post_processing(self, dir, id):
         mp4 = os.path.join(dir, id + ".mp4")
-        m3u8 = os.path.join(dir, id + ".m3u8")
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-stats", "-i", mp4, "-c", "copy",
-               "-hls_playlist_type", "vod", "-hls_time", "10", "-hls_flags", "single_file", m3u8]
+               "-hls_playlist_type", "vod", "-hls_time", "10", "-hls_segment_filename", os.path.join(dir, id + "-segments", id + "_%04d.ts"), os.path.join(dir, id + "-segments", id + ".m3u8")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()

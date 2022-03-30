@@ -214,7 +214,7 @@
         var player = videojs('vod', options);
         player.setAttribute("uuid", "{{ clip.uuid }}");
         player.src({
-            src: "{{ MEDIA_URL|safe }}clips/{{ clip.clip_id|safe }}.m3u8",
+            src: "{{ MEDIA_URL|safe }}clips/{{ clip.clip_id|safe }}-segments/{{ clip.clip_id|safe }}.m3u8",
             type: "application/x-mpegURL"
         })
         player.fluid(true);
