@@ -1,6 +1,7 @@
 celery[redis]
 django
 djangorestframework
+django-filter
 greenlet
 gunicorn
 gunicorn[gevent]

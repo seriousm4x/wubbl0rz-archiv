@@ -3,7 +3,7 @@ from django.db.models import CharField, Count, F, Func, Sum, Value
 from django.db.models.functions.datetime import ExtractHour
 from django.template.defaultfilters import date as _date
 from django.utils import timezone
-from rest_framework import mixins, serializers, viewsets
+from rest_framework import filters, mixins, serializers, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from vods.models import Vod
@@ -55,16 +55,18 @@ class VodSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class VodViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = VodSerializer
+
     def get_queryset(self):
         queryset = Vod.objects.filter(publish=True)
-        title = self.request.query_params.get("title")
         year = self.request.query_params.get("year")
-        if title is not None:
-            queryset = queryset.filter(title__icontains=title)
         if year is not None:
             queryset = queryset.filter(date__year=year)
-        return queryset.order_by("-date")
-    serializer_class = VodSerializer
+        return queryset
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["title"]
+    ordering_fields = ["date"]
+    ordering = ["-date"]
     pagination_class = StandardResultsSetPagination
 
 
@@ -91,24 +93,13 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ClipViewSet(viewsets.ReadOnlyModelViewSet):
-    def get_queryset(self):
-        queryset = Clip.objects.filter()
-        title = self.request.query_params.get("title")
-        year = self.request.query_params.get("year")
-        sort = self.request.query_params.get("sort")
-        order = self.request.query_params.get("order")
-        if title is not None:
-            queryset = queryset.filter(title__icontains=title)
-        if year is not None:
-            queryset = queryset.filter(date__year=year)
-        if sort is not None and sort in ["view_count", "date", "duration", "size"]:
-            if order == "asc":
-                return queryset.order_by(f"{sort}")
-            else:
-                return queryset.order_by(f"-{sort}")
-        return queryset.order_by("-date")
+    queryset = Clip.objects.all()
     serializer_class = ClipSerializer
-    pagination_class = StandardResultsSetPagination
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["title"]
+    ordering_fields = ["view_count", "date"]
+    ordering = ["-date"]
+    pagination_class = StandardResultsSetPagination    
 
 
 class YearsSerializer(serializers.HyperlinkedModelSerializer):

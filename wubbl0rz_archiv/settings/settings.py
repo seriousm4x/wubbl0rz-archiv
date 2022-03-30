@@ -150,3 +150,6 @@ CELERY_BROKER_URL = "redis://wub-redis:6379"
 
 # DRF
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"]
+}
