@@ -1,14 +1,15 @@
+from clips.models import Clip, Game
 from dateutil import relativedelta
 from django.db.models import CharField, Count, F, Func, Sum, Value
 from django.db.models.functions.datetime import ExtractHour
 from django.template.defaultfilters import date as _date
 from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from rest_framework import filters, mixins, serializers, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from vods.models import Vod
-from clips.models import Clip, Game
 from rest_framework.utils.urls import replace_query_param
+from vods.models import Vod
 
 from main.models import ApiStorage, Emote
 
@@ -93,13 +94,23 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ClipViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Clip.objects.all()
     serializer_class = ClipSerializer
+
+    def get_queryset(self):
+        queryset = Clip.objects.all()
+        date_from = self.request.query_params.get("date_from")
+        date_to = self.request.query_params.get("date_to")
+        if date_from is not None:
+            queryset = queryset.filter(date__gt=parse_datetime(date_from))
+        if date_to is not None:
+            queryset = queryset.filter(date__lt=parse_datetime(date_to))
+        return queryset
+
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["title"]
     ordering_fields = ["view_count", "date"]
     ordering = ["-date"]
-    pagination_class = StandardResultsSetPagination    
+    pagination_class = StandardResultsSetPagination
 
 
 class YearsSerializer(serializers.HyperlinkedModelSerializer):
