@@ -62,8 +62,10 @@ class VodViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = Vod.objects.filter(publish=True)
         try:
             year = self.request.query_params.get("year")
-            if year is not None or year is not "":
+            if year is not None and year is not "":
                 queryset = queryset.filter(date__year=year)
+        except:
+            pass
         finally:
             return queryset
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -107,6 +109,8 @@ class ClipViewSet(viewsets.ReadOnlyModelViewSet):
                 queryset = queryset.filter(date__gt=parse_datetime(date_from))
             if date_to is not None and date_to is not "":
                 queryset = queryset.filter(date__lt=parse_datetime(date_to))
+        except:
+            pass
         finally:
             return queryset
 
