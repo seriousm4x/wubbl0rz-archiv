@@ -7,6 +7,7 @@ from django.db.models import Count
 from django.db.models.functions import TruncYear
 from django.http.response import StreamingHttpResponse
 from django.shortcuts import get_object_or_404, render
+from django.utils.text import slugify
 from main.models import ApiStorage
 from main.views import match_emotes
 
@@ -33,7 +34,7 @@ def single_vod(request, uuid):
     vod = get_object_or_404(Vod, uuid=uuid)
 
     if request.GET.get("dl") == "1" and vod:
-        cmd = ["ffmpeg", "-i", os.path.join(settings.MEDIA_ROOT, "vods", vod.filename + ".ts"),
+        cmd = ["ffmpeg", "-i", os.path.join(settings.MEDIA_ROOT, "vods", vod.filename + "-segments", vod.filename + ".m3u8"),
                "-c", "copy", "-bsf:a", "aac_adtstoasc", "-movflags", "frag_keyframe+empty_moov", "-f", "mp4", "-"]
         proc = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -47,7 +48,7 @@ def single_vod(request, uuid):
                 yield data
 
         response = StreamingHttpResponse(iterator(), content_type="video/mp4")
-        response["Content-Disposition"] = f"attachment; filename={uuid}.mp4"
+        response["Content-Disposition"] = f"attachment; filename={slugify(vod.date)}-{slugify(vod.title)}.mp4"
         return response
 
     if vod:
