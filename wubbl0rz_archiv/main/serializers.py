@@ -60,10 +60,12 @@ class VodViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = Vod.objects.filter(publish=True)
-        year = self.request.query_params.get("year")
-        if year is not None:
-            queryset = queryset.filter(date__year=year)
-        return queryset
+        try:
+            year = self.request.query_params.get("year")
+            if year is not None or year is not "":
+                queryset = queryset.filter(date__year=year)
+        finally:
+            return queryset
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["title"]
     ordering_fields = ["date"]
@@ -98,13 +100,15 @@ class ClipViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = Clip.objects.all()
-        date_from = self.request.query_params.get("date_from")
-        date_to = self.request.query_params.get("date_to")
-        if date_from is not None:
-            queryset = queryset.filter(date__gt=parse_datetime(date_from))
-        if date_to is not None:
-            queryset = queryset.filter(date__lt=parse_datetime(date_to))
-        return queryset
+        try:
+            date_from = self.request.query_params.get("date_from")
+            date_to = self.request.query_params.get("date_to")
+            if date_from is not None and date_from is not "":
+                queryset = queryset.filter(date__gt=parse_datetime(date_from))
+            if date_to is not None and date_to is not "":
+                queryset = queryset.filter(date__lt=parse_datetime(date_to))
+        finally:
+            return queryset
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["title"]
