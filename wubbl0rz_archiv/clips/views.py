@@ -55,10 +55,10 @@ def single_clip(request, uuid):
     clip = get_object_or_404(Clip, uuid=uuid)
 
     if request.GET.get("dl") == "1" and clip:
-        cmd = ["ffmpeg", "-i", os.path.join(settings.MEDIA_ROOT, "clips", clip.clip_id + ".ts"),
+        cmd = ["ffmpeg", "-i", os.path.join(settings.MEDIA_ROOT, "clips", clip.clip_id + "-segments", clip.clip_id + ".m3u8"),
                "-c", "copy", "-bsf:a", "aac_adtstoasc", "-movflags", "frag_keyframe+empty_moov", "-f", "mp4", "-"]
-        proc = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
 
         def iterator():
             while True:
