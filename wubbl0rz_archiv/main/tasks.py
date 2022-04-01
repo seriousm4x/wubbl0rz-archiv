@@ -70,7 +70,7 @@ class Downloader:
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
-        #os.remove(mp4)
+        os.remove(mp4)
 
     def create_thumbnail(self, dir, id, duration):
         m3u8 = os.path.join(dir, id + "-segments", id + ".m3u8")
