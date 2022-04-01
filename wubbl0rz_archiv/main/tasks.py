@@ -42,7 +42,8 @@ class Downloader:
 
     def get_vod_infos(self):
         ydl_opts = {
-            'logger': MyLogger(),
+            "retries": 10,
+            "logger": MyLogger(),
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(
@@ -53,23 +54,26 @@ class Downloader:
         ydl_opts = {
             "format": "best",
             "concurrent-fragments": 8,
+            "retries": 10,
             "outtmpl": os.path.join(dir, f"{id}.%(ext)s"),
-            'logger': MyLogger()
+            "logger": MyLogger()
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download(url)
 
     def dl_post_processing(self, dir, id):
         mp4 = os.path.join(dir, id + ".mp4")
+        if not os.path.isdir(os.path.join(dir, id + "-segments")):
+            os.mkdir(os.path.join(dir, id + "-segments"))
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-stats", "-i", mp4, "-c", "copy",
                "-hls_playlist_type", "vod", "-hls_time", "10", "-hls_segment_filename", os.path.join(dir, id + "-segments", id + "_%04d.ts"), os.path.join(dir, id + "-segments", id + ".m3u8")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
-        os.remove(mp4)
+        #os.remove(mp4)
 
     def create_thumbnail(self, dir, id, duration):
-        ts = os.path.join(dir, id + ".ts")
+        m3u8 = os.path.join(dir, id + "-segments", id + ".m3u8")
         if duration <= 10:
             timecode_framegrab = "0"
         else:
@@ -81,28 +85,28 @@ class Downloader:
         lg_width = "1592"
 
         # jpg sm
-        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", ts,
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", m3u8,
                "-vframes", "1", "-vf", f"scale={sm_width}:-1", "-y", os.path.join(dir, id + "-sm.jpg")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
 
         # jpg md
-        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", ts,
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", m3u8,
                "-vframes", "1", "-vf", f"scale={md_width}:-1", "-y", os.path.join(dir, id + "-md.jpg")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
 
         # jpg lg
-        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", ts,
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", m3u8,
                "-vframes", "1", "-vf", f"scale={lg_width}:-1", "-y", os.path.join(dir, id + "-lg.jpg")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         proc.communicate()
 
         # lossless source png for avif sm
-        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", ts,
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", m3u8,
                "-vframes", "1", "-vf", f"scale={sm_width}:-1", "-f", "image2", "-y", os.path.join(dir, id + ".png")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
@@ -116,7 +120,7 @@ class Downloader:
         proc.communicate()
 
         # lossless source png for avif md
-        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", ts,
+        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", m3u8,
                "-vframes", "1", "-vf", f"scale={md_width}:-1", "-f", "image2", "-y", os.path.join(dir, id + ".png")]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
@@ -134,7 +138,7 @@ class Downloader:
 
         # create .webp preview animation
         cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab,
-               "-i", ts, "-c:v", "libwebp", "-vf", "scale=260:-1,fps=fps=15", "-lossless",
+               "-i", m3u8, "-c:v", "libwebp", "-vf", "scale=260:-1,fps=fps=15", "-lossless",
                "0", "-compression_level", "3", "-q:v", "70", "-loop", "0", "-preset", "picture",
                "-an", "-vsync", "0", "-t", "4", "-y", os.path.join(dir, id + "-preview.webp")]
         proc = subprocess.Popen(cmd, stderr=subprocess.PIPE,
@@ -142,11 +146,11 @@ class Downloader:
         proc.communicate()
 
     def get_metadata(self, dir, id):
-        ts = os.path.join(dir, id + ".ts")
+        m3u8 = os.path.join(dir, id + "-segments", id + ".m3u8")
 
         # duration
         cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
-               "default=noprint_wrappers=1:nokey=1", ts]
+               "default=noprint_wrappers=1:nokey=1", m3u8]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         out, _ = proc.communicate()
@@ -154,14 +158,20 @@ class Downloader:
 
         # resolution
         cmd = ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
-               "stream=width,height", "-of", "csv=s=x:p=0", ts]
+               "stream=width,height", "-of", "csv=s=x:p=0", m3u8]
         proc = subprocess.Popen(
             cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         out, _ = proc.communicate()
         resolution = out.decode().splitlines()[0].strip()
 
         # filesize
-        filesize = os.path.getsize(ts)
+        filesize = 0
+        for path, _, files in os.walk(dir):
+            for f in files:
+                if not os.path.splitext(f)[1] == ".ts":
+                    continue
+                fp = os.path.join(path, f)
+                filesize += os.path.getsize(fp)
 
         return duration, resolution, filesize
 
@@ -316,7 +326,8 @@ def check_live():
 
     try:
         ydl_opts = {
-            'logger': MyLogger()
+            "retries": 10,
+            "logger": MyLogger()
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.extract_info("https://www.twitch.tv/wubbl0rz/", download=False)
