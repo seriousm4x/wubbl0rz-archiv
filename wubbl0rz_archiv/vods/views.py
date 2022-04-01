@@ -36,8 +36,7 @@ def single_vod(request, uuid):
     if request.GET.get("dl") == "1" and vod:
         cmd = ["ffmpeg", "-i", os.path.join(settings.MEDIA_ROOT, "vods", vod.filename + "-segments", vod.filename + ".m3u8"),
                "-c", "copy", "-bsf:a", "aac_adtstoasc", "-movflags", "frag_keyframe+empty_moov", "-f", "mp4", "-"]
-        proc = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
 
         def iterator():
             while True:
