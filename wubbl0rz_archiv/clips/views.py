@@ -65,6 +65,7 @@ def single_clip(request, uuid):
                 data = proc.stdout.read(4096)
                 if not data:
                     proc.stdout.close()
+                    proc.kill()
                     break
                 yield data
 
