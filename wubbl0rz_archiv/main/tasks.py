@@ -166,7 +166,7 @@ class Downloader:
 
         # filesize
         filesize = 0
-        for path, _, files in os.walk(dir):
+        for path, _, files in os.walk(dir, id + "-segments"):
             for f in files:
                 if not os.path.splitext(f)[1] == ".ts":
                     continue
