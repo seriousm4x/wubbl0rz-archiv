@@ -1,5 +1,7 @@
 import os
+import queue
 import subprocess
+from threading import Thread
 
 from django.conf import settings
 from django.core.paginator import Paginator
@@ -34,18 +36,33 @@ def single_vod(request, uuid):
     vod = get_object_or_404(Vod, uuid=uuid)
 
     if request.GET.get("dl") == "1" and vod:
+        ff_queue = queue.Queue()
         cmd = ["ffmpeg", "-i", os.path.join(settings.MEDIA_ROOT, "vods", vod.filename + "-segments", vod.filename + ".m3u8"),
                "-c", "copy", "-bsf:a", "aac_adtstoasc", "-movflags", "frag_keyframe+empty_moov", "-f", "mp4", "-"]
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
 
-        def iterator():
+        def read_output(proc):
             while True:
                 data = proc.stdout.read(4096)
                 if not data:
-                    proc.stdout.close()
+                    break
+                ff_queue.put(data)
+
+        proc = subprocess.Popen(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        t = Thread(target=read_output, args=(proc,))
+
+        def iterator():
+            t.start()
+            while True:
+                if proc.poll() is not None and ff_queue.empty():
                     proc.kill()
                     break
-                yield data
+                try:
+                    data = ff_queue.get()
+                    ff_queue.task_done()
+                    yield data
+                except queue.Empty:
+                    pass
 
         response = StreamingHttpResponse(iterator(), content_type="video/mp4")
         response["Content-Disposition"] = f"attachment; filename={slugify(vod.date)}-{slugify(vod.title)}.mp4"

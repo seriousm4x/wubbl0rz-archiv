@@ -1,12 +1,15 @@
 import datetime
 import os
+import queue
 import subprocess
+from threading import Thread
 
 from django.conf import settings
 from django.core.paginator import Paginator
 from django.http.response import StreamingHttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
+from django.utils.text import slugify
 from main.models import ApiStorage
 from main.views import match_emotes
 
@@ -55,22 +58,36 @@ def single_clip(request, uuid):
     clip = get_object_or_404(Clip, uuid=uuid)
 
     if request.GET.get("dl") == "1" and clip:
+        ff_queue = queue.Queue()
         cmd = ["ffmpeg", "-i", os.path.join(settings.MEDIA_ROOT, "clips", clip.clip_id + "-segments", clip.clip_id + ".m3u8"),
                "-c", "copy", "-bsf:a", "aac_adtstoasc", "-movflags", "frag_keyframe+empty_moov", "-f", "mp4", "-"]
 
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-
-        def iterator():
+        def read_output(proc):
             while True:
                 data = proc.stdout.read(4096)
                 if not data:
-                    proc.stdout.close()
+                    break
+                ff_queue.put(data)
+
+        proc = subprocess.Popen(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        t = Thread(target=read_output, args=(proc,))
+
+        def iterator():
+            t.start()
+            while True:
+                if proc.poll() is not None and ff_queue.empty():
                     proc.kill()
                     break
-                yield data
+                try:
+                    data = ff_queue.get()
+                    ff_queue.task_done()
+                    yield data
+                except queue.Empty:
+                    pass
 
         response = StreamingHttpResponse(iterator(), content_type="video/mp4")
-        response["Content-Disposition"] = f"attachment; filename={uuid}.mp4"
+        response["Content-Disposition"] = f"attachment; filename={slugify(clip.date)}-{slugify(clip.title)}.mp4"
         return response
 
     if clip:
