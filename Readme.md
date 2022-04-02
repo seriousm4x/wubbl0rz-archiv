@@ -126,6 +126,7 @@ services:
     container_name: wub-redis
     image: redis:6-alpine
     restart: unless-stopped
+    command: redis-server --loglevel warning
     healthcheck:
       test: redis-cli ping
       interval: 10s
