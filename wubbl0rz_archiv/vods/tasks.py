@@ -13,9 +13,14 @@ def download_vods():
     vod_dir = os.path.join(settings.MEDIA_ROOT, "vods")
     dl = Downloader()
     info_dict = dl.get_vod_infos()
+
+    vod_count_total = 0
+
     for entry in info_dict["entries"]:
         if entry["live_status"] == "is_live" or Vod.objects.filter(filename=entry["id"]).exists():
             continue
+
+        vod_count_total += 1
 
         if not os.path.isfile(os.path.join(vod_dir, entry["id"] + ".json")):
             with open(os.path.join(vod_dir, entry["id"] + ".json"), "w", encoding="utf-8") as f:
@@ -28,3 +33,5 @@ def download_vods():
         dl.create_thumbnail(vod_dir, entry["id"], duration)
         dl.update_vod(entry["id"], entry["title"], duration,
                        entry["timestamp"], resolution, entry["fps"], filesize)
+
+    print("Vods downloaded:", vod_count_total)

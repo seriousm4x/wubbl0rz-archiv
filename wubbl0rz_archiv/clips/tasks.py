@@ -36,6 +36,9 @@ class ClipDownloader:
         api_url = "https://api.twitch.tv/helix/clips?broadcaster_id={}&first=100&started_at={}".format(
             self.broadcaster_id, started_at)
 
+        clip_count_total = 0
+        clip_count_downloaded = 0
+
         while True:
             req = requests.get(api_url, headers=self.helix_header)
             clips = req.json()
@@ -44,6 +47,7 @@ class ClipDownloader:
                 # save clip
                 if data["view_count"] < 3:
                     continue
+                clip_count_total += 1
                 if Clip.objects.filter(clip_id=data["id"]).exists():
                     c = Clip.objects.filter(clip_id=data["id"]).first()
                     data["duration"] = c.duration
@@ -64,6 +68,8 @@ class ClipDownloader:
                     self.clipdir, data["id"], data["duration"])
                 self.downloader.update_clip(data)
 
+                clip_count_downloaded += 1
+
             try:
                 cursor = clips["pagination"]["cursor"]
                 api_url = "https://api.twitch.tv/helix/clips?broadcaster_id={}&first=100&started_at={}&after={}".format(
@@ -73,12 +79,11 @@ class ClipDownloader:
                 cursor_week = (datetime.datetime.now() -
                                datetime.timedelta(weeks=week)).isoformat("T")+"Z"
                 if cursor_week < channel_creation_date:
-                    print("Channel creation date reached")
                     break
-
-                print(cursor_week)
                 api_url = "https://api.twitch.tv/helix/clips?broadcaster_id={}&first=100&started_at={}".format(
                     self.broadcaster_id, cursor_week)
+        print("Clips downloaded:", clip_count_downloaded)
+        print("Clips updated:", clip_count_total)
 
     def game(self, obj):
         if not os.path.isdir(self.gamedir):
