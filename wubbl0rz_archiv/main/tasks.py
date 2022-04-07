@@ -166,12 +166,8 @@ class Downloader:
 
         # filesize
         filesize = 0
-        for path, _, files in os.walk(dir, id + "-segments"):
-            for f in files:
-                if not os.path.splitext(f)[1] == ".ts":
-                    continue
-                fp = os.path.join(path, f)
-                filesize += os.path.getsize(fp)
+        for e in os.scandir(dir, id + "-segments"):
+            filesize += os.path.getsize(e)
 
         return duration, resolution, filesize
 
