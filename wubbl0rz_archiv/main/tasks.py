@@ -166,7 +166,7 @@ class Downloader:
 
         # filesize
         filesize = 0
-        for e in os.scandir(dir, id + "-segments"):
+        for e in os.scandir(os.path.join(dir, id + "-segments")):
             filesize += os.path.getsize(e)
 
         return duration, resolution, filesize
