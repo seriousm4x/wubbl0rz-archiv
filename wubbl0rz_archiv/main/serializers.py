@@ -173,10 +173,12 @@ class StatsViewSet(viewsets.ViewSet):
 
     def list(self, request):
         all_vods = Vod.objects.filter(publish=True)
+        all_clips = Clip.objects.all()
         ctx = {}
         ctx["count_vods_total"] = all_vods.count()
         ctx["count_vods_1m"] = all_vods.filter(date__range=[timezone.now(
         ) - relativedelta.relativedelta(months=1), timezone.now()]).count()
+        ctx["count_clips_total"] = all_clips.count()
         ctx["count_h_streamed"] = int(all_vods.aggregate(
             Sum("duration"))["duration__sum"]/3600)
         ctx["archiv_size_bytes"] = int(
