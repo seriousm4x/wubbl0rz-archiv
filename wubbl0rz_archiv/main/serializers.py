@@ -49,6 +49,7 @@ class VodSerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
         slug_field="uuid"
     )
+
     class Meta:
         model = Vod
         fields = ["uuid", "title", "duration", "bitrate",
@@ -94,7 +95,8 @@ class ClipSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Clip
-        fields = ["uuid", "title", "clip_id", "creator", "view_count", "date", "duration", "resolution", "size", "game", "vod", "bitrate"]
+        fields = ["uuid", "title", "clip_id", "creator", "view_count",
+                  "date", "duration", "resolution", "size", "game", "vod", "bitrate"]
 
 
 class ClipViewSet(viewsets.ReadOnlyModelViewSet):
@@ -175,15 +177,30 @@ class StatsViewSet(viewsets.ViewSet):
         all_vods = Vod.objects.filter(publish=True)
         all_clips = Clip.objects.all()
         ctx = {}
+
+        # total counts
         ctx["count_vods_total"] = all_vods.count()
-        ctx["count_vods_1m"] = all_vods.filter(date__range=[timezone.now(
-        ) - relativedelta.relativedelta(months=1), timezone.now()]).count()
         ctx["count_clips_total"] = all_clips.count()
         ctx["count_h_streamed"] = int(all_vods.aggregate(
             Sum("duration"))["duration__sum"]/3600)
-        ctx["archiv_size_bytes"] = int(
+        ctx["count_size_bytes"] = int(
             all_vods.aggregate(Sum("size"))["size__sum"])
 
+        # trends
+        date_range_1m = [timezone.now() - relativedelta.relativedelta(months=1),
+                         timezone.now()]
+        date_range_2m = [timezone.now() - relativedelta.relativedelta(months=2),
+                         timezone.now() - relativedelta.relativedelta(months=1)]
+        ctx["trend_vods"] = all_vods.filter(date__range=date_range_1m).count(
+        ) - all_vods.filter(date__range=date_range_2m).count()
+        ctx["trend_clips"] = all_clips.filter(date__range=date_range_1m).count(
+        ) - all_clips.filter(date__range=date_range_2m).count()
+        ctx["trend_h_streamed"] = round((all_vods.filter(date__range=date_range_1m).aggregate(
+            Sum("duration"))["duration__sum"] - all_vods.filter(date__range=date_range_2m).aggregate(
+            Sum("duration"))["duration__sum"])/3600, 1)
+
+
+        # charts
         ctx["vods_per_month"] = []
         for i in range(11, -1, -1):
             month, count = self.get_vods_per_month(i)
