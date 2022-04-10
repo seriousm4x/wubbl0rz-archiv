@@ -1,16 +1,22 @@
 import datetime
+import os
+import queue
 import re
+import subprocess
+from threading import Thread
 
 from clips.models import Clip
 from dateutil import relativedelta
+from django.conf import settings
 from django.db.models import Count, Sum
 from django.db.models.functions.datetime import ExtractHour, ExtractWeekDay
-from django.http.response import HttpResponse, HttpResponseServerError
-from django.shortcuts import render
+from django.http.response import (HttpResponse, HttpResponseServerError,
+                                  StreamingHttpResponse)
+from django.shortcuts import get_object_or_404, render
 from django.template.defaultfilters import date as _date
 from django.utils import timezone
+from django.utils.text import slugify
 from vods.models import Vod
-from clips.models import Clip
 
 from main.models import ApiStorage, Emote
 
@@ -117,11 +123,13 @@ def search(request):
 
 
 def match_emotes(item):
-    all_emotes = map(str.lower, Emote.objects.all().values_list("name", flat=True))
+    all_emotes = map(
+        str.lower, Emote.objects.all().values_list("name", flat=True))
     findemotes = re.compile(r'([A-Z]\w*)', re.IGNORECASE)
     for possible_emote in set(findemotes.findall(item.title)):
         if possible_emote.lower() in all_emotes:
-            this_emote = Emote.objects.filter(name__icontains=possible_emote).first()
+            this_emote = Emote.objects.filter(
+                name__icontains=possible_emote).first()
             item.emote_title = item.title.replace(
                 possible_emote, f'<img src="{this_emote.url}" data-toggle="tooltip" title="{this_emote.name}" loading="lazy">')
 
@@ -132,3 +140,46 @@ def health(request):
         return HttpResponse("Ok")
     except Exception:
         return HttpResponseServerError("db: cannot connect to database.")
+
+
+def download(request, type, uuid):
+    if type == "vods":
+        obj = get_object_or_404(Vod, uuid=uuid)
+        filename = obj.filename
+    elif type == "clips":
+        obj = get_object_or_404(Clip, uuid=uuid)
+        filename = obj.clip_id
+    else:
+        return
+
+    ff_queue = queue.Queue()
+    cmd = ["ffmpeg", "-i", os.path.join(settings.MEDIA_ROOT, type, filename + "-segments", filename + ".m3u8"),
+           "-c", "copy", "-bsf:a", "aac_adtstoasc", "-movflags", "frag_keyframe+empty_moov", "-f", "mp4", "-"]
+
+    def read_output(proc):
+        while True:
+            data = proc.stdout.read(4096)
+            if not data:
+                break
+            ff_queue.put(data)
+
+    proc = subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    t = Thread(target=read_output, args=(proc,))
+
+    def iterator():
+        t.start()
+        while True:
+            if proc.poll() is not None and ff_queue.empty():
+                proc.kill()
+                break
+            try:
+                data = ff_queue.get()
+                ff_queue.task_done()
+                yield data
+            except queue.Empty:
+                pass
+
+    response = StreamingHttpResponse(iterator(), content_type="video/mp4")
+    response["Content-Disposition"] = f"attachment; filename={slugify(obj.date)}-{slugify(obj.title)}.mp4"
+    return response

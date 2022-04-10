@@ -18,5 +18,6 @@ urlpatterns = [
     path("search/", main_views.search, name="search"),
     path("stats/", main_views.stats, name="stats"),
     path("health/", main_views.health, name="health"),
+    path("dl/<slug:type>/<slug:uuid>/", main_views.download, name="download"),
     path("api/", include(router.urls)),
 ]
