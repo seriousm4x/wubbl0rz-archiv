@@ -149,16 +149,21 @@ class EmoteSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EmoteViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = EmoteSerializer
+
     def get_queryset(self):
         queryset = Emote.objects.all()
-        provider = self.request.query_params.get("provider")
-        name = self.request.query_params.get("name")
-        if provider is not None:
-            queryset = queryset.filter(provider=provider)
-        if name is not None:
-            queryset = queryset.filter(name__icontains=name)
-        return queryset
-    serializer_class = EmoteSerializer
+        try:
+            provider = self.request.query_params.get("provider")
+            if provider in ["twitch", "bttv", "ffz"]:
+                queryset = queryset.filter(provider=provider)
+        except:
+            pass
+        finally:
+            return queryset
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["name"]
     pagination_class = StandardResultsSetPagination
 
 
@@ -198,7 +203,6 @@ class StatsViewSet(viewsets.ViewSet):
         ctx["trend_h_streamed"] = round((all_vods.filter(date__range=date_range_1m).aggregate(
             Sum("duration"))["duration__sum"] - all_vods.filter(date__range=date_range_2m).aggregate(
             Sum("duration"))["duration__sum"])/3600, 1)
-
 
         # charts
         ctx["vods_per_month"] = []
