@@ -314,23 +314,3 @@ class EmoteUpdater:
 def update_emotes():
     eu = EmoteUpdater()
     eu.update_all()
-
-
-@shared_task
-def check_live():
-    live = False
-
-    try:
-        ydl_opts = {
-            "retries": 10,
-            "logger": MyLogger()
-        }
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.extract_info("https://www.twitch.tv/wubbl0rz/", download=False)
-        live = True
-    except yt_dlp.DownloadError:
-        pass
-    finally:
-        obj = ApiStorage.objects.first()
-        obj.is_live = live
-        obj.save()

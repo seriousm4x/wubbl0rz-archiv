@@ -130,7 +130,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -146,9 +145,11 @@ MEDIA_ROOT = "/var/www/media/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery
+
 CELERY_BROKER_URL = "redis://wub-redis:6379"
 
 # DRF
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"]
