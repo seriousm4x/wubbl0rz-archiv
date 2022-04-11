@@ -34,7 +34,7 @@ class Command(BaseCommand):
         for f in os.listdir(clip_dir):
             if not f.endswith("-segments"):
                 continue
-            id, _ = f.split("-")
+            id = f.replace("-segments", "")
             print("importing clip:", id)
             with open(os.path.join(clip_dir, id + ".json"), "r", encoding="utf-8") as info:
                 data = json.load(info)
