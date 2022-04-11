@@ -59,7 +59,7 @@ version: "3"
 services:
   web:
     container_name: wub-api
-    image: ghcr.io/agileproggers/wubbl0rz-archiv:latest
+    image: ghcr.io/agileproggers/archiv-frontend:latest
     restart: unless-stopped
     ports:
       - 127.0.0.1:8000:8000
@@ -137,7 +137,7 @@ The Django app won't serve static and media files. A reverse proxy is needed. Th
 
 ## Documentation
 
-Check out [the docs folder](https://github.com/AgileProggers/wubbl0rz-archiv/tree/master/docs) for more documentation.
+Check out [the docs folder](https://github.com/AgileProggers/archiv-frontend/tree/master/docs) for more documentation.
 
 ## Contributing
 
