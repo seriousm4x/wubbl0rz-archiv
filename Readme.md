@@ -1,35 +1,11 @@
 <div align="center" width="100%">
-    <img src="wubbl0rz_archiv/main/static/img/wubPog.png" width="128"/>
+    <img src="https://archiv.wubbl0rz.tv/favicon.ico" width="128"/>
 </div>
 
 <div align="center" width="100%">
     <h2>wubbl0rz VOD Archiv</h2>
     <p>Stack: Django, Celery, Redis, yt-dlp, FFmpeg, Bootstrap</p>
 </div>
-
-## 🚀 Features
-
-* Automatically download Twitch vods. Vod downloads are scheduled for 3 a.m.
-* Vods go back until 2017
-* Pages: Recent streams, Search, Vods ordered by years, Statistics
-* Live vod search while typing
-* Share videos at current player time with url parameter
-* Dark/light mode by toggle, preferes-color-scheme and LocalStorage
-* Cross platform compatible (.ts/h264 videos with .avif thumbnails and.jpg fallback)
-* Thumbnail hover shows video preview (like Youtube)
-* Live status check and Twitch stream embed on front page
-* Twitch, BetterTTV and FrankerFaceZ emotes in title. Emote updates are scheduled for 2 a.m.
-* Docker image
-
-## 📸 Screenshots
-
-| Dark | Light |
-| ---- | ----- |
-| ![](https://i.imgur.com/zYMnfly.png) | ![](https://i.imgur.com/j0DBl0T.png) |
-| ![](https://i.imgur.com/Ln6yJwZ.png) | ![](https://i.imgur.com/mxP330u.png) |
-| ![](https://i.imgur.com/DUTdbBY.png) | ![](https://i.imgur.com/1G0KKjq.png) |
-| ![](https://i.imgur.com/t9iv9sM.png) | ![](https://i.imgur.com/xRfL6sh.png) |
-| ![](https://i.imgur.com/0Pzx7UF.png) | ![](https://i.imgur.com/lRvGmqc.png) |
 
 ## 🐳 Deploy
 
@@ -82,7 +58,7 @@
 version: "3"
 services:
   web:
-    container_name: wub-web
+    container_name: wub-api
     image: ghcr.io/agileproggers/wubbl0rz-archiv:latest
     restart: unless-stopped
     ports:
