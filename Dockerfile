@@ -15,7 +15,7 @@ FROM base as build-avif
 WORKDIR /build-avif
 RUN apt-get update && apt-get -y install git build-essential zlib1g-dev libpng-dev libjpeg-dev cmake ninja-build yasm &&\
     rm -rf /var/lib/apt/lists/* &&\
-    git clone -b v0.9.3 https://github.com/AOMediaCodec/libavif.git &&\
+    git clone -b v0.10.1 https://github.com/AOMediaCodec/libavif.git &&\
     cd libavif/ext/ &&\
     ./aom.cmd &&\
     cd .. && mkdir build && cd build &&\
