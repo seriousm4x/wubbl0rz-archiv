@@ -145,6 +145,16 @@ class Downloader:
                                 stdout=subprocess.PIPE)
         proc.communicate()
 
+        # create sprites
+        sprite_dir = os.path.join(dir, id + "-sprites")
+        if not os.path.isdir(sprite_dir):
+            os.mkdir(sprite_dir)
+        cmd = ["ffmpeg", "-i", m3u8, "-vf", "fps=1/20,scale=-1:90,tile",
+               "-c:v", "libwebp", os.path.join(sprite_dir, id+r"_%03d.webp")]
+        proc = subprocess.Popen(
+            cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        proc.communicate()
+
     def get_metadata(self, dir, id):
         m3u8 = os.path.join(dir, id + "-segments", id + ".m3u8")
 
