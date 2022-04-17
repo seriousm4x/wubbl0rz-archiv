@@ -17,7 +17,9 @@ class Command(BaseCommand):
             id = f.replace("-segments", "")
             print("create sprites for vod:", id)
             sprite_dir = os.path.join(self.vod_dir, id + "-sprites")
-            if not os.path.isdir(sprite_dir):
+            if os.path.isdir(sprite_dir):
+                return
+            else:
                 os.mkdir(sprite_dir)
             cmd = ["ffmpeg", "-i", os.path.join(self.vod_dir, f, id+".m3u8"), "-vf", "fps=1/20,scale=-1:90,tile",
                    "-c:v", "libwebp", os.path.join(sprite_dir, id+r"_%03d.webp")]
