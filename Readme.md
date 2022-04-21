@@ -137,7 +137,7 @@ The Django app won't serve static and media files. A reverse proxy is needed. Th
 
 ## Documentation
 
-Check out [the docs folder](https://github.com/AgileProggers/archiv-frontend/tree/master/docs) for more documentation.
+Check out [the docs folder](https://github.com/AgileProggers/archiv-backend/blob/master/docs/api.md) for more documentation.
 
 ## Contributing
 
