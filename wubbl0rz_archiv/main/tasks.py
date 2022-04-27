@@ -145,6 +145,17 @@ class Downloader:
                                 stdout=subprocess.PIPE)
         proc.communicate()
 
+        # check .webp for empty file and move inpoint after input file
+        # i think empty files have to do with too less intra frames being found, but not quite sure.
+        if os.path.getsize(os.path.join(dir, id + "-preview.webp")) <= 8:
+            cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", m3u8, "-ss", timecode_framegrab,
+                   "-c:v", "libwebp", "-vf", "scale=260:-1,fps=fps=15", "-lossless",
+                   "0", "-compression_level", "3", "-q:v", "70", "-loop", "0", "-preset", "picture",
+                   "-an", "-vsync", "0", "-t", "4", "-y", os.path.join(dir, id + "-preview.webp")]
+            proc = subprocess.Popen(cmd, stderr=subprocess.PIPE,
+                                    stdout=subprocess.PIPE)
+            proc.communicate()
+
         # create sprites
         sprite_dir = os.path.join(dir, id + "-sprites")
         if not os.path.isdir(sprite_dir):
@@ -197,7 +208,8 @@ class Downloader:
         if data["game_id"] == "":
             game_obj = None
         else:
-            game_obj, created = Game.objects.get_or_create(game_id=data["game_id"])
+            game_obj, created = Game.objects.get_or_create(
+                game_id=data["game_id"])
             if created:
                 game_req = requests.get(
                     f"https://api.twitch.tv/helix/games?id={data['game_id']}", headers=self.helix_header)
