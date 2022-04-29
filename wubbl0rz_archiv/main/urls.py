@@ -15,5 +15,6 @@ router.register(r"stats/db", serializers.DBViewSet, basename="stats/db")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("health/", main_views.health, name="health"),
     path("dl/<slug:type>/<slug:uuid>/", main_views.download, name="download"),
 ]

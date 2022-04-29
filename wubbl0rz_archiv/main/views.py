@@ -5,10 +5,21 @@ from threading import Thread
 
 from clips.models import Clip
 from django.conf import settings
-from django.http.response import StreamingHttpResponse
+from django.http.response import (HttpResponse, HttpResponseServerError,
+                                  StreamingHttpResponse)
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from vods.models import Vod
+
+from main.models import ApiStorage
+
+
+def health(request):
+    try:
+        ApiStorage.objects.all()
+        return HttpResponse("Ok")
+    except Exception:
+        return HttpResponseServerError("db: cannot connect to database.")
 
 
 def download(request, type, uuid):
