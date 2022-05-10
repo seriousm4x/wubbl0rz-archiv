@@ -82,6 +82,8 @@ services:
       - DB_PORT=5432
       - TWITCH_CLIENT_ID=<client-id>
       - TWITCH_CLIENT_SECRET=<client-secret>
+      - PUSHOVER_USERKEY=<pushover-userkey> # optional
+      - PUSHOVER_API_TOKEN=<pushover-api-token> # optional
     depends_on:
       - db
       - redis

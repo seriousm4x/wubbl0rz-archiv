@@ -1,4 +1,3 @@
-from fileinput import filename
 import os
 import subprocess
 from datetime import datetime
@@ -6,9 +5,9 @@ from datetime import datetime
 import requests
 import yt_dlp
 from celery import shared_task
-from clips.models import Clip, Game, Creator
+from clips.models import Clip, Creator, Game
+from django.conf import settings
 from django.utils import timezone
-from django.utils.timezone import make_aware
 from vods.models import Vod
 
 from main.models import ApiStorage, Emote
@@ -26,6 +25,19 @@ class MyLogger:
         pass
 
     def error(self, msg):
+        self.po_userkey = os.getenv("PUSHOVER_USERKEY")
+        self.po_api_token = os.getenv("PUSHOVER_API_TOKEN")
+
+        if self.po_userkey and self.po_api_token:
+            data = {
+                "message": msg,
+                "user": self.po_userkey,
+                "token": self.po_api_token,
+                "title": ", ".join([x for x in settings.ALLOWED_HOSTS if x != "localhost"])
+            }
+            headers = {"Content-type": "application/x-www-form-urlencoded"}
+            requests.post("https://api.pushover.net/1/messages.json",
+                          data=data, headers=headers)
         pass
 
 
@@ -198,7 +210,7 @@ class Downloader:
             defaults={
                 "title": title,
                 "duration": duration,
-                "date": make_aware(datetime.fromtimestamp(timestamp)),
+                "date": timezone.make_aware(datetime.fromtimestamp(timestamp)),
                 "resolution": resolution,
                 "fps": fps,
                 "size": filesize
