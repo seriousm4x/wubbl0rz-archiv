@@ -144,7 +144,7 @@ def check_files(path):
     for ext in expected_files:
         expected_file = path + ext
         if not os.path.isfile(expected_file):
-            logger.info("Missing:", expected_file)
+            logger.info("Missing: " + expected_file)
             return False
     return True
 
