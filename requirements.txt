@@ -1,7 +1,8 @@
 celery[redis]
+discord-webhook
 django
-djangorestframework
 django-filter
+djangorestframework
 greenlet
 gunicorn
 gunicorn[gevent]
