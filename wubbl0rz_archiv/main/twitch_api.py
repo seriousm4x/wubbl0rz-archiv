@@ -63,7 +63,7 @@ class TwitchApi:
         stream_url = f"https://api.twitch.tv/helix/streams?user_id={self.broadcaster_id}"
         stream_resp = requests.get(
             stream_url, headers=helix_header).json()["data"]
-        if len(stream_resp) >= 0:
+        if len(stream_resp) > 0:
             is_live = True
             stream_resp = stream_resp[0]
         else:
