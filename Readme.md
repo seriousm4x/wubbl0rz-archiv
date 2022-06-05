@@ -52,6 +52,11 @@
 
   Create your api keys at https://dev.twitch.tv/console/apps
 
+* DISCORD_WEBHOOK
+
+  Send discord notifications when stream goes live.
+
+
 ### Example `docker-compose.yml`
 
 ```
@@ -84,6 +89,7 @@ services:
       - TWITCH_CLIENT_SECRET=<client-secret>
       - PUSHOVER_USERKEY=<pushover-userkey> # optional
       - PUSHOVER_API_TOKEN=<pushover-api-token> # optional
+      - DISCORD_WEBHOOK=<url-here> # optional
     depends_on:
       - db
       - redis
