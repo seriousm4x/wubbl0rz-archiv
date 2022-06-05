@@ -146,6 +146,7 @@ class EmoteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Emote
         fields = ["id", "name", "url", "provider"]
+        ordering = ["name"]
 
 
 class EmoteViewSet(viewsets.ReadOnlyModelViewSet):
