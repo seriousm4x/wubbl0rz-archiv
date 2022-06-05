@@ -46,10 +46,10 @@ class Downloader:
         obj = ApiStorage.objects.first()
         obj.date_vods_updated = timezone.now()
         obj.save()
-        TwitchApi().update_bearer()
+        self.bearer = TwitchApi().get_bearer()
         self.helix_header = {
             "Client-ID": ApiStorage.objects.get().ttv_client_id,
-            "Authorization": f"Bearer {ApiStorage.objects.get().ttv_bearer_token}"
+            "Authorization": f"Bearer {self.bearer}"
         }
 
     def get_vod_infos(self):
@@ -261,7 +261,9 @@ class EmoteUpdater:
         obj = ApiStorage.objects.first()
         obj.date_emotes_updated = timezone.now()
         obj.save()
-        self.broadcaster_id = ApiStorage.objects.get().broadcaster_id
+        self.broadcaster_id = obj.broadcaster_id
+        self.client_id = obj.ttv_client_id
+        self.bearer = TwitchApi().get_bearer()
 
     def mark_outdated(self):
         for emote in Emote.objects.all():
@@ -269,15 +271,11 @@ class EmoteUpdater:
             emote.save()
 
     def twitch(self):
-        TwitchApi().update_bearer()
-        client_id = ApiStorage.objects.get().ttv_client_id
-        bearer = ApiStorage.objects.get().ttv_bearer_token
-
         # get emotes
         emote_url = f"https://api.twitch.tv/helix/chat/emotes?broadcaster_id={self.broadcaster_id}"
         helix_header = {
-            "Client-ID": client_id,
-            "Authorization": "Bearer {}".format(bearer),
+            "Client-ID": self.client_id,
+            "Authorization": f"Bearer {self.bearer}"
         }
         emote_resp = requests.get(emote_url, headers=helix_header)
         emote_resp.raise_for_status()
@@ -348,3 +346,8 @@ class EmoteUpdater:
 def update_emotes():
     eu = EmoteUpdater()
     eu.update_all()
+
+
+@shared_task
+def check_is_live():
+    TwitchApi().check_live()

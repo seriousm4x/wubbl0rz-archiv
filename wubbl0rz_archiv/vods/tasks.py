@@ -32,6 +32,6 @@ def download_vods():
             vod_dir, entry["id"])
         dl.create_thumbnail(vod_dir, entry["id"], duration)
         dl.update_vod(entry["id"], entry["title"], duration,
-                       entry["timestamp"], resolution, entry["fps"], filesize)
+                      entry["timestamp"], resolution, entry["fps"], filesize)
 
     print("Vods downloaded:", vod_count_total)

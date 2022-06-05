@@ -12,6 +12,10 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.timezone = "Europe/Berlin"
 
 app.conf.beat_schedule = {
+    "check_live": {
+        "task": "main.tasks.check_is_live",
+        "schedule": 60
+    },
     "update_emotes": {
         "task": "main.tasks.update_emotes",
         "schedule": crontab(hour=2, minute=0)

@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import shutil
 
 import requests
 from celery import shared_task
@@ -8,7 +9,6 @@ from django.conf import settings
 from main.models import ApiStorage
 from main.tasks import Downloader
 from main.twitch_api import TwitchApi
-import shutil
 
 from clips.models import Clip, Game
 
@@ -19,10 +19,10 @@ class ClipDownloader:
         self.gamedir = os.path.join(settings.MEDIA_ROOT, "games")
         self.broadcaster_id = ApiStorage.objects.get().broadcaster_id
         self.downloader = Downloader()
-        TwitchApi().update_bearer()
+        self.bearer = TwitchApi().get_bearer()
         self.helix_header = {
             "Client-ID": ApiStorage.objects.get().ttv_client_id,
-            "Authorization": f"Bearer {ApiStorage.objects.get().ttv_bearer_token}",
+            "Authorization": f"Bearer {self.bearer}",
         }
 
     def clips(self):

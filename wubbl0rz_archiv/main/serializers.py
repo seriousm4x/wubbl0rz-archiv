@@ -63,7 +63,7 @@ class VodViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = Vod.objects.filter(publish=True)
         try:
             year = self.request.query_params.get("year")
-            if year is not None and year is not "":
+            if year != None and year != "":
                 queryset = queryset.filter(date__year=year)
         except:
             pass
@@ -107,9 +107,9 @@ class ClipViewSet(viewsets.ReadOnlyModelViewSet):
         try:
             date_from = self.request.query_params.get("date_from")
             date_to = self.request.query_params.get("date_to")
-            if date_from is not None and date_from is not "":
+            if date_from != None and date_from != "":
                 queryset = queryset.filter(date__gt=parse_datetime(date_from))
-            if date_to is not None and date_to is not "":
+            if date_to != None and date_to != "":
                 queryset = queryset.filter(date__lt=parse_datetime(date_to))
         except:
             pass
@@ -235,7 +235,10 @@ class StatsViewSet(viewsets.ViewSet):
 
 class DBViewSet(viewsets.ViewSet):
     def list(self, request):
-        ctx = {}
-        ctx["last_vod_sync"] = ApiStorage.objects.first().date_vods_updated
-        ctx["last_emote_sync"] = ApiStorage.objects.first().date_emotes_updated
+        apistorage = ApiStorage.objects.first()
+        ctx = {
+            "last_vod_sync": apistorage.date_vods_updated,
+            "last_emote_sync": apistorage.date_emotes_updated,
+            "is_live": apistorage.is_live
+        }
         return Response(ctx)

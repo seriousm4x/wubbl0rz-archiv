@@ -10,9 +10,11 @@ class EmoteAdmin(admin.ModelAdmin):
 
 class ApiStorageAdmin(admin.ModelAdmin):
     list_display = ["broadcaster_id", "ttv_client_id",
-                    "ttv_client_secret", "ttv_bearer_token"]
+                    "ttv_client_secret", "ttv_bearer_token",
+                    "ttv_bearer_expire_date", "is_live"]
     search_fields = ["broadcaster_id", "ttv_client_id",
-                     "ttv_client_secret", "ttv_bearer_token"]
+                     "ttv_client_secret", "ttv_bearer_token",
+                     "ttv_bearer_expire_date", "is_live"]
 
 
 admin.site.register(Emote, EmoteAdmin)
