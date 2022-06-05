@@ -161,7 +161,7 @@ class EmoteViewSet(viewsets.ReadOnlyModelViewSet):
         except:
             pass
         finally:
-            return queryset
+            return queryset.order_by("name")
 
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
