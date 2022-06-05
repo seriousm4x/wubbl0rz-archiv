@@ -32,19 +32,19 @@ def download(request, type, uuid):
     else:
         return
 
-    ff_queue = queue.Queue()
+    ff_queue = queue.Queue(maxsize=1024*8)
     cmd = ["ffmpeg", "-i", os.path.join(settings.MEDIA_ROOT, type, filename + "-segments", filename + ".m3u8"),
            "-c", "copy", "-bsf:a", "aac_adtstoasc", "-movflags", "frag_keyframe+empty_moov", "-f", "mp4", "-"]
 
     def read_output(proc):
         while True:
-            data = proc.stdout.read(4096)
+            data = proc.stdout.read(1024*4)
             if not data:
                 break
             ff_queue.put(data)
 
     proc = subprocess.Popen(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        cmd, bufsize=1024*4, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     t = Thread(target=read_output, args=(proc,))
 
     def iterator():
