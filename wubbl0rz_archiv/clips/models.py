@@ -22,7 +22,7 @@ class Game(models.Model):
 
 class Creator(models.Model):
     creator_id = models.PositiveIntegerField()
-    name = models.SlugField(max_length=30)
+    name = models.SlugField(max_length=30, null=False, blank=False, default="Unbekannt")
 
     def __str__(self):
         return self.name

@@ -3,7 +3,7 @@ from django.db import models
 
 class Emote(models.Model):
     id = models.SlugField(primary_key=True, blank=False, null=False)
-    name = models.SlugField(blank=False, null=False, default="Unbekannt")
+    name = models.SlugField(blank=False, null=False)
     url = models.URLField(blank=False, null=False)
     provider = models.SlugField(blank=False, null=False)
     outdated = models.BooleanField(default=False)
