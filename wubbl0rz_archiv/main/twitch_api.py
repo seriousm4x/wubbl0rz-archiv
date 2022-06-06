@@ -82,8 +82,8 @@ class TwitchApi:
                 user_resp = requests.get(
                     user_url, headers=helix_header).json()["data"]
 
-                timestamp = datetime.datetime.strptime(
-                    stream_resp["started_at"], "%Y-%m-%dT%H:%M:%SZ")
+                timestamp = timezone.make_aware(datetime.datetime.strptime(
+                    stream_resp["started_at"], "%Y-%m-%dT%H:%M:%SZ"))
                 webhook = DiscordWebhook(url=os.getenv(
                     "DISCORD_WEBHOOK"), content=f"Auf gehts @everyone, {stream_resp['user_name']} macht nun Streamstelz")
                 embed = DiscordEmbed(
