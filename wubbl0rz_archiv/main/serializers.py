@@ -65,6 +65,10 @@ class VodViewSet(viewsets.ReadOnlyModelViewSet):
             year = self.request.query_params.get("year")
             if year != None and year != "":
                 queryset = queryset.filter(date__year=year)
+            uuids = self.request.query_params.get("uuids")
+            if uuids != None and uuids != "":
+                uuid_set = uuids.split(",")
+                queryset = queryset.filter(uuid__in=uuid_set)
         except:
             pass
         finally:
@@ -111,6 +115,10 @@ class ClipViewSet(viewsets.ReadOnlyModelViewSet):
                 queryset = queryset.filter(date__gt=parse_datetime(date_from))
             if date_to != None and date_to != "":
                 queryset = queryset.filter(date__lt=parse_datetime(date_to))
+            uuids = self.request.query_params.get("uuids")
+            if uuids != None and uuids != "":
+                uuid_set = uuids.split(",")
+                queryset = queryset.filter(uuid__in=uuid_set)
         except:
             pass
         finally:
