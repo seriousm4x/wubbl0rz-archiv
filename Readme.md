@@ -42,7 +42,7 @@
 
 * DJANGO_DOMAIN
 
-  Set this to your domain.
+  Set this to your backend domain, e.g. api.wubbl0rz.tv
 
 * DB_*
 
