@@ -132,12 +132,13 @@ Available tags are
 The Django app won't serve static and media files. A reverse proxy is needed. The easiest way is to use caddy. Paste the following into a file called `Caddyfile`. Change the root path to the parent directory of media and static files from `docker-compose.yml` (/path/to/). Then run `caddy run` from the same directory.
 
 ```
-:8001 {
-  root * /path/to/
+api.wubbl0rz.tv {
+  root * /path/to/files/
   @notStatic {
     not path /static/* /media/*
   }
   reverse_proxy @notStatic :8000
+  header Access-Control-Allow-Origin "*"
   file_server
   encode gzip
 }
