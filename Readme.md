@@ -64,7 +64,7 @@ version: "3"
 services:
   web:
     container_name: wub-api
-    image: ghcr.io/agileproggers/archiv-frontend:latest
+    build: .
     restart: unless-stopped
     ports:
       - 127.0.0.1:8000:8000
