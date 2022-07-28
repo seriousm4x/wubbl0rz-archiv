@@ -63,7 +63,7 @@
 version: "3"
 services:
   web:
-    container_name: wub-api
+    container_name: archiv-backend
     build: .
     restart: unless-stopped
     ports:
