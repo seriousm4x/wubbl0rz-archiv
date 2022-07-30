@@ -5,6 +5,7 @@ from django.db.models.functions.datetime import ExtractHour
 from django.template.defaultfilters import date as _date
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
+from django.utils.timezone import make_aware
 from rest_framework import filters, mixins, serializers, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -66,7 +67,7 @@ class VodViewSet(viewsets.ReadOnlyModelViewSet):
             if year != None and year != "":
                 queryset = queryset.filter(date__year=year)
             uuids = self.request.query_params.get("uuids")
-            if uuids != None and uuids != "":
+            if uuids:
                 uuid_set = uuids.split(",")
                 queryset = queryset.filter(uuid__in=uuid_set)
         except:
@@ -111,12 +112,14 @@ class ClipViewSet(viewsets.ReadOnlyModelViewSet):
         try:
             date_from = self.request.query_params.get("date_from")
             date_to = self.request.query_params.get("date_to")
-            if date_from != None and date_from != "":
-                queryset = queryset.filter(date__gt=parse_datetime(date_from))
-            if date_to != None and date_to != "":
-                queryset = queryset.filter(date__lt=parse_datetime(date_to))
+            if date_from:
+                queryset = queryset.filter(
+                    date__gt=make_aware(parse_datetime(date_from)))
+            if date_to:
+                queryset = queryset.filter(
+                    date__lt=make_aware(parse_datetime(date_to)))
             uuids = self.request.query_params.get("uuids")
-            if uuids != None and uuids != "":
+            if uuids:
                 uuid_set = uuids.split(",")
                 queryset = queryset.filter(uuid__in=uuid_set)
         except:
