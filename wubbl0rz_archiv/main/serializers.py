@@ -64,7 +64,7 @@ class VodViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = Vod.objects.filter(publish=True)
         try:
             year = self.request.query_params.get("year")
-            if year != None and year != "":
+            if year:
                 queryset = queryset.filter(date__year=year)
             uuids = self.request.query_params.get("uuids")
             if uuids:
