@@ -201,8 +201,8 @@ class StatsViewSet(viewsets.ViewSet):
         ctx["count_clips_total"] = all_clips.count()
         ctx["count_h_streamed"] = int(all_vods.aggregate(
             Sum("duration"))["duration__sum"]/3600)
-        ctx["count_size_bytes"] = int(
-            all_vods.aggregate(Sum("size"))["size__sum"])
+        ctx["count_size_bytes"] = int(all_vods.aggregate(
+            Sum("size"))["size__sum"]) + int(all_clips.aggregate(Sum("size"))["size__sum"])
 
         # trends
         date_range_1m = [timezone.now() - relativedelta.relativedelta(months=1),
