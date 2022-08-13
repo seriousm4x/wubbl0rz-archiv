@@ -11,6 +11,8 @@ from vods.models import Vod
 @shared_task
 def download_vods():
     vod_dir = os.path.join(settings.MEDIA_ROOT, "vods")
+    if not os.path.isdir(vod_dir):
+        os.mkdir(vod_dir)
     dl = Downloader()
     info_dict = dl.get_vod_infos()
 

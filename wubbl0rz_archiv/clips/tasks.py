@@ -17,6 +17,11 @@ class ClipDownloader:
     def __init__(self):
         self.clipdir = os.path.join(settings.MEDIA_ROOT, "clips")
         self.gamedir = os.path.join(settings.MEDIA_ROOT, "games")
+        if not os.path.isdir(self.clipdir):
+            os.mkdir(self.clipdir)
+        if not os.path.isdir(self.gamedir):
+            os.mkdir(self.gamedir)
+
         self.broadcaster_id = ApiStorage.objects.get().broadcaster_id
         self.downloader = Downloader()
         self.bearer = TwitchApi().get_bearer()

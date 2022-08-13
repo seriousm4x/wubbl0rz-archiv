@@ -299,7 +299,9 @@ class EmoteUpdater:
     def bttv(self):
         emote_url = f"https://api.betterttv.net/3/cached/users/twitch/{self.broadcaster_id}"
         emote_resp = requests.get(emote_url)
-        emote_resp.raise_for_status()
+        if emote_resp.status_code != 200:
+            print(emote_resp.text)
+            return
         emote_json_resp = emote_resp.json()
         for emote in emote_json_resp["sharedEmotes"]:
             Emote.objects.update_or_create(
@@ -315,7 +317,9 @@ class EmoteUpdater:
     def ffz(self):
         emote_url = f"https://api.frankerfacez.com/v1/room/id/{self.broadcaster_id}"
         emote_resp = requests.get(emote_url)
-        emote_resp.raise_for_status()
+        if emote_resp.status_code != 200:
+            print(emote_resp.text)
+            return
         emote_json_resp = emote_resp.json()
         for _, value in emote_json_resp["sets"].items():
             for emote in value["emoticons"]:
