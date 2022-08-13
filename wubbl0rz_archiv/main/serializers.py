@@ -113,9 +113,11 @@ class ClipViewSet(viewsets.ReadOnlyModelViewSet):
             date_from = self.request.query_params.get("date_from")
             date_to = self.request.query_params.get("date_to")
             if date_from:
+                date_from = date_from.replace("Z", "")
                 queryset = queryset.filter(
                     date__gt=make_aware(parse_datetime(date_from)))
             if date_to:
+                date_to = date_to.replace("Z", "")
                 queryset = queryset.filter(
                     date__lt=make_aware(parse_datetime(date_to)))
             uuids = self.request.query_params.get("uuids")
