@@ -1,5 +1,5 @@
 <div align="center" width="100%">
-    <img src="https://archiv.wubbl0rz.tv/favicon.ico" width="128"/>
+    <img src="https://raw.githubusercontent.com/AgileProggers/archiv-frontend/master/static/favicon.ico" width="128"/>
 </div>
 
 <div align="center" width="100%">
