@@ -24,7 +24,7 @@ services:
     ports:
       - 127.0.0.1:5000:5000
     volumes:
-      - /path/to/media/:/var/www/
+      - /path/to/media/:/var/www/media/
     depends_on:
       - db
   db:
