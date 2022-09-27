@@ -74,7 +74,7 @@ func DiscordSendWebhook(d TwitchStreamResponse) error {
 	embed.Timestamp = streamData.StartedAt
 	webhookData.Embeds = append(webhookData.Embeds, embed)
 
-	// send webhook,
+	// send webhook
 	jsonData, err := json.Marshal(webhookData)
 	if err != nil {
 		return err

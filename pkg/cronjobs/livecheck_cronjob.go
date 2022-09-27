@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/AgileProggers/archiv-backend-go/pkg/external_apis"
 	"github.com/AgileProggers/archiv-backend-go/pkg/logger"
@@ -54,8 +55,10 @@ func SetStreamStatus() {
 		}
 		if isLive {
 			logger.Debug.Println("[cronjob] stream live")
-			if err := external_apis.DiscordSendWebhook(responseJson); err != nil {
-				logger.Error.Println(err)
+			if os.Getenv("DISCORD_WEBHOOK") != "" {
+				if err := external_apis.DiscordSendWebhook(responseJson); err != nil {
+					logger.Error.Println(err)
+				}
 			}
 		} else {
 			settings.IsLive = false
