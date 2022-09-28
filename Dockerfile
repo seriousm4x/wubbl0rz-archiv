@@ -12,7 +12,7 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=base /build/apiserver ./
 RUN apk update && \
-    apk add --no-cache ffmpeg vips curl
+    apk add --no-cache tzdata ffmpeg vips curl
 HEALTHCHECK --interval=10s \
     CMD curl -fs "http://localhost:5000/health" || exit 1
 ENTRYPOINT ["./apiserver"]

@@ -45,16 +45,28 @@ func getSegmentSize(path string) (int64, error) {
 	return size, err
 }
 
-func createSegmentsfromURL(input_url string, segmentsPath string, filename string) error {
-	cmd := exec.Command("ffmpeg",
-		"-hide_banner", "-loglevel", "error", "-stats",
-		"-i", input_url, "-map", "p:0", "-c", "copy",
-		"-hls_playlist_type", "vod", "-hls_time", "10", "-hls_segment_filename",
-		filepath.Join(segmentsPath, filename+"_%04d.ts"),
-		filepath.Join(segmentsPath, filename+".m3u8"),
-	)
+func createSegmentsfromURL(input_url string, segmentsPath string, filename string, video_type string) error {
+	var cmd *exec.Cmd
+	if video_type == "vod" {
+		cmd = exec.Command("ffmpeg",
+			"-hide_banner", "-loglevel", "error", "-stats",
+			"-i", input_url, "-map", "p:0", "-c", "copy",
+			"-hls_playlist_type", "vod", "-hls_time", "10", "-hls_segment_filename",
+			filepath.Join(segmentsPath, filename+"_%04d.ts"),
+			filepath.Join(segmentsPath, filename+".m3u8"),
+		)
+	} else {
+		cmd = exec.Command("ffmpeg",
+			"-hide_banner", "-loglevel", "error", "-stats",
+			"-i", input_url, "-c", "copy",
+			"-hls_playlist_type", "vod", "-hls_time", "10", "-hls_segment_filename",
+			filepath.Join(segmentsPath, filename+"_%04d.ts"),
+			filepath.Join(segmentsPath, filename+".m3u8"),
+		)
+	}
 
 	if err := cmd.Run(); err != nil {
+		logger.Error.Println(cmd.Args)
 		return err
 	}
 
@@ -206,6 +218,7 @@ func createThumbnails(destPath string, filename string, duration int) error {
 }
 
 func DownloadVods() error {
+	logger.Debug.Println("Vod download started")
 	var vods []external_apis.TwitchHelixVideo
 	if err := external_apis.TwitchGetHelixVideos(&vods); err != nil {
 		logger.Error.Println(err)
@@ -245,7 +258,7 @@ func DownloadVods() error {
 		}
 
 		// pass the m3u8 to ffmpeg to create .ts segments
-		if err := createSegmentsfromURL(m3u8Url, segmentsPath, newVod.Filename); err != nil {
+		if err := createSegmentsfromURL(m3u8Url, segmentsPath, newVod.Filename, "vod"); err != nil {
 			os.RemoveAll(segmentsPath)
 			return err
 		}
@@ -280,6 +293,7 @@ func DownloadVods() error {
 }
 
 func DownloadClips() error {
+	logger.Debug.Println("Clip download started")
 	var clips []external_apis.TwitchHelixClip
 	if err := external_apis.TwitchGetHelixClips(&clips); err != nil {
 		return err
@@ -314,7 +328,6 @@ func DownloadClips() error {
 			creator.Name = clip.CreatorName
 			creator.Clips = nil
 			if e := queries.AddNewCreator(&creator); e != nil {
-				logger.Error.Println(e)
 				return e
 			}
 		}
@@ -364,7 +377,7 @@ func DownloadClips() error {
 		}
 
 		// pass the clip url to ffmpeg to create .ts segments
-		if err := createSegmentsfromURL(downloadURL, segmentsPath, clip.ID); err != nil {
+		if err := createSegmentsfromURL(downloadURL, segmentsPath, clip.ID, "clip"); err != nil {
 			os.RemoveAll(segmentsPath)
 			return err
 		}
@@ -445,7 +458,6 @@ func DownloadGames() error {
 		}
 
 		if err := queries.PatchGame(map[string]interface{}{"Name": game.Name, "BoxartURL": box_art_url}, game.ID); err != nil {
-			logger.Error.Println(err)
 			return err
 		}
 	}
