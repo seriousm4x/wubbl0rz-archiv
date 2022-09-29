@@ -60,6 +60,7 @@ func UpdateOrCreateEmote(e *models.Emote, id string) error {
 	var changes map[string]interface{}
 	data, _ := json.Marshal(e)
 	json.Unmarshal(data, &changes)
+	changes["outdated"] = false
 
 	result := database.DB.Model(&e).Where("id = ?", id).Where("provider = ?", e.Provider).Updates(&changes)
 	if result.Error != nil {
