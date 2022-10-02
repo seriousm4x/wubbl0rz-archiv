@@ -63,7 +63,7 @@ func GetShortStats(c *gin.Context) {
 		"result": map[string]interface{}{
 			"last_vod_sync":   settings.DateVodsUpdate.Format(time.RFC3339),
 			"last_emote_sync": settings.DateEmotesUpdate.Format(time.RFC3339),
-			"is_live":         false,
+			"is_live":         settings.IsLive,
 		},
 	})
 }

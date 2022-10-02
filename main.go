@@ -18,6 +18,17 @@ import (
 )
 
 func main() {
+	// wait for db
+	db, _ := database.DB.DB()
+	for {
+		err := db.Ping()
+		if err == nil {
+			break
+		}
+		logger.Info.Println("Database not reachable:", err)
+		time.Sleep(1 * time.Second)
+	}
+
 	// start http server
 	srv := &http.Server{
 		Addr:    "0.0.0.0:5000",
@@ -37,6 +48,7 @@ func main() {
 	}()
 
 	// start cronjobs
+	cronjobs.RunTwitchDownloads()
 	if err := cronjobs.Init(); err != nil {
 		panic(err)
 	}
