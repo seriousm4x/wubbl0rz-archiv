@@ -58,10 +58,10 @@ type TwitchHelixClip struct {
 	CreatorName string `json:"creator_name"`
 	GameID      string `json:"game_id"`
 	Title       string
-	ViewCount   int         `json:"view_count"`
-	CreatedAt   time.Time   `json:"created_at"`
-	VideoID     string      `json:"video_id"`
-	VodOffset   interface{} `json:"vod_offset"`
+	ViewCount   int       `json:"view_count"`
+	CreatedAt   time.Time `json:"created_at"`
+	VideoID     string    `json:"video_id"`
+	VodOffset   int       `json:"vod_offset"`
 }
 
 type TwitchHelixClipResponse struct {

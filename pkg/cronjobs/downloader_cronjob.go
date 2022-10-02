@@ -339,6 +339,7 @@ func DownloadClips() error {
 			changes := map[string]interface{}{
 				"Title":     clip.Title,
 				"Viewcount": clip.ViewCount,
+				"VodOffset": clip.VodOffset,
 			}
 			if e := queries.PatchClip(changes, c.UUID); e != nil {
 				return e
@@ -361,6 +362,7 @@ func DownloadClips() error {
 		newClip.Viewcount = clip.ViewCount
 		newClip.GameUUID = game.UUID
 		newClip.CreatorUUID = creator.UUID
+		newClip.VodOffset = clip.VodOffset
 
 		// create destination path
 		clipsPath := filepath.Join("/var/www/media", "clips")
