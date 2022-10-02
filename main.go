@@ -48,7 +48,6 @@ func main() {
 	}()
 
 	// start cronjobs
-	cronjobs.RunTwitchDownloads()
 	if err := cronjobs.Init(); err != nil {
 		panic(err)
 	}
