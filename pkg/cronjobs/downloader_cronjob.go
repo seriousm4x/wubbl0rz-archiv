@@ -339,7 +339,6 @@ func DownloadClips() error {
 			changes := map[string]interface{}{
 				"Title":     clip.Title,
 				"Viewcount": clip.ViewCount,
-				"VodOffset": clip.VodOffset,
 			}
 			if e := queries.PatchClip(changes, c.UUID); e != nil {
 				return e
