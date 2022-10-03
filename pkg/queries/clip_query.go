@@ -101,7 +101,7 @@ func PatchClip(changes map[string]interface{}, uuid string) error {
 	if err := GetOneClip(&clip, uuid); err != nil {
 		return errors.New("clip not found")
 	}
-	if err := database.DB.Model(&clip).Where("uuid = ?", uuid).Updates(changes).Error; err != nil {
+	if err := database.DB.Model(&clip).Updates(changes).Error; err != nil {
 		return errors.New("update failed")
 	}
 	return nil
