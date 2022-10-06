@@ -137,7 +137,7 @@ func UpdateBearer(settings *models.Settings) error {
 
 	settings.TtvBearerToken = responseJson.AccessToken
 	settings.TtvBearerExpireDate = time.Now().Add(time.Duration(responseJson.ExpiresIn) * time.Second)
-	if err := queries.OverwriteAllSettings(settings); err != nil {
+	if err := queries.PartiallyUpdateSettings(settings); err != nil {
 		return err
 	}
 
