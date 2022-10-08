@@ -218,7 +218,7 @@ func createThumbnails(destPath string, filename string, duration int) error {
 }
 
 func DownloadVods() error {
-	logger.Debug.Println("Vod download started")
+	logger.Debug.Println("[cron] vod download started")
 	var vods []external_apis.TwitchHelixVideo
 	if err := external_apis.TwitchGetHelixVideos(&vods); err != nil {
 		logger.Error.Println(err)
@@ -293,7 +293,7 @@ func DownloadVods() error {
 }
 
 func DownloadClips() error {
-	logger.Debug.Println("Clip download started")
+	logger.Debug.Println("[cron] clip download started")
 	var clips []external_apis.TwitchHelixClip
 	if err := external_apis.TwitchGetHelixClips(&clips); err != nil {
 		return err

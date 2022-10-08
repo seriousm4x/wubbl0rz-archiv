@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -441,7 +442,7 @@ func TwitchGetHelixGames(games []models.Game) ([]TwitchHelixGame, error) {
 
 func BuildDownloadURL(id string, isVod bool) (string, error) {
 	// this is a go implementation of streamlink's way to the m3u8 from a vod/clip
-	// https://github.com/streamlink/streamlink/blob/165b4880e6375dae5f72520404f05288906280c8/src/streamlink/plugins/twitch.py
+	// https://github.com/streamlink/streamlink/blob/master/src/streamlink/plugins/twitch.py
 
 	var postBodyString string
 
@@ -558,7 +559,7 @@ func BuildDownloadURL(id string, isVod bool) (string, error) {
 	for _, quality := range playbackResponse.Data.Clip.VideoQualities {
 		res, err := strconv.Atoi(quality.Quality)
 		if err != nil {
-			return "", err
+			continue
 		}
 		if bestQuality.Resolution == 0 {
 			bestQuality.Resolution = res
@@ -574,7 +575,7 @@ func BuildDownloadURL(id string, isVod bool) (string, error) {
 
 	return fmt.Sprintf("%s?token=%s&sig=%s",
 		bestQuality.URL,
-		playbackResponse.Data.Clip.PlaybackAccessToken.Value,
+		url.QueryEscape(playbackResponse.Data.Clip.PlaybackAccessToken.Value),
 		playbackResponse.Data.Clip.PlaybackAccessToken.Signature,
 	), nil
 }
