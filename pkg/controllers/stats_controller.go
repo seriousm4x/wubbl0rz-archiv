@@ -26,17 +26,24 @@ type startByTime struct {
 	Count int64 `json:"count"`
 }
 
+type clipsPerCreator struct {
+	Name      string `json:"name"`
+	ClipCount int64  `json:"clip_count"`
+	ViewCount int64  `json:"view_count"`
+}
+
 type longStats struct {
-	CountVodsTotal     int64           `json:"count_vods_total"`
-	CountClipsTotal    int64           `json:"count_clips_total"`
-	CountHoursStreamed float64         `json:"count_h_streamed"`
-	CountSizeBytes     uint            `json:"count_size_bytes"`
-	TrendVods          int64           `json:"trend_vods"`
-	TrendClips         int64           `json:"trend_clips"`
-	TrendHoursStreamed float64         `json:"trend_h_streamed"`
-	VodsPerMonth       []vodPerMonth   `json:"vods_per_month"`
-	VodsPerWeekday     []vodPerWeekday `json:"vods_per_weekday"`
-	StartByTime        []startByTime   `json:"start_by_time"`
+	CountVodsTotal     int64             `json:"count_vods_total"`
+	CountClipsTotal    int64             `json:"count_clips_total"`
+	CountHoursStreamed float64           `json:"count_h_streamed"`
+	CountSizeBytes     uint              `json:"count_size_bytes"`
+	TrendVods          int64             `json:"trend_vods"`
+	TrendClips         int64             `json:"trend_clips"`
+	TrendHoursStreamed float64           `json:"trend_h_streamed"`
+	VodsPerMonth       []vodPerMonth     `json:"vods_per_month"`
+	VodsPerWeekday     []vodPerWeekday   `json:"vods_per_weekday"`
+	StartByTime        []startByTime     `json:"start_by_time"`
+	ClipsByCreator     []clipsPerCreator `json:"clips_per_creator"`
 }
 
 // Get Statistics godoc
@@ -224,6 +231,15 @@ func GetLongStats(c *gin.Context) {
 
 	// get StartByTime
 	if result := database.DB.Table("vods").Select("extract(hour from date) as hour, count(extract(hour from date)) as count").Group("hour").Order("hour asc").Scan(&stats.StartByTime); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": true,
+			"msg":   "Failed to get stats",
+		})
+		return
+	}
+
+	// get top clip creators
+	if result := database.DB.Table("clips").Select("creators.name, count(clips.uuid) as clip_count, sum(clips.viewcount) as view_count").Joins("left join creators on clips.creator_uuid = creators.uuid").Group("clips.creator_uuid, creators.name").Order("view_count desc").Limit(15).Scan(&stats.ClipsByCreator); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
