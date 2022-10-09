@@ -25,6 +25,7 @@ services:
       - 127.0.0.1:5000:5000
     volumes:
       - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
       - /path/to/media/:/var/www/media/
     depends_on:
       - db
@@ -35,6 +36,7 @@ services:
     env_file: .env
     volumes:
       - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
       - /path/to/postgres/:/var/lib/postgresql/data
 ```
 ## 🚪 Reverse Proxy
