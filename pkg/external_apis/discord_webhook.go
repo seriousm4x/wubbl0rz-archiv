@@ -61,7 +61,7 @@ func DiscordSendWebhook(d TwitchStreamResponse) error {
 	imgUrl := strings.Replace(streamData.ThumbnailURL, "{width}", "1920", 1)
 	imgUrl = strings.Replace(imgUrl, "{height}", "1080", 1)
 
-	webhookData.Content = fmt.Sprintf("Auf gehts @everyone, %s macht nun Streamstelz", streamData.UserName)
+	webhookData.Content = os.Getenv("DISCORD_MESSAGE")
 	embed.Color = 15896107 // hex as decimal
 	embed.Author.Name = streamData.UserName
 	embed.Author.URL = fmt.Sprintf("https://twitch.tv/%s", streamData.UserLogin)
