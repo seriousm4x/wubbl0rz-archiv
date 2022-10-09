@@ -49,8 +49,8 @@ func SetStreamStatus() {
 	isLive := len(responseJson.Data) > 0
 
 	if isLive != settings.IsLive {
-		settings = models.Settings{IsLive: true}
-		if err := queries.PartiallyUpdateSettings(&settings); err != nil {
+		isLiveSettings := models.Settings{IsLive: true}
+		if err := queries.PartiallyUpdateSettings(&isLiveSettings); err != nil {
 			logger.Error.Println(err)
 		}
 		if isLive {
