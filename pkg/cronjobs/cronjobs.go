@@ -8,24 +8,24 @@ import (
 func Init() error {
 	c := cron.New()
 
-	logger.Debug.Println("[cron] registering job: emote update")
+	logger.Debug.Println("[cronjob] registering job: emote update")
 	if err := c.AddFunc("@every 1h", UpdateEmotes); err != nil {
 		return err
 	}
 
-	logger.Debug.Println("[cron] registering job: stream status")
+	logger.Debug.Println("[cronjob] registering job: stream status")
 	if err := c.AddFunc("@every 1m", SetStreamStatus); err != nil {
 		return err
 	}
 
-	logger.Debug.Println("[cron] registering job: twitch downloads")
+	logger.Debug.Println("[cronjob] registering job: twitch downloads")
 	if err := c.AddFunc("@every 1h", RunTwitchDownloads); err != nil {
 		return err
 	}
 
 	c.Start()
 
-	logger.Debug.Printf("[cron] registered %d jobs", len(c.Entries()))
+	logger.Debug.Printf("[cronjob] registered %d jobs", len(c.Entries()))
 
 	return nil
 }

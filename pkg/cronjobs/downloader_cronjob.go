@@ -218,7 +218,7 @@ func createThumbnails(destPath string, filename string, duration int) error {
 }
 
 func DownloadVods() error {
-	logger.Debug.Println("[cron] vod download started")
+	logger.Debug.Println("[cronjob] vod download started")
 	var vods []external_apis.TwitchHelixVideo
 	if err := external_apis.TwitchGetHelixVideos(&vods); err != nil {
 		logger.Error.Println(err)
@@ -296,12 +296,12 @@ func DownloadVods() error {
 		}
 	}
 
-	logger.Debug.Printf("[cron] vods downloaded: %d", vods_downloaded)
+	logger.Debug.Printf("[cronjob] vods downloaded: %d", vods_downloaded)
 	return nil
 }
 
 func DownloadClips() error {
-	logger.Debug.Println("[cron] clip download started")
+	logger.Debug.Println("[cronjob] clip download started")
 	var clips []external_apis.TwitchHelixClip
 	if err := external_apis.TwitchGetHelixClips(&clips); err != nil {
 		return err
@@ -415,8 +415,8 @@ func DownloadClips() error {
 		clips_downloaded += 1
 	}
 
-	logger.Debug.Printf("[cron] clips downloaded: %d", clips_downloaded)
-	logger.Debug.Printf("[cron] clips updated: %d", clips_updated)
+	logger.Debug.Printf("[cronjob] clips downloaded: %d", clips_downloaded)
+	logger.Debug.Printf("[cronjob] clips updated: %d", clips_updated)
 	return nil
 }
 
