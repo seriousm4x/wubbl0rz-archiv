@@ -288,6 +288,14 @@ func DownloadVods() error {
 		vods_downloaded += 1
 	}
 
+	if vods_downloaded == 0 {
+		var settings models.Settings
+		settings.DateVodsUpdate = time.Now()
+		if err := queries.PartiallyUpdateSettings(&settings); err != nil {
+			return err
+		}
+	}
+
 	logger.Debug.Printf("[cron] vods downloaded: %d", vods_downloaded)
 	return nil
 }
