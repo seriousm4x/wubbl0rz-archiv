@@ -68,7 +68,7 @@ func DiscordSendWebhook(d TwitchStreamResponse) error {
 	embed.Author.IconURL = helixUser.Data[0].ProfileImageUrl
 	embed.Title = streamData.Title
 	embed.URL = fmt.Sprintf("https://twitch.tv/%s", streamData.UserLogin)
-	embed.Description = fmt.Sprintf("%s, %d Viewer", streamData.GameName, streamData.ViewerCount)
+	embed.Description = fmt.Sprintf("%s", streamData.GameName)
 	embed.Image.URL = imgUrl
 	embed.Thumbnail.URL = fmt.Sprintf("https://static-cdn.jtvnw.net/ttv-boxart/%s-144x192.jpg", streamData.GameID)
 	embed.Timestamp = streamData.StartedAt
