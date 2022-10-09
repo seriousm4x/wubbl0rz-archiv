@@ -23,7 +23,7 @@ func GetAllVods(v *[]models.Vod, query models.Vod, pagination Pagination, o stri
 		// else search exact query match
 		result = result.Where(query)
 	}
-	result = result.Where("publish = ?", true).Order(o).Preload("Clips.Creator").Preload("Clips.Game").Find(v).Scopes(Paginate(v, len(*v), &pagination, database.DB)).Find(v)
+	result = result.Where("publish = ?", true).Order(o).Find(v).Scopes(Paginate(v, len(*v), &pagination, database.DB)).Find(v)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}
@@ -71,7 +71,7 @@ func GetOneVod(v *models.Vod, uuid string, onlyPublic bool) error {
 }
 
 func GetVodByFilename(v *models.Vod, filename string) error {
-	result := database.DB.Where("filename = ?", filename).Preload("Clips.Creator").Preload("Clips.Game").Find(v)
+	result := database.DB.Where("filename = ?", filename).Find(v)
 	if result.RowsAffected == 0 {
 		return errors.New("not found")
 	}
@@ -79,7 +79,7 @@ func GetVodByFilename(v *models.Vod, filename string) error {
 }
 
 func GetVodsByUUID(v *[]models.Vod, uuids []string) error {
-	result := database.DB.Where("uuid IN ?", uuids).Where("publish = ?", true).Preload("Clips.Creator").Preload("Clips.Game").Find(v)
+	result := database.DB.Where("uuid IN ?", uuids).Where("publish = ?", true).Find(v)
 	if result.RowsAffected == 0 {
 		return errors.New("not found")
 	}
@@ -87,7 +87,7 @@ func GetVodsByUUID(v *[]models.Vod, uuids []string) error {
 }
 
 func GetVodsByYear(v *[]models.Vod, year string) error {
-	result := database.DB.Model(&v).Where("date_part('year', date) = ?", year).Where("publish = ?", true).Order("date desc").Preload("Clips.Creator").Preload("Clips.Game").Find(v)
+	result := database.DB.Model(&v).Where("date_part('year', date) = ?", year).Where("publish = ?", true).Order("date desc").Find(v)
 	if result.RowsAffected == 0 {
 		return errors.New("not found")
 	}

@@ -32,7 +32,7 @@ func GetAllClips(c *[]models.Clip, query models.Clip, pagination Pagination, o s
 		result = result.Where("date < ?", date_to)
 	}
 
-	result = result.Order(o).Find(c).Scopes(Paginate(c, len(*c), &pagination, database.DB)).Preload("Creator").Preload("Game").Preload("Vod").Find(c)
+	result = result.Order(o).Find(c).Scopes(Paginate(c, len(*c), &pagination, database.DB)).Preload("Creator").Find(c)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}
@@ -81,7 +81,7 @@ func GetOneClip(c *models.Clip, uuid string) error {
 }
 
 func GetClipByFilename(c *models.Clip, filename string) error {
-	result := database.DB.Where("filename = ?", filename).Preload("Creator").Preload("Game").Preload("Vod").Find(c)
+	result := database.DB.Where("filename = ?", filename).Find(c)
 	if result.RowsAffected == 0 {
 		return errors.New("not found")
 	}
@@ -89,7 +89,7 @@ func GetClipByFilename(c *models.Clip, filename string) error {
 }
 
 func GetClipsByUUID(c *[]models.Clip, uuids []string) error {
-	result := database.DB.Where("uuid IN ?", uuids).Preload("Creator").Preload("Game").Preload("Vod").Find(c)
+	result := database.DB.Where("uuid IN ?", uuids).Preload("Creator").Find(c)
 	if result.RowsAffected == 0 {
 		return errors.New("not found")
 	}

@@ -16,7 +16,7 @@ func GetAllCreators(c *[]models.Creator, query models.Creator, pagination Pagina
 		// else search exact query match
 		result = result.Where(query)
 	}
-	result = result.Find(c).Scopes(Paginate(c, len(*c), &pagination, database.DB)).Preload("Clips").Find(c)
+	result = result.Find(c).Scopes(Paginate(c, len(*c), &pagination, database.DB)).Find(c)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}
