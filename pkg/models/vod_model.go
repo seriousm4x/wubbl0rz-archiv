@@ -7,6 +7,7 @@ type Vod struct {
 	Title      string     `json:"title" form:"title"`
 	Duration   int        `json:"duration" form:"duration"`
 	Date       *time.Time `json:"date" form:"date" time_format:"2006-01-02T15:04:05.000Z"`
+	Viewcount  int        `gorm:"default:0" json:"viewcount" form:"viewcount"`
 	Filename   string     `json:"filename" form:"filename"`
 	Resolution string     `json:"resolution" form:"resolution"`
 	Fps        float32    `json:"fps" form:"fps"`

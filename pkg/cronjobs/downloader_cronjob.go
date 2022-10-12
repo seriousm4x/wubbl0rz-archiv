@@ -234,12 +234,16 @@ func DownloadVods() error {
 		var newVod models.Vod
 		newVod.Title = vod.Title
 		newVod.Date = &vod.CreatedAt
+		newVod.Viewcount = vod.ViewCount
 		newVod.Filename = "v" + vod.ID
 		newVod.Publish = true
 
-		// check if vod already in db, if yes, skip
+		// check if vod already in db, if yes update viewcount and continue
 		var v models.Vod
 		if err := queries.GetVodByFilename(&v, newVod.Filename); err == nil {
+			if e := queries.PatchVod(map[string]interface{}{"Viewcount": newVod.Viewcount}, v.UUID); e != nil {
+				return err
+			}
 			continue
 		}
 

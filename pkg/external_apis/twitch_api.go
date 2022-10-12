@@ -43,7 +43,7 @@ type TwitchHelixVideo struct {
 	ID        string
 	Title     string
 	CreatedAt time.Time `json:"created_at"`
-	ViewCount uint      `json:"view_count"`
+	ViewCount int       `json:"view_count"`
 }
 
 type TwitchHelixVideoResponse struct {

@@ -10,7 +10,7 @@ type Clip struct {
 	Filename    string     `json:"filename" form:"filename"`
 	Resolution  string     `json:"resolution" form:"resolution"`
 	Size        int        `json:"size" form:"size"`
-	Viewcount   int        `json:"viewcount" form:"viewcount"`
+	Viewcount   int        `gorm:"default:0" json:"viewcount" form:"viewcount"`
 	VodOffset   int        `json:"vod_offset" form:"vod_offset"`
 	CreatorUUID string     `json:"creator_uuid" form:"creator_uuid"`
 	Creator     Creator    `gorm:"foreignKey:CreatorUUID;references:UUID" form:"creator" json:"creator"`
