@@ -101,6 +101,7 @@ func GetVods(c *gin.Context) {
 			return
 		}
 		orderParams = strings.Replace(orderParams, ",", " ", -1)
+		orderParams = orderParams + " nulls last"
 	}
 
 	// set pagination
