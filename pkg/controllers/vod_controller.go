@@ -86,7 +86,7 @@ func GetVods(c *gin.Context) {
 			})
 			return
 		}
-		if !stringInSlice(order[0], []string{"date", "duration", "size"}) {
+		if !stringInSlice(order[0], []string{"date", "duration", "size", "viewcount"}) {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": true,
 				"msg":   "Invalid first order param. 'date', 'duration' or 'size'",
