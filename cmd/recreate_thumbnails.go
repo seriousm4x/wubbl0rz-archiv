@@ -28,7 +28,7 @@ func main() {
 		}
 
 		if info.IsDir() && strings.HasSuffix(path, "-segments") {
-			filename := strings.Split(filepath.Base(path), "-")[0]
+			filename := strings.Split(filepath.Base(path), "-segments")[0]
 			files = append(files, filename)
 		}
 
