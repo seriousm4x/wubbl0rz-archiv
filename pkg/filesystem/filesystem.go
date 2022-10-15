@@ -100,8 +100,8 @@ func CreateThumbnails(destPath string, filename string, duration int) error {
 
 	// create lossless source png
 	src_png := filepath.Join(destPath, filename+"-source.png")
-	cmd := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", m3u8,
-		"-vframes", "1", "-f", "image2", "-y", src_png)
+	cmd := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", m3u8,
+		"-ss", timecode_framegrab, "-vframes", "1", "-f", "image2", "-y", src_png)
 	if err := cmd.Run(); err != nil {
 		return err
 	}
@@ -142,28 +142,12 @@ func CreateThumbnails(destPath string, filename string, duration int) error {
 
 	// animated webp
 	animated_webp := filepath.Join(destPath, filename+"-preview.webp")
-	cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab,
-		"-i", m3u8, "-c:v", "libwebp", "-vf", "scale=256:-1,fps=fps=15", "-lossless",
+	cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", m3u8, "-ss",
+		timecode_framegrab, "-c:v", "libwebp", "-vf", "scale=256:-1,fps=fps=15", "-lossless",
 		"0", "-compression_level", "3", "-q:v", "70", "-loop", "0", "-preset", "picture",
 		"-an", "-vsync", "0", "-t", "4", "-y", animated_webp)
 	if err := cmd.Run(); err != nil {
 		return err
-	}
-	// check if webp is larger than 8 byte.
-	// sometimes the above command fails and the image is empty.
-	// we need to move the seekpoint "-ss" after the input file
-	webp_info, err := os.Stat(animated_webp)
-	if err != nil {
-		return err
-	}
-	if webp_info.Size() <= 8 {
-		cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", m3u8,
-			"-ss", timecode_framegrab, "-c:v", "libwebp", "-vf", "scale=256:-1,fps=fps=15", "-lossless",
-			"0", "-compression_level", "3", "-q:v", "70", "-loop", "0", "-preset", "picture",
-			"-an", "-vsync", "0", "-t", "4", "-y", animated_webp)
-		if err := cmd.Run(); err != nil {
-			return err
-		}
 	}
 
 	// create sprites

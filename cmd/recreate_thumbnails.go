@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"flag"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -35,8 +36,8 @@ func main() {
 		return nil
 	})
 
-	for _, id := range files {
-		logger.Debug.Println(id)
+	for i, id := range files {
+		logger.Debug.Println(fmt.Sprintf("%d of %d: %s", i, len(files), id))
 
 		var m filesystem.Meta
 		m.Filename = id
