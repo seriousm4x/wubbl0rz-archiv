@@ -9,6 +9,7 @@ type Clip struct {
 	Date        *time.Time `json:"date" form:"date" time_format:"2006-01-02T15:04:05.000Z"`
 	Filename    string     `json:"filename" form:"filename"`
 	Resolution  string     `json:"resolution" form:"resolution"`
+	Fps         float32    `json:"fps" form:"fps"`
 	Size        int        `json:"size" form:"size"`
 	Viewcount   int        `gorm:"default:0" json:"viewcount" form:"viewcount"`
 	VodOffset   int        `json:"vod_offset" form:"vod_offset"`
