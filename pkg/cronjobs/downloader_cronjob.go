@@ -234,6 +234,7 @@ func DownloadClips() error {
 		newClip.Duration = m.Duration
 		newClip.Resolution = m.Resolution
 		newClip.Size = m.Size
+		newClip.Fps = m.Fps
 
 		// create thumbnails ...
 		if err := filesystem.CreateThumbnails(clipsPath, clip.ID, newClip.Duration); err != nil {
