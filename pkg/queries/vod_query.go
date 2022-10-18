@@ -122,13 +122,15 @@ func DeleteVod(v *models.Vod, uuid string) error {
 
 func GetVodsFullText(foundVods *[]map[string]interface{}, query string, pagination Pagination) (*Pagination, error) {
 	var vod models.Vod
+	var tempVods []map[string]interface{}
 
 	result := database.DB.Model(&vod).
 		Select("vods.uuid, vods.title, vods.duration, vods.date, vods.viewcount, vods.filename, vods.resolution, vods.fps, vods.size, ts_headline('german', vods.transcript, websearch_to_tsquery('german', ?) || websearch_to_tsquery('simple', ?), 'StartSel=<span>,StopSel=</span>') as matches, ts_rank(vods.transcript_vector, websearch_to_tsquery('german', ?)) + ts_rank(vods.transcript_vector, websearch_to_tsquery('simple', ?)) as rank", query, query, query, query).
 		Where("publish = ? and vods.transcript_vector @@ websearch_to_tsquery('german', ?) or vods.transcript_vector @@ websearch_to_tsquery('simple', ?)", true, query, query).
 		Order("rank desc").
-		Find(foundVods).
-		Scopes(Paginate(foundVods, len(*foundVods), &pagination, database.DB))
+		Find(&tempVods).
+		Scopes(Paginate(tempVods, len(tempVods), &pagination, database.DB)).
+		Find(foundVods)
 
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
