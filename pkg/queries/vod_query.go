@@ -15,7 +15,7 @@ func GetAllVods(v *[]models.Vod, query models.Vod, pagination Pagination, o stri
 	if o == "" {
 		o = "date desc"
 	}
-	result := database.DB
+	result := database.DB.Model(&query).Omit("transcript")
 	if query.Title != "" {
 		// if title is given, do case insensitive search in title string
 		result = result.Where("position(LOWER(?) in LOWER(title))>0", query.Title)
@@ -60,10 +60,11 @@ func AddNewVod(v *models.Vod) error {
 func GetOneVod(v *models.Vod, uuid string, onlyPublic bool) error {
 	var result *gorm.DB
 	if onlyPublic {
-		result = database.DB.Where("uuid = ?", uuid).Where("publish = ?", true).Preload("Clips.Creator").Preload("Clips.Game").Find(v)
+		result = database.DB.Where("uuid = ?", uuid).Where("publish = ?", true).Preload("Clips.Creator").Preload("Clips.Game")
 	} else {
-		result = database.DB.Where("uuid = ?", uuid).Find(v)
+		result = database.DB.Where("uuid = ?", uuid)
 	}
+	result = result.Omit("transcript").Find(v)
 	if result.RowsAffected == 0 {
 		return errors.New("not found")
 	}
@@ -71,7 +72,7 @@ func GetOneVod(v *models.Vod, uuid string, onlyPublic bool) error {
 }
 
 func GetVodByFilename(v *models.Vod, filename string) error {
-	result := database.DB.Where("filename = ?", filename).Find(v)
+	result := database.DB.Omit("transcript").Where("filename = ?", filename).Find(v)
 	if result.RowsAffected == 0 {
 		return errors.New("not found")
 	}
@@ -79,7 +80,7 @@ func GetVodByFilename(v *models.Vod, filename string) error {
 }
 
 func GetVodsByUUID(v *[]models.Vod, uuids []string) error {
-	result := database.DB.Where("uuid IN ?", uuids).Where("publish = ?", true).Find(v)
+	result := database.DB.Omit("transcript").Where("uuid IN ?", uuids).Where("publish = ?", true).Find(v)
 	if result.RowsAffected == 0 {
 		return errors.New("not found")
 	}
@@ -87,7 +88,7 @@ func GetVodsByUUID(v *[]models.Vod, uuids []string) error {
 }
 
 func GetVodsByYear(v *[]models.Vod, year string) error {
-	result := database.DB.Model(&v).Where("date_part('year', date) = ?", year).Where("publish = ?", true).Order("date desc").Find(v)
+	result := database.DB.Model(&v).Omit("transcript").Where("date_part('year', date) = ?", year).Where("publish = ?", true).Order("date desc").Find(v)
 	if result.RowsAffected == 0 {
 		return errors.New("not found")
 	}
