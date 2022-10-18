@@ -32,6 +32,12 @@ func GetVods(c *gin.Context) {
 	var vods []models.Vod
 	var query models.Vod
 
+	// if ?q= is passed, run a full text search and ignore other params
+	if c.Query("q") != "" {
+		GetVodsFullText(c)
+		return
+	}
+
 	c.ShouldBindQuery(&query)
 
 	// filter array of uuid's
@@ -268,5 +274,52 @@ func DeleteVod(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"error": false,
 		"msg":   "Deleted",
+	})
+}
+
+// GetVodsFullText godoc
+// @Summary Get all vods by full text search
+// @Tags    Vods
+// @Accept  json
+// @Produce  json
+// @Success 200 {array}  models.Vod
+// @Failure  404 {string} string
+// @Router  /vods/ [get]
+// @Param   q query string true "The text to search in transcript"
+func GetVodsFullText(c *gin.Context) {
+	var foundVods []map[string]interface{}
+
+	if c.Query("q") == "" {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error":  true,
+			"msg":    "Please provide a query",
+			"result": foundVods,
+		})
+		return
+	}
+
+	// set pagination
+	var pagination queries.Pagination
+	limit, _ := strconv.Atoi(c.Query("limit"))
+	pagination.Limit = limit
+	page, _ := strconv.Atoi(c.Query("page"))
+	pagination.Page = page
+
+	// run query
+	page_obj, err := queries.GetVodsFullText(&foundVods, c.Query("q"), pagination)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error":  true,
+			"msg":    "No vods found",
+			"result": foundVods,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"error":    false,
+		"msg":      "Ok",
+		"page_obj": page_obj,
+		"result":   foundVods,
 	})
 }

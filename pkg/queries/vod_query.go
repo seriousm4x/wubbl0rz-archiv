@@ -118,3 +118,20 @@ func DeleteVod(v *models.Vod, uuid string) error {
 	database.DB.Where("uuid = ?", uuid).Delete(v)
 	return nil
 }
+
+func GetVodsFullText(foundVods *[]map[string]interface{}, query string, pagination Pagination) (*Pagination, error) {
+	var vod models.Vod
+
+	result := database.DB.Model(&vod).
+		Select("vods.uuid, vods.title, vods.duration, vods.date, vods.viewcount, vods.filename, vods.resolution, vods.fps, vods.size, ts_headline('german', vods.transcript, websearch_to_tsquery('german', ?) || websearch_to_tsquery('simple', ?)) as matches, ts_rank(vods.transcript_vector, websearch_to_tsquery('german', ?)) + ts_rank(vods.transcript_vector, websearch_to_tsquery('simple', ?)) as rank", query, query, query, query).
+		Where("publish = ? and vods.transcript_vector @@ websearch_to_tsquery('german', ?) or vods.transcript_vector @@ websearch_to_tsquery('simple', ?)", true, query, query).
+		Order("rank desc").
+		Find(foundVods).
+		Scopes(Paginate(foundVods, len(*foundVods), &pagination, database.DB))
+
+	if result.RowsAffected == 0 {
+		return &pagination, errors.New("not found")
+	}
+
+	return &pagination, nil
+}
