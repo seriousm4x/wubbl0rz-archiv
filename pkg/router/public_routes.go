@@ -24,7 +24,7 @@ func PublicRoutes(rg *gin.RouterGroup) {
 	// route groups
 	vodsGroup := rg.Group("/vods")
 	{
-		vodsGroup.GET("/", cache.CachePage(store, 3*time.Hour, controllers.GetVods))
+		vodsGroup.GET("/", controllers.GetVods)
 		vodsGroup.GET("/:uuid", cache.CachePage(store, 3*time.Hour, controllers.GetVodByUUID))
 	}
 	clipsGroup := rg.Group("/clips")
