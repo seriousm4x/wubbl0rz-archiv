@@ -311,9 +311,10 @@ func GetVodsFullText(c *gin.Context) {
 	page_obj, err := queries.GetVodsFullText(&foundVods, c.Query("q"), pagination)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"error":  true,
-			"msg":    "No vods found",
-			"result": foundVods,
+			"error":     true,
+			"msg":       "No vods found",
+			"result":    foundVods,
+			"exec_time": time.Since(start),
 		})
 		return
 	}
