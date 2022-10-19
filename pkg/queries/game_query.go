@@ -17,7 +17,7 @@ func GetAllGames(g *[]models.Game, query models.Game, pagination Pagination) (*P
 		result = result.Where(query)
 	}
 
-	result = result.Find(g).Scopes(Paginate(g, len(*g), &pagination, database.DB)).Preload("Clips").Find(g)
+	result = result.Find(g).Scopes(Paginate(len(*g), &pagination, database.DB)).Preload("Clips").Find(g)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}

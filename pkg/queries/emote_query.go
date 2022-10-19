@@ -18,7 +18,7 @@ func GetAllEmotes(e *[]models.Emote, query models.Emote, pagination Pagination) 
 		result = result.Where(query)
 	}
 
-	result = result.Order("name asc").Find(e).Scopes(Paginate(e, len(*e), &pagination, database.DB)).Find(e)
+	result = result.Order("name asc").Find(e).Scopes(Paginate(len(*e), &pagination, database.DB)).Find(e)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}

@@ -23,7 +23,7 @@ func GetAllVods(v *[]models.Vod, query models.Vod, pagination Pagination, o stri
 		// else search exact query match
 		result = result.Where(query)
 	}
-	result = result.Where("publish = ?", true).Order(o).Find(v).Scopes(Paginate(v, len(*v), &pagination, database.DB)).Find(v)
+	result = result.Where("publish = ?", true).Order(o).Find(v).Scopes(Paginate(len(*v), &pagination, database.DB)).Find(v)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}
@@ -129,7 +129,7 @@ func GetVodsFullText(foundVods *[]map[string]interface{}, query string, paginati
 		Where("publish = ? and vods.title_vector @@ websearch_to_tsquery('german', ?) or vods.title_vector @@ websearch_to_tsquery('english', ?) or vods.transcript_vector @@ websearch_to_tsquery('german', ?) or vods.transcript_vector @@ websearch_to_tsquery('english', ?)", true, query, query, query, query).
 		Order("title_rank desc, transcript_rank desc").
 		Find(&tempVods).
-		Scopes(Paginate(tempVods, len(tempVods), &pagination, database.DB)).
+		Scopes(Paginate(len(tempVods), &pagination, database.DB)).
 		Find(foundVods)
 
 	if result.RowsAffected == 0 {

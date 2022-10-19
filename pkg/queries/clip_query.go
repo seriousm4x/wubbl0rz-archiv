@@ -32,7 +32,7 @@ func GetAllClips(c *[]models.Clip, query models.Clip, pagination Pagination, o s
 		result = result.Where("date < ?", date_to)
 	}
 
-	result = result.Order(o).Find(c).Scopes(Paginate(c, len(*c), &pagination, database.DB)).Preload("Creator").Find(c)
+	result = result.Order(o).Find(c).Scopes(Paginate(len(*c), &pagination, database.DB)).Preload("Creator").Find(c)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}
