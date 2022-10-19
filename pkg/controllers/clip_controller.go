@@ -52,7 +52,7 @@ func GetClips(c *gin.Context) {
 	if c.Query("uuids") != "" {
 		uuids := strings.Split(c.Query("uuids"), ",")
 		if err := queries.GetClipsByUUID(&clips, uuids); err != nil {
-			c.JSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":  true,
 				"msg":    "Clip not found",
 				"result": clips,
@@ -133,7 +133,7 @@ func GetClips(c *gin.Context) {
 
 	page_obj, err := queries.GetAllClips(&clips, query, pagination, orderParams, date_from, date_to)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":  true,
 			"msg":    "No clips found",
 			"result": clips,
@@ -161,7 +161,7 @@ func GetClipByUUID(c *gin.Context) {
 	var clip models.Clip
 
 	if err := queries.GetOneClip(&clip, c.Param("uuid")); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":  true,
 			"msg":    "Clip not found",
 			"result": clip,
@@ -270,7 +270,7 @@ func DeleteClip(c *gin.Context) {
 	uuid := c.Param("uuid")
 
 	if err := queries.GetOneClip(&clip, uuid); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error": true,
 			"msg":   "Clip not found",
 		})

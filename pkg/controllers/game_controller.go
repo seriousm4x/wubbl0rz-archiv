@@ -36,7 +36,7 @@ func GetGames(c *gin.Context) {
 
 	page_obj, err := queries.GetAllGames(&games, query, pagination)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":  true,
 			"msg":    "No games found",
 			"result": games,
@@ -66,7 +66,7 @@ func GetGameByUUID(c *gin.Context) {
 	uuid := c.Param("uuid")
 
 	if err := queries.GetOneGame(&game, uuid); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":  true,
 			"msg":    "Game not found",
 			"result": game,
@@ -176,7 +176,7 @@ func DeleteGame(c *gin.Context) {
 	uuid := c.Param("uuid")
 
 	if err := queries.GetOneGame(&game, uuid); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error": true,
 			"msg":   "Game not found",
 		})

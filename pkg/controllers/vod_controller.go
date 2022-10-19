@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/AgileProggers/archiv-backend-go/pkg/models"
 	"github.com/AgileProggers/archiv-backend-go/pkg/queries"
@@ -46,7 +47,7 @@ func GetVods(c *gin.Context) {
 		uuids := strings.Split(c.Query("uuids"), ",")
 		err := queries.GetVodsByUUID(&vods, uuids)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":  true,
 				"msg":    "uuid not found",
 				"result": vods,
@@ -66,7 +67,7 @@ func GetVods(c *gin.Context) {
 		year := c.Query("year")
 		err := queries.GetVodsByYear(&vods, year)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":  true,
 				"msg":    "no vods in year found",
 				"result": vods,
@@ -119,7 +120,7 @@ func GetVods(c *gin.Context) {
 
 	page_obj, err := queries.GetAllVods(&vods, query, pagination, orderParams)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":  true,
 			"msg":    "No vods found",
 			"result": vods,
@@ -147,7 +148,7 @@ func GetVodByUUID(c *gin.Context) {
 	var vod models.Vod
 
 	if err := queries.GetOneVod(&vod, c.Param("uuid"), true); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":  true,
 			"msg":    "Vod not found",
 			"result": vod,
@@ -256,7 +257,7 @@ func DeleteVod(c *gin.Context) {
 	uuid := c.Param("uuid")
 
 	if err := queries.GetOneVod(&vod, uuid, false); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error": true,
 			"msg":   "Vod not found",
 		})
@@ -290,7 +291,7 @@ func GetVodsFullText(c *gin.Context) {
 	var foundVods []map[string]interface{}
 
 	if c.Query("q") == "" {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":  true,
 			"msg":    "Please provide a query",
 			"result": foundVods,
@@ -306,9 +307,10 @@ func GetVodsFullText(c *gin.Context) {
 	pagination.Page = page
 
 	// run query
+	start := time.Now()
 	page_obj, err := queries.GetVodsFullText(&foundVods, c.Query("q"), pagination)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":  true,
 			"msg":    "No vods found",
 			"result": foundVods,
@@ -317,9 +319,10 @@ func GetVodsFullText(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"error":    false,
-		"msg":      "Ok",
-		"page_obj": page_obj,
-		"result":   foundVods,
+		"error":     false,
+		"msg":       "Ok",
+		"page_obj":  page_obj,
+		"result":    foundVods,
+		"exec_time": time.Since(start),
 	})
 }

@@ -24,7 +24,7 @@ func SendStream(c *gin.Context) {
 
 	if media_type == "vods" {
 		if err := queries.GetOneVod(&vod, uuid, true); err != nil {
-			c.JSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error": true,
 				"msg":   "Vod not found",
 			})
@@ -34,7 +34,7 @@ func SendStream(c *gin.Context) {
 		title = vod.Title
 	} else if media_type == "clips" {
 		if err := queries.GetOneClip(&clip, uuid); err != nil {
-			c.JSON(http.StatusNotFound, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error": true,
 				"msg":   "Clip not found",
 			})

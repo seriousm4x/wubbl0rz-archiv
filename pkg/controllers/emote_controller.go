@@ -36,7 +36,7 @@ func GetEmotes(c *gin.Context) {
 
 	page_obj, err := queries.GetAllEmotes(&emotes, query, pagination)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":  true,
 			"msg":    "No emotes found",
 			"result": emotes,
@@ -147,7 +147,7 @@ func DeleteEmote(c *gin.Context) {
 	id := c.Param("id")
 
 	if err := queries.GetOneEmote(&emote, id); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error": true,
 			"msg":   "Emote not found",
 		})

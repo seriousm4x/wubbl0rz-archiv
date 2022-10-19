@@ -35,7 +35,7 @@ func GetCreators(c *gin.Context) {
 
 	page_obj, err := queries.GetAllCreators(&creators, query, pagination)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":  true,
 			"msg":    "No creators found",
 			"result": creators,
@@ -65,7 +65,7 @@ func GetCreatorByUUID(c *gin.Context) {
 	uuid := c.Param("uuid")
 
 	if err := queries.GetOneCreator(&creator, uuid); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":  true,
 			"msg":    "Creator not found",
 			"result": creator,
@@ -175,7 +175,7 @@ func DeleteCreator(c *gin.Context) {
 	uuid := c.Param("uuid")
 
 	if err := queries.GetOneCreator(&creator, uuid); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error": true,
 			"msg":   "Creator not found",
 		})
