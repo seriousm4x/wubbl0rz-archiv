@@ -33,17 +33,20 @@ type clipsPerCreator struct {
 }
 
 type longStats struct {
-	CountVodsTotal     int64             `json:"count_vods_total"`
-	CountClipsTotal    int64             `json:"count_clips_total"`
-	CountHoursStreamed float64           `json:"count_h_streamed"`
-	CountSizeBytes     uint              `json:"count_size_bytes"`
-	TrendVods          int64             `json:"trend_vods"`
-	TrendClips         int64             `json:"trend_clips"`
-	TrendHoursStreamed float64           `json:"trend_h_streamed"`
-	VodsPerMonth       []vodPerMonth     `json:"vods_per_month"`
-	VodsPerWeekday     []vodPerWeekday   `json:"vods_per_weekday"`
-	StartByTime        []startByTime     `json:"start_by_time"`
-	ClipsByCreator     []clipsPerCreator `json:"clips_per_creator"`
+	CountVodsTotal       int64             `json:"count_vods_total"`
+	CountClipsTotal      int64             `json:"count_clips_total"`
+	CountHoursStreamed   float64           `json:"count_h_streamed"`
+	CountSizeBytes       uint              `json:"count_size_bytes"`
+	CountTranscriptWords int64             `json:"count_transcript_words"`
+	CountUniqueWords     int64             `json:"count_unique_words"`
+	CountAvgWords        float64           `json:"count_avg_words"`
+	TrendVods            int64             `json:"trend_vods"`
+	TrendClips           int64             `json:"trend_clips"`
+	TrendHoursStreamed   float64           `json:"trend_h_streamed"`
+	VodsPerMonth         []vodPerMonth     `json:"vods_per_month"`
+	VodsPerWeekday       []vodPerWeekday   `json:"vods_per_weekday"`
+	StartByTime          []startByTime     `json:"start_by_time"`
+	ClipsByCreator       []clipsPerCreator `json:"clips_per_creator"`
 }
 
 // Get Statistics godoc
@@ -117,6 +120,33 @@ func GetLongStats(c *gin.Context) {
 
 	// get CountSizeBytes
 	if result := database.DB.Table("vods").Select("sum(size)").Scan(&stats.CountSizeBytes); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": true,
+			"msg":   "Failed to get stats",
+		})
+		return
+	}
+
+	// get CountTranscriptWords
+	if result := database.DB.Table("vods").Select("sum(length(vods.transcript)) as count_transcript_words").Where("vods.publish = ? and vods.transcript is not null", true).Scan(&stats.CountTranscriptWords); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": true,
+			"msg":   "Failed to get stats",
+		})
+		return
+	}
+
+	// get CountUniqueWords
+	if result := database.DB.Raw("select count(stats.word) as count_unique_words from ts_stat('select vods.transcript_vector from vods where vods.publish = true and vods.transcript is not null') as stats").Scan(&stats.CountUniqueWords); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": true,
+			"msg":   "Failed to get stats",
+		})
+		return
+	}
+
+	// get CountAvgWords
+	if result := database.DB.Table("vods").Select("avg(length(vods.transcript)) as count_avg_words").Where("vods.publish = ? and vods.transcript is not null", true).Scan(&stats.CountAvgWords); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",

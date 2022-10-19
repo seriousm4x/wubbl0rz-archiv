@@ -81,6 +81,10 @@ func main() {
 
 	for i, id := range files {
 		logger.Debug.Println(fmt.Sprintf("%d of %d: %s", i+1, len(files), id))
+		
+		if id != "v1545429112" {
+			continue
+		}
 
 		thumbnails = []Thumbnail{}
 		thumbnails = append(thumbnails, Thumbnail{Filename: "-sm.jpg", Width: 256, Height: 144})
