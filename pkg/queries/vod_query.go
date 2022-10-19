@@ -125,8 +125,8 @@ func GetVodsFullText(foundVods *[]map[string]interface{}, query string, paginati
 	var tempVods []map[string]interface{}
 
 	result := database.DB.Model(&vod).
-		Select("vods.uuid, vods.title, coalesce(vods.duration, 0) as duration, vods.date, coalesce(vods.viewcount, 0) as viewcount, vods.filename, vods.resolution, vods.fps, vods.size, ts_headline('german', vods.transcript, websearch_to_tsquery('german', ?) || websearch_to_tsquery('simple', ?), 'MaxFragments=6, StartSel=<span>, StopSel=</span>') as matches, ts_rank(vods.transcript_vector, websearch_to_tsquery('german', ?)) + ts_rank(vods.transcript_vector, websearch_to_tsquery('simple', ?)) as rank", query, query, query, query).
-		Where("publish = ? and vods.transcript_vector @@ websearch_to_tsquery('german', ?) or vods.transcript_vector @@ websearch_to_tsquery('simple', ?)", true, query, query).
+		Select("vods.uuid, vods.title, coalesce(vods.duration, 0) as duration, vods.date, coalesce(vods.viewcount, 0) as viewcount, vods.filename, vods.resolution, vods.fps, vods.size, ts_headline('german', vods.transcript, websearch_to_tsquery('german', ?) || websearch_to_tsquery('english', ?), 'MaxFragments=6, StartSel=<span>, StopSel=</span>') as matches, ts_rank(vods.transcript_vector, websearch_to_tsquery('german', ?)) + ts_rank(vods.transcript_vector, websearch_to_tsquery('english', ?)) as rank", query, query, query, query).
+		Where("publish = ? and vods.transcript_vector @@ websearch_to_tsquery('german', ?) or vods.transcript_vector @@ websearch_to_tsquery('english', ?)", true, query, query).
 		Order("rank desc").
 		Find(&tempVods).
 		Scopes(Paginate(tempVods, len(tempVods), &pagination, database.DB)).
