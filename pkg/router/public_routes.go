@@ -19,36 +19,36 @@ func PublicRoutes(rg *gin.RouterGroup) {
 	rg.GET("/health", controllers.GetHealth)
 
 	// caching
-	memoryStore := persist.NewMemoryStore(1 * time.Minute)
+	memoryStore := persist.NewMemoryStore(1 * time.Hour)
 
 	// route groups
 	vodsGroup := rg.Group("/vods")
 	{
-		vodsGroup.GET("/", cache.CacheByRequestURI(memoryStore, 3*time.Hour), controllers.GetVods)
-		vodsGroup.GET("/:uuid", cache.CacheByRequestURI(memoryStore, 3*time.Hour), controllers.GetVodByUUID)
+		vodsGroup.GET("/", cache.CacheByRequestURI(memoryStore, 1*time.Hour), controllers.GetVods)
+		vodsGroup.GET("/:uuid", cache.CacheByRequestURI(memoryStore, 1*time.Hour), controllers.GetVodByUUID)
 	}
 	clipsGroup := rg.Group("/clips")
 	{
-		clipsGroup.GET("/", cache.CacheByRequestURI(memoryStore, 3*time.Hour), controllers.GetClips)
-		clipsGroup.GET("/:uuid", cache.CacheByRequestURI(memoryStore, 3*time.Hour), controllers.GetClipByUUID)
+		clipsGroup.GET("/", cache.CacheByRequestURI(memoryStore, 1*time.Hour), controllers.GetClips)
+		clipsGroup.GET("/:uuid", cache.CacheByRequestURI(memoryStore, 1*time.Hour), controllers.GetClipByUUID)
 	}
 	gamesGroup := rg.Group("/games")
 	{
-		gamesGroup.GET("/", cache.CacheByRequestURI(memoryStore, 3*time.Hour), controllers.GetGames)
-		gamesGroup.GET("/:uuid", cache.CacheByRequestURI(memoryStore, 3*time.Hour), controllers.GetGameByUUID)
+		gamesGroup.GET("/", cache.CacheByRequestURI(memoryStore, 1*time.Hour), controllers.GetGames)
+		gamesGroup.GET("/:uuid", cache.CacheByRequestURI(memoryStore, 1*time.Hour), controllers.GetGameByUUID)
 	}
 	creatorsGroup := rg.Group("/creators")
 	{
-		creatorsGroup.GET("/", cache.CacheByRequestURI(memoryStore, 3*time.Hour), controllers.GetCreators)
-		creatorsGroup.GET("/:uuid", cache.CacheByRequestURI(memoryStore, 3*time.Hour), controllers.GetCreatorByUUID)
+		creatorsGroup.GET("/", cache.CacheByRequestURI(memoryStore, 1*time.Hour), controllers.GetCreators)
+		creatorsGroup.GET("/:uuid", cache.CacheByRequestURI(memoryStore, 1*time.Hour), controllers.GetCreatorByUUID)
 	}
 	emotesGroup := rg.Group("/emotes")
 	{
-		emotesGroup.GET("/", cache.CacheByRequestURI(memoryStore, 3*time.Hour), controllers.GetEmotes)
+		emotesGroup.GET("/", cache.CacheByRequestURI(memoryStore, 1*time.Hour), controllers.GetEmotes)
 	}
 	yearsGroup := rg.Group("/years")
 	{
-		yearsGroup.GET("/", cache.CacheByRequestURI(memoryStore, 3*time.Hour), controllers.GetYears)
+		yearsGroup.GET("/", cache.CacheByRequestURI(memoryStore, 1*time.Hour), controllers.GetYears)
 	}
 	statsGroup := rg.Group("/stats")
 	{
