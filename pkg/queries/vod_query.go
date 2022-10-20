@@ -64,7 +64,7 @@ func GetOneVod(v *models.Vod, uuid string, onlyPublic bool) error {
 	} else {
 		result = database.DB.Where("uuid = ?", uuid)
 	}
-	result = result.Omit("transcript").Find(v)
+	result = result.Find(v)
 	if result.RowsAffected == 0 {
 		return errors.New("not found")
 	}
@@ -125,7 +125,7 @@ func GetVodsFullText(foundVods *[]map[string]interface{}, query string, paginati
 	var tempVods []map[string]interface{}
 
 	result := database.DB.Model(&vod).
-		Select("vods.uuid, vods.title, vods.filename, vods.resolution, vods.fps, vods.size, vods.date, coalesce(vods.duration, 0) as duration, coalesce(vods.viewcount, 0) as viewcount, coalesce(ts_headline('german', vods.title, websearch_to_tsquery('german', ?)  || websearch_to_tsquery('english', ?), 'MaxFragments=6, StartSel=<span>, StopSel=</span>'), '') as title_matches, coalesce(ts_headline('german', vods.transcript, websearch_to_tsquery('german', ?) || websearch_to_tsquery('english', ?), 'MaxFragments=6, StartSel=<span>, StopSel=</span>'), '') as transcript_matches, coalesce(ts_rank(vods.title_vector, websearch_to_tsquery('german', ?)) + ts_rank(vods.title_vector, websearch_to_tsquery('english', ?)), 0) as title_rank, coalesce(ts_rank(vods.transcript_vector, websearch_to_tsquery('german', ?)) + ts_rank(vods.transcript_vector, websearch_to_tsquery('english', ?)), 0) as transcript_rank", query, query, query, query, query, query, query, query).
+		Select("vods.uuid, vods.title, vods.filename, vods.resolution, vods.fps, vods.size, vods.date, coalesce(vods.duration, 0) as duration, coalesce(vods.viewcount, 0) as viewcount, coalesce(ts_headline('german', vods.title, websearch_to_tsquery('german', ?)  || websearch_to_tsquery('english', ?), 'MaxFragments=6, StartSel=<span>, StopSel=</span>, FragmentDelimiter=<hr>'), '') as title_matches, coalesce(ts_headline('german', vods.transcript, websearch_to_tsquery('german', ?) || websearch_to_tsquery('english', ?), 'MaxFragments=6, StartSel=<span>, StopSel=</span>, FragmentDelimiter=<hr>'), '') as transcript_matches, coalesce(ts_rank(vods.title_vector, websearch_to_tsquery('german', ?)) + ts_rank(vods.title_vector, websearch_to_tsquery('english', ?)), 0) as title_rank, coalesce(ts_rank(vods.transcript_vector, websearch_to_tsquery('german', ?)) + ts_rank(vods.transcript_vector, websearch_to_tsquery('english', ?)), 0) as transcript_rank", query, query, query, query, query, query, query, query).
 		Where("publish = ? and vods.title_vector @@ websearch_to_tsquery('german', ?) or vods.title_vector @@ websearch_to_tsquery('english', ?) or vods.transcript_vector @@ websearch_to_tsquery('german', ?) or vods.transcript_vector @@ websearch_to_tsquery('english', ?)", true, query, query, query, query).
 		Order("title_rank desc, transcript_rank desc").
 		Find(&tempVods).
