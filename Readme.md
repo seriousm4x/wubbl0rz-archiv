@@ -31,7 +31,7 @@ services:
       - db
   db:
     container_name: archiv-db
-    image: postgres:14-alpine
+    image: postgres:15-alpine
     restart: unless-stopped
     env_file: .env
     volumes:
@@ -39,6 +39,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /path/to/postgres/:/var/lib/postgresql/data
 ```
+
 ## 🚪 Reverse Proxy
 
 The easiest way is to use caddy. Paste the following into a file called `Caddyfile`. Change the `root` path to the parent directory of media (/path/to/) and run caddys system service.
@@ -57,6 +58,16 @@ api.wubbl0rz.tv {
     header Cross-Origin-Resource-Policy "*"
 }
 ```
+
+## Backup and restore database
+
+Required to upgrade major postgres versions.
+
+**Backup**
+`docker exec -t archiv-db pg_dumpall -c -U YOUR_DB_USER > /path/to/backup/dump_$(date +%Y-%m-%d"_"%H_%M_%S).sql`
+
+**Restore**
+`docker exec -i archiv-db psql -d YOUR_DB_NAME -U YOUR_DB_USER < /path/to/backup/dump_<some-date>.sql`
 
 ## Documentation
 
