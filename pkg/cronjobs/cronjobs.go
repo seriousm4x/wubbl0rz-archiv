@@ -2,6 +2,7 @@ package cronjobs
 
 import (
 	"github.com/AgileProggers/archiv-backend-go/pkg/logger"
+	"github.com/AgileProggers/archiv-backend-go/pkg/router"
 	"github.com/robfig/cron"
 )
 
@@ -31,6 +32,7 @@ func Init() error {
 }
 
 func RunTwitchDownloads() {
+	// run downloads
 	if err := DownloadVods(); err != nil {
 		logger.Error.Println(err)
 	}
@@ -38,6 +40,11 @@ func RunTwitchDownloads() {
 		logger.Error.Println(err)
 	}
 	if err := DownloadGames(); err != nil {
+		logger.Error.Println(err)
+	}
+
+	// delete cached routes
+	if err := router.MemoryStore.Cache.Purge(); err != nil {
 		logger.Error.Println(err)
 	}
 }

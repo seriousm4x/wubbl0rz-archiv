@@ -92,7 +92,7 @@ func GetLongStats(c *gin.Context) {
 	var clip models.Clip
 
 	// get CountVodsTotal
-	if result := database.DB.Find(&vod).Count(&stats.CountVodsTotal); result.Error != nil {
+	if result := database.DB.Model(&vod).Count(&stats.CountVodsTotal); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -101,7 +101,7 @@ func GetLongStats(c *gin.Context) {
 	}
 
 	// get CountClipsTotal
-	if result := database.DB.Find(&clip).Count(&stats.CountClipsTotal); result.Error != nil {
+	if result := database.DB.Model(&clip).Count(&stats.CountClipsTotal); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -110,7 +110,7 @@ func GetLongStats(c *gin.Context) {
 	}
 
 	// get CountHoursStreamed
-	if result := database.DB.Table("vods").Select("sum(duration)/3600").Scan(&stats.CountHoursStreamed); result.Error != nil {
+	if result := database.DB.Model(&vod).Select("sum(duration)/3600").Scan(&stats.CountHoursStreamed); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -119,7 +119,7 @@ func GetLongStats(c *gin.Context) {
 	}
 
 	// get CountSizeBytes
-	if result := database.DB.Table("vods").Select("sum(size)").Scan(&stats.CountSizeBytes); result.Error != nil {
+	if result := database.DB.Model(&vod).Select("sum(size)").Scan(&stats.CountSizeBytes); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -128,7 +128,7 @@ func GetLongStats(c *gin.Context) {
 	}
 
 	// get CountTranscriptWords
-	if result := database.DB.Table("vods").Select("sum(length(vods.transcript)) as count_transcript_words").Where("vods.publish = ? and vods.transcript is not null", true).Scan(&stats.CountTranscriptWords); result.Error != nil {
+	if result := database.DB.Model(&vod).Select("sum(length(vods.transcript)) as count_transcript_words").Where("vods.publish = ? and vods.transcript is not null", true).Scan(&stats.CountTranscriptWords); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -146,7 +146,7 @@ func GetLongStats(c *gin.Context) {
 	}
 
 	// get CountAvgWords
-	if result := database.DB.Table("vods").Select("avg(length(vods.transcript)) as count_avg_words").Where("vods.publish = ? and vods.transcript is not null", true).Scan(&stats.CountAvgWords); result.Error != nil {
+	if result := database.DB.Model(&vod).Select("avg(length(vods.transcript)) as count_avg_words").Where("vods.publish = ? and vods.transcript is not null", true).Scan(&stats.CountAvgWords); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -161,7 +161,7 @@ func GetLongStats(c *gin.Context) {
 	var count_one_month int64
 	var count_two_months int64
 
-	if result := database.DB.Table("vods").Where("date BETWEEN ? AND ?", one_month_ago, now).Count(&count_one_month); result.Error != nil {
+	if result := database.DB.Model(&vod).Where("date BETWEEN ? AND ?", one_month_ago, now).Count(&count_one_month); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -169,7 +169,7 @@ func GetLongStats(c *gin.Context) {
 		return
 	}
 
-	if result := database.DB.Table("vods").Where("date BETWEEN ? AND ?", two_months_ago, one_month_ago).Count(&count_two_months); result.Error != nil {
+	if result := database.DB.Model(&vod).Where("date BETWEEN ? AND ?", two_months_ago, one_month_ago).Count(&count_two_months); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -179,7 +179,7 @@ func GetLongStats(c *gin.Context) {
 	stats.TrendVods = count_one_month - count_two_months
 
 	// get TrendClips
-	if result := database.DB.Table("clips").Where("date BETWEEN ? AND ?", one_month_ago, now).Count(&count_one_month); result.Error != nil {
+	if result := database.DB.Model(&clip).Where("date BETWEEN ? AND ?", one_month_ago, now).Count(&count_one_month); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -187,7 +187,7 @@ func GetLongStats(c *gin.Context) {
 		return
 	}
 
-	if result := database.DB.Table("clips").Where("date BETWEEN ? AND ?", two_months_ago, one_month_ago).Count(&count_two_months); result.Error != nil {
+	if result := database.DB.Model(&clip).Where("date BETWEEN ? AND ?", two_months_ago, one_month_ago).Count(&count_two_months); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -199,7 +199,7 @@ func GetLongStats(c *gin.Context) {
 	// get TrendHoursStreamed
 	var count_h_streamed_month1 float64
 	var count_h_streamed_month2 float64
-	if result := database.DB.Table("vods").Where("date BETWEEN ? AND ?", one_month_ago, now).Select("sum(duration)/3600").Scan(&count_h_streamed_month1); result.Error != nil {
+	if result := database.DB.Model(&vod).Where("date BETWEEN ? AND ?", one_month_ago, now).Select("sum(duration)/3600").Scan(&count_h_streamed_month1); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -207,7 +207,7 @@ func GetLongStats(c *gin.Context) {
 		return
 	}
 
-	if result := database.DB.Table("vods").Where("date BETWEEN ? AND ?", two_months_ago, one_month_ago).Select("sum(duration)/3600").Scan(&count_h_streamed_month2); result.Error != nil {
+	if result := database.DB.Model(&vod).Where("date BETWEEN ? AND ?", two_months_ago, one_month_ago).Select("sum(duration)/3600").Scan(&count_h_streamed_month2); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -226,7 +226,7 @@ func GetLongStats(c *gin.Context) {
 			Month: monthStr,
 		}
 
-		if result := database.DB.Table("vods").Where("date BETWEEN ? AND ?", range_start, range_end).Count(&month.Count); result.Error != nil {
+		if result := database.DB.Model(&vod).Where("date BETWEEN ? AND ?", range_start, range_end).Count(&month.Count); result.Error != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": true,
 				"msg":   "Failed to get stats",
@@ -248,7 +248,7 @@ func GetLongStats(c *gin.Context) {
 	}
 	var weekday vodPerWeekday
 	for i, day := range weekdays {
-		if result := database.DB.Table("vods").Where("(extract(dow from date) = ?)", i).Count(&weekday.Count); result.Error != nil {
+		if result := database.DB.Model(&vod).Where("(extract(dow from date) = ?)", i).Count(&weekday.Count); result.Error != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": true,
 				"msg":   "Failed to get stats",
@@ -260,7 +260,7 @@ func GetLongStats(c *gin.Context) {
 	}
 
 	// get StartByTime
-	if result := database.DB.Table("vods").Select("extract(hour from date) as hour, count(extract(hour from date)) as count").Group("hour").Order("hour asc").Scan(&stats.StartByTime); result.Error != nil {
+	if result := database.DB.Model(&vod).Select("extract(hour from date) as hour, count(extract(hour from date)) as count").Group("hour").Order("hour asc").Scan(&stats.StartByTime); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -269,7 +269,7 @@ func GetLongStats(c *gin.Context) {
 	}
 
 	// get top clip creators
-	if result := database.DB.Table("clips").Select("creators.name, count(clips.uuid) as clip_count, sum(clips.viewcount) as view_count").Joins("left join creators on clips.creator_uuid = creators.uuid").Group("clips.creator_uuid, creators.name").Order("view_count desc").Limit(15).Scan(&stats.ClipsByCreator); result.Error != nil {
+	if result := database.DB.Model(&clip).Select("creators.name, count(clips.uuid) as clip_count, sum(clips.viewcount) as view_count").Joins("left join creators on clips.creator_uuid = creators.uuid").Group("clips.creator_uuid, creators.name").Order("view_count desc").Limit(15).Scan(&stats.ClipsByCreator); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
