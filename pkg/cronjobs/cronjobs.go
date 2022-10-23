@@ -6,6 +6,8 @@ import (
 	"github.com/robfig/cron"
 )
 
+var twitchDownloadsRunning bool
+
 func Init() error {
 	c := cron.New()
 
@@ -32,7 +34,13 @@ func Init() error {
 }
 
 func RunTwitchDownloads() {
+	if twitchDownloadsRunning {
+		return
+	}
+
 	// run downloads
+	twitchDownloadsRunning = true
+
 	if err := DownloadVods(); err != nil {
 		logger.Error.Println(err)
 	}
@@ -42,6 +50,8 @@ func RunTwitchDownloads() {
 	if err := DownloadGames(); err != nil {
 		logger.Error.Println(err)
 	}
+
+	twitchDownloadsRunning = false
 
 	// delete cached routes
 	if err := router.MemoryStore.Cache.Purge(); err != nil {

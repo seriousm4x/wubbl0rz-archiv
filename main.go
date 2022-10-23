@@ -19,14 +19,13 @@ import (
 
 func main() {
 	// wait for db
-	db, _ := database.DB.DB()
-	for {
-		err := db.Ping()
-		if err == nil {
-			break
+	if db, err := database.DB.DB(); err != nil {
+		for {
+			if e := db.Ping(); e == nil {
+				break
+			}
+			time.Sleep(100 * time.Millisecond)
 		}
-		logger.Info.Println("Database not reachable:", err)
-		time.Sleep(1 * time.Second)
 	}
 
 	// start http server
