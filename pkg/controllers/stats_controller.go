@@ -129,32 +129,22 @@ func GetLongStats(c *gin.Context) {
 		return
 	}
 
-	// get CountTranscriptWords
-	if result := database.DB.Model(&vod).Select("sum(length(vods.transcript)) as count_transcript_words").Where("vods.publish = ? and vods.transcript is not null", true).Scan(&stats.CountTranscriptWords); result.Error != nil {
+	// get CountTranscriptWords, CountUniqueWords and CountAvgWords
+	tempDest := struct {
+		CountTranscriptWords int64   `json:"count_transcript_words"`
+		CountUniqueWords     int64   `json:"count_unique_words"`
+		CountAvgWords        float64 `json:"count_avg_words"`
+	}{}
+	if result := database.DB.Raw("select sum(stats.nentry) as count_transcript_words, count(stats.word) as count_unique_words, sum(stats.nentry)/(select count(vods.uuid) from vods) as count_avg_words from ts_stat('select vods.transcript_vector from vods where vods.publish = true and vods.transcript is not null') as stats").Scan(&tempDest); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
 		})
 		return
 	}
-
-	// get CountUniqueWords
-	if result := database.DB.Raw("select count(stats.word) as count_unique_words from ts_stat('select vods.transcript_vector from vods where vods.publish = true and vods.transcript is not null') as stats").Scan(&stats.CountUniqueWords); result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": true,
-			"msg":   "Failed to get stats",
-		})
-		return
-	}
-
-	// get CountAvgWords
-	if result := database.DB.Model(&vod).Select("avg(length(vods.transcript)) as count_avg_words").Where("vods.publish = ? and vods.transcript is not null", true).Scan(&stats.CountAvgWords); result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": true,
-			"msg":   "Failed to get stats",
-		})
-		return
-	}
+	stats.CountTranscriptWords = tempDest.CountTranscriptWords
+	stats.CountUniqueWords = tempDest.CountUniqueWords
+	stats.CountAvgWords = tempDest.CountAvgWords
 
 	// get TrendVods
 	if result := database.DB.Raw("select (select count(vods.uuid) from vods where vods.date between (now() - interval '1 month') and now()) - count(vods.uuid) as vods_trend from vods where vods.date between (now() - interval '2 month') and (now() - interval '1 month')").Scan(&stats.TrendVods); result.Error != nil {
