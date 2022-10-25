@@ -157,66 +157,31 @@ func GetLongStats(c *gin.Context) {
 	}
 
 	// get TrendVods
-	now := time.Now()
-	one_month_ago := now.AddDate(0, -1, 0)
-	two_months_ago := now.AddDate(0, -2, 0)
-	var count_one_month int64
-	var count_two_months int64
-
-	if result := database.DB.Model(&vod).Where("date BETWEEN ? AND ?", one_month_ago, now).Count(&count_one_month); result.Error != nil {
+	if result := database.DB.Raw("select (select count(vods.uuid) from vods where vods.date between (now() - interval '1 month') and now()) - count(vods.uuid) as vods_trend from vods where vods.date between (now() - interval '2 month') and (now() - interval '1 month')").Scan(&stats.TrendVods); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
 		})
 		return
 	}
-
-	if result := database.DB.Model(&vod).Where("date BETWEEN ? AND ?", two_months_ago, one_month_ago).Count(&count_two_months); result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": true,
-			"msg":   "Failed to get stats",
-		})
-		return
-	}
-	stats.TrendVods = count_one_month - count_two_months
 
 	// get TrendClips
-	if result := database.DB.Model(&clip).Where("date BETWEEN ? AND ?", one_month_ago, now).Count(&count_one_month); result.Error != nil {
+	if result := database.DB.Raw("select (select count(clips.uuid) from clips where clips.date between (now() - interval '1 month') and now()) - count(clips.uuid) as clips_trend from clips where clips.date between (now() - interval '2 month') and (now() - interval '1 month')").Scan(&stats.TrendClips); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
 		})
 		return
 	}
-
-	if result := database.DB.Model(&clip).Where("date BETWEEN ? AND ?", two_months_ago, one_month_ago).Count(&count_two_months); result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": true,
-			"msg":   "Failed to get stats",
-		})
-		return
-	}
-	stats.TrendClips = count_one_month - count_two_months
 
 	// get TrendHoursStreamed
-	var count_h_streamed_month1 float64
-	var count_h_streamed_month2 float64
-	if result := database.DB.Model(&vod).Where("date BETWEEN ? AND ?", one_month_ago, now).Select("sum(duration)/3600").Scan(&count_h_streamed_month1); result.Error != nil {
+	if result := database.DB.Raw("select (select sum(vods.duration)/3600 from vods where vods.date between (now() - interval '1 month') and now()) - sum(vods.duration)/3600 as trend_h_streamed from vods where vods.date between (now() - interval '2 month') and (now() - interval '1 month')").Scan(&stats.TrendHoursStreamed); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
 		})
 		return
 	}
-
-	if result := database.DB.Model(&vod).Where("date BETWEEN ? AND ?", two_months_ago, one_month_ago).Select("sum(duration)/3600").Scan(&count_h_streamed_month2); result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": true,
-			"msg":   "Failed to get stats",
-		})
-		return
-	}
-	stats.TrendHoursStreamed = count_h_streamed_month1 - count_h_streamed_month2
 
 	// get DatabaseSize
 	if result := database.DB.Raw("select pg_database_size(?) as database_size", os.Getenv("POSTGRES_DB")).Find(&stats.DatabaseSize); result.Error != nil {
@@ -228,6 +193,7 @@ func GetLongStats(c *gin.Context) {
 	}
 
 	// get VodsPerMonth
+	now := time.Now()
 	for i := 11; i >= 0; i-- {
 		monthsBack := now.AddDate(0, -i, 0)
 		range_start := time.Date(monthsBack.Year(), monthsBack.Month(), 1, 0, 0, 0, 0, monthsBack.Local().Location())
