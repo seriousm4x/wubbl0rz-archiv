@@ -1104,61 +1104,14 @@ const docTemplate = `{
                 "tags": [
                     "Vods"
                 ],
-                "summary": "Get all vods",
+                "summary": "Get all vods by full text search",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "The uuid of a vod",
-                        "name": "uuid",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "The title of a vod",
-                        "name": "title",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "The duration of a vod",
-                        "name": "duration",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "The date of a vod",
-                        "name": "date",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "The filename of a vod",
-                        "name": "filename",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "The resolution of a vod",
-                        "name": "resolution",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "The fps of a vod",
-                        "name": "fps",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "The size of a vod",
-                        "name": "size",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Set order direction divided by comma. Possible ordering values: 'date', 'duration', 'size'. Possible directions: 'asc', 'desc'. Example: 'date,desc'",
-                        "name": "order",
-                        "in": "query"
+                        "description": "The text to search in transcript",
+                        "name": "q",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1169,12 +1122,6 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/models.Vod"
                             }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
                         }
                     },
                     "404": {
@@ -1418,6 +1365,9 @@ const docTemplate = `{
                 "filename": {
                     "type": "string"
                 },
+                "fps": {
+                    "type": "number"
+                },
                 "game": {
                     "$ref": "#/definitions/models.Game"
                 },
@@ -1537,8 +1487,14 @@ const docTemplate = `{
                 "title": {
                     "type": "string"
                 },
+                "transcript": {
+                    "type": "string"
+                },
                 "uuid": {
                     "type": "string"
+                },
+                "viewcount": {
+                    "type": "integer"
                 }
             }
         }

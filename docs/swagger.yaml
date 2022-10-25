@@ -11,6 +11,8 @@ definitions:
         type: integer
       filename:
         type: string
+      fps:
+        type: number
       game:
         $ref: '#/definitions/models.Game'
       game_uuid:
@@ -89,8 +91,12 @@ definitions:
         type: integer
       title:
         type: string
+      transcript:
+        type: string
       uuid:
         type: string
+      viewcount:
+        type: integer
     type: object
 info:
   contact: {}
@@ -790,43 +796,10 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: The uuid of a vod
+      - description: The text to search in transcript
         in: query
-        name: uuid
-        type: string
-      - description: The title of a vod
-        in: query
-        name: title
-        type: string
-      - description: The duration of a vod
-        in: query
-        name: duration
-        type: integer
-      - description: The date of a vod
-        in: query
-        name: date
-        type: string
-      - description: The filename of a vod
-        in: query
-        name: filename
-        type: string
-      - description: The resolution of a vod
-        in: query
-        name: resolution
-        type: string
-      - description: The fps of a vod
-        in: query
-        name: fps
-        type: integer
-      - description: The size of a vod
-        in: query
-        name: size
-        type: integer
-      - description: 'Set order direction divided by comma. Possible ordering values:
-          ''date'', ''duration'', ''size''. Possible directions: ''asc'', ''desc''.
-          Example: ''date,desc'''
-        in: query
-        name: order
+        name: q
+        required: true
         type: string
       produces:
       - application/json
@@ -837,15 +810,11 @@ paths:
             items:
               $ref: '#/definitions/models.Vod'
             type: array
-        "400":
-          description: Bad Request
-          schema:
-            type: string
         "404":
           description: Not Found
           schema:
             type: string
-      summary: Get all vods
+      summary: Get all vods by full text search
       tags:
       - Vods
     post:
