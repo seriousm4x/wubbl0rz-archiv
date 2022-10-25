@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/AgileProggers/archiv-backend-go/pkg/database"
@@ -43,6 +44,7 @@ type longStats struct {
 	TrendVods            int64             `json:"trend_vods"`
 	TrendClips           int64             `json:"trend_clips"`
 	TrendHoursStreamed   float64           `json:"trend_h_streamed"`
+	DatabaseSize         int64             `json:"database_size"`
 	VodsPerMonth         []vodPerMonth     `json:"vods_per_month"`
 	VodsPerWeekday       []vodPerWeekday   `json:"vods_per_weekday"`
 	StartByTime          []startByTime     `json:"start_by_time"`
@@ -215,6 +217,15 @@ func GetLongStats(c *gin.Context) {
 		return
 	}
 	stats.TrendHoursStreamed = count_h_streamed_month1 - count_h_streamed_month2
+
+	// get DatabaseSize
+	if result := database.DB.Raw("select pg_database_size(?) as database_size", os.Getenv("POSTGRES_DB")).Find(&stats.DatabaseSize); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": true,
+			"msg":   "Failed to get stats",
+		})
+		return
+	}
 
 	// get VodsPerMonth
 	for i := 11; i >= 0; i-- {
