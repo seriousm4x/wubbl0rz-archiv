@@ -40,9 +40,8 @@ func (p *Pagination) GetPage() int {
 	return p.Page
 }
 
-func Paginate(totalRows int, pagination *Pagination, db *gorm.DB) func(db *gorm.DB) *gorm.DB {
-	pagination.TotalRows = int64(totalRows)
-	totalPages := int(math.Ceil(float64(totalRows) / float64(pagination.GetLimit())))
+func Paginate(pagination *Pagination, db *gorm.DB) func(db *gorm.DB) *gorm.DB {
+	totalPages := int(math.Ceil(float64(pagination.TotalRows) / float64(pagination.GetLimit())))
 	pagination.TotalPages = totalPages
 
 	return func(db *gorm.DB) *gorm.DB {

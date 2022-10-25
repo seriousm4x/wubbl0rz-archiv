@@ -8,7 +8,7 @@ import (
 )
 
 func GetAllGames(g *[]models.Game, query models.Game, pagination Pagination) (*Pagination, error) {
-	result := database.DB
+	result := database.DB.Model(&query)
 	if query.Name != "" {
 		// if name is given, do case insensitive search in name string
 		result = result.Where("position(LOWER(?) in LOWER(name))>0", query.Name)
@@ -17,7 +17,7 @@ func GetAllGames(g *[]models.Game, query models.Game, pagination Pagination) (*P
 		result = result.Where(query)
 	}
 
-	result = result.Find(g).Scopes(Paginate(len(*g), &pagination, database.DB)).Preload("Clips").Find(g)
+	result = result.Count(&pagination.TotalRows).Scopes(Paginate(&pagination, database.DB)).Preload("Clips").Find(g)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}

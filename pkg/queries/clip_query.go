@@ -15,7 +15,7 @@ func GetAllClips(c *[]models.Clip, query models.Clip, pagination Pagination, o s
 	if o == "" {
 		o = "date desc"
 	}
-	result := database.DB
+	result := database.DB.Model(&query)
 	if query.Title != "" {
 		// if title is given, do case insensitive search in title string
 		result = result.Where("position(LOWER(?) in LOWER(title))>0", query.Title)
@@ -32,7 +32,7 @@ func GetAllClips(c *[]models.Clip, query models.Clip, pagination Pagination, o s
 		result = result.Where("date < ?", date_to)
 	}
 
-	result = result.Order(o).Find(c).Scopes(Paginate(len(*c), &pagination, database.DB)).Preload("Creator").Find(c)
+	result = result.Order(o).Count(&pagination.TotalRows).Scopes(Paginate(&pagination, database.DB)).Preload("Creator").Find(c)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}

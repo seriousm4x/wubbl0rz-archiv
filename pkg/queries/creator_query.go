@@ -8,7 +8,7 @@ import (
 )
 
 func GetAllCreators(c *[]models.Creator, query models.Creator, pagination Pagination) (*Pagination, error) {
-	result := database.DB
+	result := database.DB.Model(&query)
 	if query.Name != "" {
 		// if name is given, do case insensitive search in name string
 		result = result.Where("position(LOWER(?) in LOWER(name))>0", query.Name)
@@ -16,7 +16,7 @@ func GetAllCreators(c *[]models.Creator, query models.Creator, pagination Pagina
 		// else search exact query match
 		result = result.Where(query)
 	}
-	result = result.Find(c).Scopes(Paginate(len(*c), &pagination, database.DB)).Find(c)
+	result = result.Count(&pagination.TotalRows).Scopes(Paginate(&pagination, database.DB)).Find(c)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}

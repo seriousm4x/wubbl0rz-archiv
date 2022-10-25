@@ -9,7 +9,7 @@ import (
 )
 
 func GetAllEmotes(e *[]models.Emote, query models.Emote, pagination Pagination) (*Pagination, error) {
-	result := database.DB
+	result := database.DB.Model(&query)
 	if query.Name != "" {
 		// if name is given, do case insensitive search in name string
 		result = result.Where("position(LOWER(?) in LOWER(name))>0", query.Name)
@@ -18,7 +18,7 @@ func GetAllEmotes(e *[]models.Emote, query models.Emote, pagination Pagination) 
 		result = result.Where(query)
 	}
 
-	result = result.Order("name asc").Find(e).Scopes(Paginate(len(*e), &pagination, database.DB)).Find(e)
+	result = result.Order("name asc").Count(&pagination.TotalRows).Scopes(Paginate(&pagination, database.DB)).Find(e)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}

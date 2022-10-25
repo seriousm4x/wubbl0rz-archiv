@@ -24,7 +24,7 @@ func GetAllVods(v *[]models.Vod, query models.Vod, pagination Pagination, o stri
 		// else search exact query match
 		result = result.Where(query)
 	}
-	result = result.Where("publish = ?", true).Order(o).Find(v).Scopes(Paginate(len(*v), &pagination, database.DB)).Find(v)
+	result = result.Where("publish = ?", true).Order(o).Count(&pagination.TotalRows).Scopes(Paginate(&pagination, database.DB)).Find(v)
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
 	}
