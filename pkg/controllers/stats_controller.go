@@ -135,7 +135,7 @@ func GetLongStats(c *gin.Context) {
 		CountUniqueWords     int64   `json:"count_unique_words"`
 		CountAvgWords        float64 `json:"count_avg_words"`
 	}{}
-	if result := database.DB.Raw("select sum(stats.nentry) as count_transcript_words, count(stats.word) as count_unique_words, sum(stats.nentry)/(select count(vods.uuid) from vods) as count_avg_words from ts_stat('select vods.transcript_vector from vods where vods.publish = true and vods.transcript is not null') as stats").Scan(&tempDest); result.Error != nil {
+	if result := database.DB.Raw("select sum(stats.nentry) as count_transcript_words, count(stats.word) as count_unique_words, sum(stats.nentry)/? as count_avg_words from ts_stat('select vods.transcript_vector from vods where vods.publish = true and vods.transcript is not null') as stats", stats.CountVodsTotal).Scan(&tempDest); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
