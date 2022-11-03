@@ -13,15 +13,16 @@ var MemoryStore *persist.MemoryStore
 
 // PublicRoutes func for describe group of public routes.
 func PublicRoutes(rg *gin.RouterGroup) {
+	// caching
+	MemoryStore = persist.NewMemoryStore(1 * time.Hour)
+
 	// auth login
 	rg.POST("/token/new", AuthMiddleware.LoginHandler)
 
 	// other routes
 	rg.GET("/download/:type/:uuid", controllers.SendStream)
 	rg.GET("/health", controllers.GetHealth)
-
-	// caching
-	MemoryStore = persist.NewMemoryStore(1 * time.Hour)
+	rg.GET("/chat", cache.CacheByRequestURI(MemoryStore, 1*time.Hour), controllers.GetAllChatMessages)
 
 	// route groups
 	vodsGroup := rg.Group("/vods")

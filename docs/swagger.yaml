@@ -1,4 +1,23 @@
 definitions:
+  models.ChatMessage:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      message:
+        type: string
+      tags:
+        additionalProperties:
+          type: string
+        type: object
+      user_display_name:
+        type: string
+      user_id:
+        type: string
+      user_name:
+        type: string
+    type: object
   models.Clip:
     properties:
       creator:
@@ -101,6 +120,36 @@ definitions:
 info:
   contact: {}
 paths:
+  /chat/:
+    get:
+      parameters:
+      - description: messages after unix timestamp
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: messages before unix timestamp
+        in: query
+        name: to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ChatMessage'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get chat messages
+      tags:
+      - ChatMessage
   /clips/:
     get:
       consumes:

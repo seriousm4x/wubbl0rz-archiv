@@ -9,6 +9,7 @@ import (
 	"time"
 
 	_ "github.com/AgileProggers/archiv-backend-go/docs"
+	"github.com/AgileProggers/archiv-backend-go/pkg/chatlogger"
 	"github.com/AgileProggers/archiv-backend-go/pkg/cronjobs"
 	"github.com/AgileProggers/archiv-backend-go/pkg/database"
 	"github.com/AgileProggers/archiv-backend-go/pkg/helpers"
@@ -50,6 +51,9 @@ func main() {
 	if err := cronjobs.Init(); err != nil {
 		panic(err)
 	}
+
+	// run chatlogger
+	go chatlogger.Run()
 
 	// Wait for interrupt signal to gracefully shutdown the server with
 	// a timeout of 5 seconds.

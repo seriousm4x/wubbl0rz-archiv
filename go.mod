@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/appleboy/gin-jwt/v2 v2.9.0
 	github.com/chenyahui/gin-cache v1.7.1
+	github.com/gempir/go-twitch-irc/v3 v3.2.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/h2non/bimg v1.1.9
 	github.com/joho/godotenv v1.4.0

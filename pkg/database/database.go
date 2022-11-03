@@ -25,7 +25,7 @@ func init() {
 	if err != nil {
 		panic("failed to connect database")
 	}
-	err = db.AutoMigrate(&models.Vod{}, &models.Game{}, &models.Creator{}, &models.Clip{}, &models.Emote{}, &models.Settings{})
+	err = db.AutoMigrate(&models.Vod{}, &models.Game{}, &models.Creator{}, &models.Clip{}, &models.Emote{}, &models.Settings{}, &models.ChatMessage{})
 	if err != nil {
 		panic(fmt.Sprint("Unable to auto migrate database:", err))
 	}
