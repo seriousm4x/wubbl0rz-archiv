@@ -53,17 +53,30 @@ func GetMetadata(destPath string, m *Meta) error {
 	if len(splittedStdout) < 4 {
 		return errors.New("not enough values to unpack")
 	}
+
+	// width, height
 	width := strings.TrimSpace(splittedStdout[0])
 	height := strings.TrimSpace(splittedStdout[1])
-	fps, err := strconv.ParseFloat(strings.TrimSpace(strings.Replace(splittedStdout[2], "/1", "", 1)), 64)
+
+	// fps
+	fpsFraction := strings.Split(strings.TrimSpace(splittedStdout[2]), "/")
+	fpsNumerator, err := strconv.ParseFloat(fpsFraction[0], 64)
 	if err != nil {
 		return err
 	}
+	fpsDenominator, err := strconv.ParseFloat(fpsFraction[1], 64)
+	if err != nil {
+		return err
+	}
+	fps := fpsNumerator / fpsDenominator
+
+	// duration
 	duration, err := strconv.ParseFloat(strings.TrimSpace(splittedStdout[3]), 64)
 	if err != nil {
 		return err
 	}
 
+	// check empty values
 	if width == "" {
 		return errors.New("width empty")
 	} else if height == "" {
