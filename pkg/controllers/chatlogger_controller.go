@@ -46,7 +46,7 @@ func GetAllChatMessages(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": true,
-			"msg":   err,
+			"msg":   err.Error(),
 		})
 		return
 	}
@@ -54,7 +54,7 @@ func GetAllChatMessages(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": true,
-			"msg":   err,
+			"msg":   err.Error(),
 		})
 		return
 	}
