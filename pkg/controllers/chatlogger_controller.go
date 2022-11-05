@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/AgileProggers/archiv-backend-go/pkg/database"
 	"github.com/AgileProggers/archiv-backend-go/pkg/models"
@@ -20,9 +21,11 @@ import (
 // @Param   to query string false "messages before unix timestamp"
 func GetAllChatMessages(c *gin.Context) {
 	var messages []models.ChatMessage
+	var settings models.Settings
 	fromStr := c.Query("from")
 	toStr := c.Query("to")
 
+	// check id from and to are empty
 	if fromStr == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": true,
@@ -30,26 +33,55 @@ func GetAllChatMessages(c *gin.Context) {
 		})
 		return
 	}
-
-	query := database.DB.Model(&models.ChatMessage{})
-
-	if toStr != "" {
-		query = query.Where("created_at > to_timestamp(?) and created_at < to_timestamp(?)", fromStr, toStr)
-	} else {
-		query = query.Where("created_at > to_timestamp(?)", fromStr)
+	if toStr == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": true,
+			"msg":   "'to' query param missing",
+		})
+		return
 	}
 
+	// check id from and to are ints
+	fromInt, err := strconv.ParseInt(fromStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": true,
+			"msg":   err,
+		})
+		return
+	}
+	toInt, err := strconv.ParseInt(toStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": true,
+			"msg":   err,
+		})
+		return
+	}
+
+	// get chat messages
+	query := database.DB.Model(&models.ChatMessage{}).Where("created_at > to_timestamp(?) and created_at < to_timestamp(?)", fromInt, toInt)
 	if result := query.Find(&messages); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
-			"msg":   result.Error,
+			"msg":   "Error while getting chat messages",
+		})
+		return
+	}
+
+	// get broadcaster id
+	if result := database.DB.Model(&models.Settings{}).First(&settings); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": true,
+			"msg":   "Error while getting broadcaster id",
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"error":  false,
-		"msg":    "Ok",
-		"result": messages,
+		"error":          false,
+		"msg":            "Ok",
+		"broadcaster_id": settings.BroadcasterId,
+		"result":         messages,
 	})
 }
