@@ -1,6 +1,7 @@
 package chatlogger
 
 import (
+	"html"
 	"os"
 
 	"github.com/AgileProggers/archiv-backend-go/pkg/database"
@@ -19,7 +20,7 @@ func Run() {
 		msg.UserID = message.User.ID
 		msg.UserDisplayName = message.User.DisplayName
 		msg.UserName = message.User.Name
-		msg.Message = message.Message
+		msg.Message = html.EscapeString(message.Message)
 		msg.Tags = message.Tags
 		if result := database.DB.Model(&msg).Create(msg); result.Error != nil {
 			logger.Error.Println(result.Error)
