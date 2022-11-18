@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -135,7 +134,7 @@ func GetLongStats(c *gin.Context) {
 		CountUniqueWords     int64   `json:"count_unique_words"`
 		CountAvgWords        float64 `json:"count_avg_words"`
 	}{}
-	if result := database.DB.Raw("select sum(stats.nentry) as count_transcript_words, count(stats.word) as count_unique_words, sum(stats.nentry)/? as count_avg_words from ts_stat('select vods.transcript_vector from vods where vods.publish = true and vods.transcript is not null') as stats", stats.CountVodsTotal).Scan(&tempDest); result.Error != nil {
+	if result := database.DB.Raw("select sum(stats.nentry) as count_transcript_words, count(stats.word) as count_unique_words from ts_stat('select vods.transcript_vector from vods where vods.publish = true and vods.transcript is not null') as stats").Scan(&tempDest); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
@@ -144,7 +143,7 @@ func GetLongStats(c *gin.Context) {
 	}
 	stats.CountTranscriptWords = tempDest.CountTranscriptWords
 	stats.CountUniqueWords = tempDest.CountUniqueWords
-	stats.CountAvgWords = tempDest.CountAvgWords
+	stats.CountAvgWords = float64(tempDest.CountTranscriptWords) / float64(stats.CountVodsTotal)
 
 	// get TrendVods
 	if result := database.DB.Raw("select (select count(vods.uuid) from vods where vods.date between (now() - interval '1 month') and now()) - count(vods.uuid) as vods_trend from vods where vods.date between (now() - interval '2 month') and (now() - interval '1 month')").Scan(&stats.TrendVods); result.Error != nil {
@@ -183,47 +182,21 @@ func GetLongStats(c *gin.Context) {
 	}
 
 	// get VodsPerMonth
-	now := time.Now()
-	for i := 11; i >= 0; i-- {
-		monthsBack := now.AddDate(0, -i, 0)
-		range_start := time.Date(monthsBack.Year(), monthsBack.Month(), 1, 0, 0, 0, 0, monthsBack.Local().Location())
-		range_end := range_start.AddDate(0, 1, -1)
-		monthStr := fmt.Sprintf("%s %d", range_start.Month().String()[:3], range_start.Year()%100)
-		month := vodPerMonth{
-			Month: monthStr,
-		}
-
-		if result := database.DB.Model(&vod).Where("date BETWEEN ? AND ?", range_start, range_end).Count(&month.Count); result.Error != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": true,
-				"msg":   "Failed to get stats",
-			})
-			return
-		}
-		stats.VodsPerMonth = append(stats.VodsPerMonth, month)
+	if result := database.DB.Raw("select month || ' ' || year as month, count from (select to_char(vods.date, 'Mon') as month, to_char(vods.date, 'MM') as month_int, to_char(vods.date, 'YY') as year, count(vods.uuid) as count from vods where publish = true group by year, month_int, month order by year desc, month_int desc limit 12) as months order by months.year, months.month_int").Scan(&stats.VodsPerMonth); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": true,
+			"msg":   "Failed to get stats",
+		})
+		return
 	}
 
 	// get VodsPerWeekday
-	weekdays := []string{
-		"Sunday",
-		"Monday",
-		"Tuesday",
-		"Wednesday",
-		"Thursday",
-		"Friday",
-		"Saturday",
-	}
-	var weekday vodPerWeekday
-	for i, day := range weekdays {
-		if result := database.DB.Model(&vod).Where("(extract(dow from date) = ?)", i).Count(&weekday.Count); result.Error != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": true,
-				"msg":   "Failed to get stats",
-			})
-			return
-		}
-		weekday.Weekday = day
-		stats.VodsPerWeekday = append(stats.VodsPerWeekday, weekday)
+	if result := database.DB.Raw("select weekday, count(dow) as count from (select to_char(vods.date, 'Day') as weekday, extract(dow from vods.date) as dow_int from vods) as dow group by weekday, dow_int order by dow.dow_int").Scan(&stats.VodsPerWeekday); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": true,
+			"msg":   "Failed to get stats",
+		})
+		return
 	}
 
 	// get StartByTime

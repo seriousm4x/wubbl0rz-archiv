@@ -135,26 +135,25 @@ func GetVodsFullText(foundVods *[]map[string]interface{}, query string, paginati
 
 	// formated sql query for GetVodsFullText
 
-	// with chunk as (
 	// 	select vods.uuid, vods.title, vods.filename, vods.resolution, vods.fps, vods.size, vods.date, vods.transcript, vods.title_vector, vods.transcript_vector,
-	// 		coalesce(vods.duration, 0) as duration,
-	// 		coalesce(vods.viewcount, 0) as viewcount,
-	// 		coalesce(ts_rank(vods.title_vector, german) + ts_rank(vods.title_vector, english), 0) as title_rank,
-	// 		coalesce(ts_rank(vods.transcript_vector, german) + ts_rank(vods.transcript_vector, english), 0) as transcript_rank
-	// 	FROM vods,
-	// 	websearch_to_tsquery('german', 'arch') as german,
-	// 	websearch_to_tsquery('english', 'arch') as english
-	// 	WHERE publish = true and vods.title_vector @@ german or vods.title_vector @@ english or vods.transcript_vector @@ german or vods.transcript_vector @@ english
-	// 	ORDER BY title_rank desc, transcript_rank desc
-	// )
-	// select chunk.uuid, chunk.title, chunk.filename, chunk.duration, chunk.viewcount, chunk.resolution, chunk.fps, chunk.size, chunk.date, chunk.title_rank, chunk.transcript_rank,
-	// coalesce(ts_headline(chunk.title, german && english, 'MaxFragments=6, StartSel=<span>, StopSel=</span>, FragmentDelimiter=<hr>'), '') as title_matches,
-	// coalesce(ts_headline(chunk.transcript, german && english, 'MaxFragments=6, StartSel=<span>, StopSel=</span>, FragmentDelimiter=<hr>'), '') as transcript_matches
-	// from chunk, websearch_to_tsquery('german', 'arch') as german, websearch_to_tsquery('english', 'arch') as english
-	// where chunk.title_vector @@ german or chunk.title_vector @@ english or chunk.transcript_vector @@ german or chunk.transcript_vector @@ english
-	// limit 4 offset 8
+	// 	coalesce(vods.duration, 0) as duration,
+	// 	coalesce(vods.viewcount, 0) as viewcount,
+	// 	coalesce(ts_rank(vods.title_vector, german) + ts_rank(vods.title_vector, english), 0) as title_rank,
+	// 	coalesce(ts_rank(vods.transcript_vector, german) + ts_rank(vods.transcript_vector, english), 0) as transcript_rank,
+	// 	coalesce(ts_headline(vods.title, german && english, 'MaxFragments=6, StartSel=<span>, StopSel=</span>, FragmentDelimiter=<hr>'), '') as title_matches,
+	// 	coalesce(ts_headline(vods.transcript, german && english, 'MaxFragments=6, StartSel=<span>, StopSel=</span>, FragmentDelimiter=<hr>'), '') as transcript_matches
+	// from vods,
+	// 	websearch_to_tsquery('german', 'youtube') as german,
+	// 	websearch_to_tsquery('english', 'youtube') as english
+	// where publish = true
+	// 	and vods.title_vector @@ german
+	// 	or vods.title_vector @@ english
+	// 	or vods.transcript_vector @@ german
+	// 	or vods.transcript_vector @@ english
+	// order by title_rank desc, transcript_rank desc
+	// limit 4 offset 0
 
-	result := database.DB.Raw("with chunk as (select vods.uuid, vods.title, vods.filename, vods.resolution, vods.fps, vods.size, vods.date, vods.transcript, vods.title_vector, vods.transcript_vector, coalesce(vods.duration, 0) as duration, coalesce(vods.viewcount, 0) as viewcount, coalesce(ts_rank(vods.title_vector, german) + ts_rank(vods.title_vector, english), 0) as title_rank, coalesce(ts_rank(vods.transcript_vector, german) + ts_rank(vods.transcript_vector, english), 0) as transcript_rank FROM vods, websearch_to_tsquery('german', ?) as german, websearch_to_tsquery('english', ?) as english WHERE publish = true and vods.title_vector @@ german or vods.title_vector @@ english or vods.transcript_vector @@ german or vods.transcript_vector @@ english ORDER BY title_rank desc, transcript_rank desc) select chunk.uuid, chunk.title, chunk.filename, chunk.duration, chunk.viewcount, chunk.resolution, chunk.fps, chunk.size, chunk.date, chunk.title_rank, chunk.transcript_rank, coalesce(ts_headline(chunk.title, german && english, 'MaxFragments=6, StartSel=<span>, StopSel=</span>, FragmentDelimiter=<hr>'), '') as title_matches, coalesce(ts_headline(chunk.transcript, german && english, 'MaxFragments=6, StartSel=<span>, StopSel=</span>, FragmentDelimiter=<hr>'), '') as transcript_matches	from chunk, websearch_to_tsquery('german', ?) as german, websearch_to_tsquery('english', ?) as english where chunk.title_vector @@ german or chunk.title_vector @@ english or chunk.transcript_vector @@ german or chunk.transcript_vector @@ english limit ? offset ?", query, query, query, query, pagination.Limit, pagination.GetOffset()).Find(foundVods)
+	result := database.DB.Raw("select vods.uuid, vods.title, vods.filename, vods.resolution, vods.fps, vods.size, vods.date, vods.transcript, vods.title_vector, vods.transcript_vector, coalesce(vods.duration, 0) as duration, coalesce(vods.viewcount, 0) as viewcount, coalesce(ts_rank(vods.title_vector, german) + ts_rank(vods.title_vector, english), 0) as title_rank, coalesce(ts_rank(vods.transcript_vector, german) + ts_rank(vods.transcript_vector, english), 0) as transcript_rank, coalesce(ts_headline(vods.title, german && english, 'MaxFragments=6, StartSel=<span>, StopSel=</span>, FragmentDelimiter=<hr>'), '') as title_matches, coalesce(ts_headline(vods.transcript, german && english, 'MaxFragments=6, StartSel=<span>, StopSel=</span>, FragmentDelimiter=<hr>'), '') as transcript_matches from vods, websearch_to_tsquery('german', ?) as german, websearch_to_tsquery('english', ?) as english where publish = true and vods.title_vector @@ german or vods.title_vector @@ english or vods.transcript_vector @@ german or vods.transcript_vector @@ english order by title_rank desc, transcript_rank desc limit ? offset ?", query, query, pagination.Limit, pagination.GetOffset()).Find(foundVods)
 
 	if result.RowsAffected == 0 {
 		return &pagination, errors.New("not found")
