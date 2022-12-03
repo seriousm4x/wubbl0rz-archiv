@@ -32,6 +32,11 @@ type clipsPerCreator struct {
 	ViewCount int64  `json:"view_count"`
 }
 
+type messagesPerUser struct {
+	Name     string `json:"name"`
+	MsgCount int64  `json:"msg_count"`
+}
+
 type longStats struct {
 	CountVodsTotal       int64             `json:"count_vods_total"`
 	CountClipsTotal      int64             `json:"count_clips_total"`
@@ -44,10 +49,12 @@ type longStats struct {
 	TrendClips           int64             `json:"trend_clips"`
 	TrendHoursStreamed   float64           `json:"trend_h_streamed"`
 	DatabaseSize         int64             `json:"database_size"`
+	CountChatMessages    int64             `json:"count_chat_messages"`
 	VodsPerMonth         []vodPerMonth     `json:"vods_per_month"`
 	VodsPerWeekday       []vodPerWeekday   `json:"vods_per_weekday"`
 	StartByTime          []startByTime     `json:"start_by_time"`
 	ClipsByCreator       []clipsPerCreator `json:"clips_per_creator"`
+	MessagesByUser       []messagesPerUser `json:"messages_per_user"`
 }
 
 // Get Statistics godoc
@@ -181,6 +188,15 @@ func GetLongStats(c *gin.Context) {
 		return
 	}
 
+	// get CountChatMessages
+	if result := database.DB.Raw("select count(chat_messages.id) as count_chat_messages from chat_messages").Find(&stats.CountChatMessages); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": true,
+			"msg":   "Failed to get stats",
+		})
+		return
+	}
+
 	// get VodsPerMonth
 	if result := database.DB.Raw("select month || ' ' || year as month, count from (select to_char(vods.date, 'Mon') as month, to_char(vods.date, 'MM') as month_int, to_char(vods.date, 'YY') as year, count(vods.uuid) as count from vods where publish = true group by year, month_int, month order by year desc, month_int desc limit 12) as months order by months.year, months.month_int").Scan(&stats.VodsPerMonth); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -210,6 +226,15 @@ func GetLongStats(c *gin.Context) {
 
 	// get top clip creators
 	if result := database.DB.Model(&clip).Select("creators.name, count(clips.uuid) as clip_count, sum(clips.viewcount) as view_count").Joins("left join creators on clips.creator_uuid = creators.uuid").Group("clips.creator_uuid, creators.name").Order("view_count desc").Limit(15).Scan(&stats.ClipsByCreator); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": true,
+			"msg":   "Failed to get stats",
+		})
+		return
+	}
+
+	// top chatter
+	if result := database.DB.Raw("select chat_messages.user_display_name as name, count(chat_messages.id) as msg_count from chat_messages where chat_messages.user_name not in ('nightbot', 'moobot', 'streamlabs', 'streamelements', 'wizebot', 'deepbot', 'coebot', 'phantombot', 'stay_hydrated_bot') group by chat_messages.user_display_name order by msg_count desc limit 15").Scan(&stats.MessagesByUser); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": true,
 			"msg":   "Failed to get stats",
