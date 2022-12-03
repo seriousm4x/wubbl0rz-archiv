@@ -46,7 +46,7 @@ func createSegmentsfromURL(input_url string, segmentsPath string, filename strin
 	return nil
 }
 
-func DownloadVods() error {
+func DownloadVods() (int, error) {
 	logger.Debug.Println("[cronjob] vod download started")
 	var vods []external_apis.TwitchHelixVideo
 	if err := external_apis.TwitchGetHelixVideos(&vods); err != nil {
@@ -71,7 +71,7 @@ func DownloadVods() error {
 		var v models.Vod
 		if err := queries.GetVodByFilename(&v, newVod.Filename); err == nil {
 			if e := queries.PatchVod(map[string]interface{}{"Viewcount": newVod.Viewcount}, v.UUID); e != nil {
-				return err
+				return vods_downloaded, err
 			}
 			continue
 		}
@@ -80,20 +80,20 @@ func DownloadVods() error {
 		vodsPath := filepath.Join("/var/www/media", "vods")
 		segmentsPath := filepath.Join(vodsPath, newVod.Filename+"-segments")
 		if err := os.MkdirAll(segmentsPath, 0755); err != nil && !os.IsExist(err) {
-			return err
+			return vods_downloaded, err
 		}
 
 		// get m3u8 playlist from twitch
 		m3u8Url, err := external_apis.BuildDownloadURL(vod.ID, true)
 		if err != nil {
 			os.RemoveAll(segmentsPath)
-			return err
+			return vods_downloaded, err
 		}
 
 		// pass the m3u8 to ffmpeg to create .ts segments
 		if err := createSegmentsfromURL(m3u8Url, segmentsPath, newVod.Filename, "vod"); err != nil {
 			os.RemoveAll(segmentsPath)
-			return err
+			return vods_downloaded, err
 		}
 
 		// get metadata from m3u8
@@ -101,7 +101,7 @@ func DownloadVods() error {
 		m.Filename = newVod.Filename
 		if err := filesystem.GetMetadata(segmentsPath, &m); err != nil {
 			os.RemoveAll(segmentsPath)
-			return err
+			return vods_downloaded, err
 		}
 		newVod.Duration = m.Duration
 		newVod.Resolution = m.Resolution
@@ -110,12 +110,12 @@ func DownloadVods() error {
 
 		// create thumbnails ...
 		if err := filesystem.CreateThumbnails(vodsPath, newVod.Filename, newVod.Duration); err != nil {
-			return err
+			return vods_downloaded, err
 		}
 
 		// create vod in database
 		if err := queries.AddNewVod(&newVod); err != nil {
-			return err
+			return vods_downloaded, err
 		}
 
 		vods_downloaded += 1
@@ -125,23 +125,24 @@ func DownloadVods() error {
 		var settings models.Settings
 		settings.DateVodsUpdate = time.Now()
 		if err := queries.PartiallyUpdateSettings(&settings); err != nil {
-			return err
+			return vods_downloaded, err
 		}
 	}
 
 	logger.Debug.Printf("[cronjob] vods downloaded: %d", vods_downloaded)
-	return nil
+	return vods_downloaded, nil
 }
 
-func DownloadClips() error {
+func DownloadClips() (int, error) {
 	logger.Debug.Println("[cronjob] clip download started")
-	var clips []external_apis.TwitchHelixClip
-	if err := external_apis.TwitchGetHelixClips(&clips); err != nil {
-		return err
-	}
-
 	clips_downloaded := 0
 	clips_updated := 0
+
+	var clips []external_apis.TwitchHelixClip
+	if err := external_apis.TwitchGetHelixClips(&clips); err != nil {
+		return clips_downloaded, err
+	}
+
 	for _, clip := range clips {
 		// skip clip if created less then 24h ago (terms of service)
 		if !clip.CreatedAt.Before(time.Now().Add(time.Duration(-24) * time.Hour)) {
@@ -157,7 +158,7 @@ func DownloadClips() error {
 		if err := queries.GetOneGame(&game, clip.GameID); err != nil {
 			game.UUID = clip.GameID
 			if e := queries.AddNewGame(&game); e != nil {
-				return e
+				return clips_downloaded, e
 			}
 		}
 
@@ -169,7 +170,7 @@ func DownloadClips() error {
 			creator.Name = clip.CreatorName
 			creator.Clips = nil
 			if e := queries.AddNewCreator(&creator); e != nil {
-				return e
+				return clips_downloaded, e
 			}
 		}
 
@@ -182,7 +183,7 @@ func DownloadClips() error {
 				"Viewcount": clip.ViewCount,
 			}
 			if e := queries.PatchClip(changes, c.UUID); e != nil {
-				return e
+				return clips_downloaded, e
 			}
 			clips_updated += 1
 			continue
@@ -208,20 +209,20 @@ func DownloadClips() error {
 		clipsPath := filepath.Join("/var/www/media", "clips")
 		segmentsPath := filepath.Join(clipsPath, newClip.Filename+"-segments")
 		if err := os.MkdirAll(segmentsPath, 0755); err != nil && !os.IsExist(err) {
-			return err
+			return clips_downloaded, err
 		}
 
 		// get clip url from twitch
 		downloadURL, err := external_apis.BuildDownloadURL(clip.ID, false)
 		if err != nil {
 			os.RemoveAll(segmentsPath)
-			return err
+			return clips_downloaded, err
 		}
 
 		// pass the clip url to ffmpeg to create .ts segments
 		if err := createSegmentsfromURL(downloadURL, segmentsPath, clip.ID, "clip"); err != nil {
 			os.RemoveAll(segmentsPath)
-			return err
+			return clips_downloaded, err
 		}
 
 		// get metadata from clip url
@@ -229,7 +230,7 @@ func DownloadClips() error {
 		m.Filename = clip.ID
 		if err := filesystem.GetMetadata(segmentsPath, &m); err != nil {
 			os.RemoveAll(segmentsPath)
-			return err
+			return clips_downloaded, err
 		}
 		newClip.Duration = m.Duration
 		newClip.Resolution = m.Resolution
@@ -238,12 +239,12 @@ func DownloadClips() error {
 
 		// create thumbnails ...
 		if err := filesystem.CreateThumbnails(clipsPath, clip.ID, newClip.Duration); err != nil {
-			return err
+			return clips_downloaded, err
 		}
 
 		// create clip in database
 		if err := queries.AddNewClip(&newClip); err != nil {
-			return err
+			return clips_downloaded, err
 		}
 
 		clips_downloaded += 1
@@ -251,7 +252,7 @@ func DownloadClips() error {
 
 	logger.Debug.Printf("[cronjob] clips downloaded: %d", clips_downloaded)
 	logger.Debug.Printf("[cronjob] clips updated: %d", clips_updated)
-	return nil
+	return clips_downloaded, nil
 }
 
 func DownloadGames() error {

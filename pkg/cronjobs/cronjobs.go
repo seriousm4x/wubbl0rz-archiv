@@ -40,13 +40,20 @@ func RunTwitchDownloads() {
 
 	// run downloads
 	twitchDownloadsRunning = true
+	downloaded_items := 0
 
-	if err := DownloadVods(); err != nil {
+	count, err := DownloadVods()
+	if err != nil {
 		logger.Error.Println(err)
 	}
-	if err := DownloadClips(); err != nil {
+	downloaded_items += count
+
+	count, err = DownloadClips()
+	if err != nil {
 		logger.Error.Println(err)
 	}
+	downloaded_items += count
+
 	if err := DownloadGames(); err != nil {
 		logger.Error.Println(err)
 	}
@@ -54,7 +61,9 @@ func RunTwitchDownloads() {
 	twitchDownloadsRunning = false
 
 	// delete cached routes
-	if err := router.MemoryStore.Cache.Purge(); err != nil {
-		logger.Error.Println(err)
+	if downloaded_items > 0 {
+		if err := router.MemoryStore.Cache.Purge(); err != nil {
+			logger.Error.Println(err)
+		}
 	}
 }
