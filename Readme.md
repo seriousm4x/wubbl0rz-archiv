@@ -42,20 +42,13 @@ services:
 
 ## 🚪 Reverse Proxy
 
-The easiest way is to use caddy. Paste the following into a file called `Caddyfile`. Change the `root` path to the parent directory of media (/path/to/) and run caddys system service.
+The easiest way is to use caddy. Paste the following into a file called `Caddyfile`.
 
 ```
 api.wubbl0rz.tv {
-    root * /path/to/
-    @excludePaths {
-        not path /media/*
-    }
-    reverse_proxy @excludePaths localhost:5000
-    file_server
+    reverse_proxy localhost:5000
     encode gzip
-    header * Cache-Control max-age=1
     header Access-Control-Allow-Origin "*"
-    header Cross-Origin-Resource-Policy "*"
 }
 ```
 

@@ -114,6 +114,7 @@ func Init() *gin.Engine {
 		gin.LoggerWithWriter(gin.DefaultWriter, "/health"),
 		gin.Recovery(),
 	)
+	r.Static("/media", "/var/www/media")
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
