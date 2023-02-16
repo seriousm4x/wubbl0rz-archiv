@@ -26,9 +26,14 @@ func Init() error {
 		return err
 	}
 
-	c.Start()
-
 	logger.Debug.Printf("[cronjob] registered %d jobs", len(c.Entries()))
+
+	logger.Debug.Println("[cronjob] inital run for all jobs")
+	for _, job := range c.Entries() {
+		job.Job.Run()
+	}
+
+	c.Start()
 
 	return nil
 }
