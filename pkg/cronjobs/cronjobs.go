@@ -3,7 +3,7 @@ package cronjobs
 import (
 	"github.com/AgileProggers/archiv-backend-go/pkg/logger"
 	"github.com/AgileProggers/archiv-backend-go/pkg/router"
-	"github.com/robfig/cron"
+	"github.com/robfig/cron/v3"
 )
 
 var twitchDownloadsRunning bool
@@ -12,17 +12,17 @@ func Init() error {
 	c := cron.New()
 
 	logger.Debug.Println("[cronjob] registering job: emote update")
-	if err := c.AddFunc("@every 1h", UpdateEmotes); err != nil {
+	if _, err := c.AddFunc("@every 1h", UpdateEmotes); err != nil {
 		return err
 	}
 
 	logger.Debug.Println("[cronjob] registering job: stream status")
-	if err := c.AddFunc("@every 1m", SetStreamStatus); err != nil {
+	if _, err := c.AddFunc("@every 1m", SetStreamStatus); err != nil {
 		return err
 	}
 
 	logger.Debug.Println("[cronjob] registering job: twitch downloads")
-	if err := c.AddFunc("@every 1h", RunTwitchDownloads); err != nil {
+	if _, err := c.AddFunc("@every 1h", RunTwitchDownloads); err != nil {
 		return err
 	}
 
