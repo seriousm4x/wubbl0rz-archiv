@@ -80,7 +80,7 @@ func main() {
 	thumbnails := []Thumbnail{}
 
 	for i, id := range files {
-		logger.Debug.Println(fmt.Sprintf("%d of %d: %s", i+1, len(files), id))
+		logger.Info.Println(fmt.Sprintf("%d of %d: %s", i+1, len(files), id))
 
 		thumbnails = []Thumbnail{}
 		thumbnails = append(thumbnails, Thumbnail{Filename: "-sm.jpg", Width: 256, Height: 144})
@@ -88,14 +88,13 @@ func main() {
 		thumbnails = append(thumbnails, Thumbnail{Filename: "-lg.jpg", Width: 1600, Height: 900})
 		thumbnails = append(thumbnails, Thumbnail{Filename: "-sm.avif", Width: 256, Height: 144})
 		thumbnails = append(thumbnails, Thumbnail{Filename: "-md.avif", Width: 512, Height: 288})
-		thumbnails = append(thumbnails, Thumbnail{Filename: "-sprites", Width: 512, Height: 288})
 
 		for _, thumb := range thumbnails {
 			imgPath := filepath.Join(*pathPtr, id+thumb.Filename)
 
 			stat, err := os.Stat(imgPath)
 			if errors.Is(err, os.ErrNotExist) {
-				logger.Debug.Println("Recrete", id, "Doesn't exist")
+				logger.Info.Println("Recrete", id, "(doesn't exist)")
 				if err := recreate(*pathPtr, id); err != nil {
 					logger.Error.Panicln(err)
 				}
@@ -106,38 +105,17 @@ func main() {
 				continue
 			}
 
-			if stat.Size() <= 8 {
-				logger.Debug.Println("Recrete", id, "Size:", stat.Size())
-				if err := recreate(*pathPtr, id); err != nil {
-					logger.Error.Panicln(err)
-				}
-				continue
-			}
-
 			// go cant decode avif to get dimensions
 			if strings.HasSuffix(imgPath, ".avif") {
 				continue
 			}
 
 			width, height, err := getImageDimension(imgPath)
-			if err != nil {
-				logger.Debug.Println("Recrete", id, "No dimensions")
-			}
-
-			if width != thumb.Width {
-				logger.Debug.Println("Recrete", id, "Width:", width)
+			if stat.Size() <= 8 || width != thumb.Width || height != thumb.Height || err != nil {
+				logger.Info.Println("Recrete", id)
 				if err := recreate(*pathPtr, id); err != nil {
 					logger.Error.Panicln(err)
 				}
-				continue
-			}
-
-			if height != thumb.Height {
-				logger.Debug.Println("Recrete", id, "Height:", height)
-				if err := recreate(*pathPtr, id); err != nil {
-					logger.Error.Panicln(err)
-				}
-				continue
 			}
 		}
 	}
