@@ -42,6 +42,7 @@ func init() {
 	// see this issue here https://github.com/go-gorm/gorm/issues/4946
 	// workaround is to drop the generated columns and recreate them
 	if db.Migrator().HasTable(&models.Vod{}) {
+		logger.Debug.Println("Deleting old generated columns")
 		if db.Migrator().HasColumn(&models.Vod{}, "TitleVector") {
 			if err := db.Migrator().DropColumn(&models.Vod{}, "TitleVector"); err != nil {
 				logger.Error.Println(err)
@@ -55,6 +56,7 @@ func init() {
 	}
 
 	// finally auto migrate
+	logger.Debug.Println("Running automigrate")
 	err = db.AutoMigrate(&models.Vod{}, &models.Game{}, &models.Creator{}, &models.Clip{}, &models.Emote{}, &models.Settings{}, &models.ChatMessage{})
 	if err != nil {
 		panic(fmt.Sprint("Unable to auto migrate database:", err))
