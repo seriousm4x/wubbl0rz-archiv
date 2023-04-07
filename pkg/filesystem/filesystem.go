@@ -10,8 +10,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-
-	"github.com/h2non/bimg"
 )
 
 type Meta struct {
@@ -119,33 +117,42 @@ func CreateThumbnails(destPath string, filename string, duration int) error {
 		return err
 	}
 
-	// read lossless png to buff
-	buffer, err := bimg.Read(src_png)
-	if err != nil {
-		return err
-	}
-
-	// define final thumbnails
-	type Thumbnail struct {
-		Options  *bimg.Options
+	// define final jpg thumbnails
+	type JpgThumbnail struct {
 		Filename string
+		Width    int
+		Height   int
 	}
+	jpgThumbnails := []JpgThumbnail{}
+	jpgThumbnails = append(jpgThumbnails, JpgThumbnail{Filename: "-sm.jpg", Width: 256, Height: 144})
+	jpgThumbnails = append(jpgThumbnails, JpgThumbnail{Filename: "-md.jpg", Width: 512, Height: 288})
+	jpgThumbnails = append(jpgThumbnails, JpgThumbnail{Filename: "-lg.jpg", Width: 1600, Height: 900})
 
-	thumbnails := []Thumbnail{}
-	thumbnails = append(thumbnails, Thumbnail{Filename: "-sm.jpg", Options: &bimg.Options{Width: 256, Height: 144, Type: bimg.JPEG}})
-	thumbnails = append(thumbnails, Thumbnail{Filename: "-md.jpg", Options: &bimg.Options{Width: 512, Height: 288, Type: bimg.JPEG}})
-	thumbnails = append(thumbnails, Thumbnail{Filename: "-lg.jpg", Options: &bimg.Options{Width: 1600, Height: 900, Type: bimg.JPEG}})
-	thumbnails = append(thumbnails, Thumbnail{Filename: "-sm.avif", Options: &bimg.Options{Width: 256, Height: 144, Type: bimg.AVIF}})
-	thumbnails = append(thumbnails, Thumbnail{Filename: "-md.avif", Options: &bimg.Options{Width: 512, Height: 288, Type: bimg.AVIF}})
+	// define final avif thumbnails
+	type AvifThumbnail struct {
+		Filename string
+		Width    int
+		Height   int
+	}
+	avifThumbnails := []AvifThumbnail{}
+	avifThumbnails = append(avifThumbnails, AvifThumbnail{Filename: "-sm.avif", Width: 256, Height: 144})
+	avifThumbnails = append(avifThumbnails, AvifThumbnail{Filename: "-md.avif", Width: 512, Height: 288})
 
-	// create defined thumbnails
-	for _, thumb := range thumbnails {
-		thumb.Options.Quality = 95
-		newImage, err := bimg.NewImage(buffer).Process(*thumb.Options)
-		if err != nil {
+	// encode jpg and avif thumbnails with ffmpeg
+	for _, thumb := range jpgThumbnails {
+		cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", src_png,
+			"-vf", fmt.Sprintf("scale=%d:%d", thumb.Width, thumb.Height), "-y", filepath.Join(destPath, filename+thumb.Filename))
+		if err := cmd.Run(); err != nil {
 			return err
 		}
-		bimg.Write(filepath.Join(destPath, filename+thumb.Filename), newImage)
+	}
+	for _, thumb := range avifThumbnails {
+		cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", src_png, "-c:v", "libaom-av1",
+			"-still-picture", "1", "-vf", fmt.Sprintf("scale=%d:%d", thumb.Width, thumb.Height), "-y",
+			filepath.Join(destPath, filename+thumb.Filename))
+		if err := cmd.Run(); err != nil {
+			return err
+		}
 	}
 
 	// remove source png
