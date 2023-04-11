@@ -38,6 +38,15 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - /path/to/postgres/:/var/lib/postgresql/data
+  meili:
+    container_name: archiv-meili
+    image: getmeili/meilisearch:v1.1
+    env_file: .env
+    ports:
+      - 127.0.0.1:7700:7700
+    volumes:
+      - ./meili_data:/meili_data
+    restart: unless-stopped
 ```
 
 ## 🚪 Reverse Proxy
@@ -47,7 +56,7 @@ The easiest way is to use caddy. Paste the following into a file called `Caddyfi
 ```
 api.wubbl0rz.tv {
     reverse_proxy localhost:5000
-    encode gzip
+    encode zstd gzip
     header Access-Control-Allow-Origin "*"
 }
 ```
@@ -62,6 +71,97 @@ Required to upgrade major postgres versions.
 **Restore**
 `docker exec -i archiv-db psql -d YOUR_DB_NAME -U YOUR_DB_USER < /path/to/backup/dump_<some-date>.sql`
 
+## 🔎 Meilisearch
+
+Meilisearch index is filled with [archiv-transcribe](https://github.com/AgileProggers/archiv-transcribe).
+
+A custom config is requires for our indexes. [Use the api](https://docs.meilisearch.com/reference/api/settings.html#update-settings) to patch the index settings like so:
+
+> PATCH `http://localhost:7700/indexes/transcripts/settings/`
+
+```json
+{
+	"displayedAttributes": [
+		"*"
+	],
+	"searchableAttributes": [
+		"text"
+	],
+	"filterableAttributes": [],
+	"sortableAttributes": [
+		"date",
+		"duration",
+		"viewcount"
+	],
+	"rankingRules": [
+		"sort",
+		"words",
+		"typo",
+		"proximity",
+		"attribute",
+		"exactness"
+	]
+}
+```
+
+> PATCH `http://localhost:7700/indexes/vods/settings/`
+
+```json
+{
+	"displayedAttributes": [
+		"*"
+	],
+	"searchableAttributes": [
+		"title"
+	],
+	"filterableAttributes": [],
+	"sortableAttributes": [
+		"date",
+		"duration",
+		"viewcount"
+	],
+	"rankingRules": [
+		"sort",
+		"words",
+		"typo",
+		"proximity",
+		"attribute",
+		"exactness"
+	]
+}
+```
+
+> PATCH `http://localhost:7700/indexes/clips/settings/`
+
+```json
+{
+	"displayedAttributes": [
+		"*"
+	],
+	"searchableAttributes": [
+		"*"
+	],
+	"filterableAttributes": [],
+	"sortableAttributes": [
+		"date",
+		"duration",
+		"viewcount"
+	]
+}
+```
+
 ## Documentation
 
-Check out [the swagger page](https://api.wubbl0rz.tv/swagger/index.html) for more documentation.
+Docs are generated with swagger. Install `swag` to build docs:
+
+```bash
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+
+Then build:
+
+```bash
+swag i
+```
+
+Check out [the swagger page](https://api.wubbl0rz.tv/swagger/index.html) for the build documentation.

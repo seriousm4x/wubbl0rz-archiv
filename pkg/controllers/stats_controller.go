@@ -135,23 +135,6 @@ func GetLongStats(c *gin.Context) {
 		return
 	}
 
-	// get CountTranscriptWords, CountUniqueWords and CountAvgWords
-	tempDest := struct {
-		CountTranscriptWords int64   `json:"count_transcript_words"`
-		CountUniqueWords     int64   `json:"count_unique_words"`
-		CountAvgWords        float64 `json:"count_avg_words"`
-	}{}
-	if result := database.DB.Raw("select sum(stats.nentry) as count_transcript_words, count(stats.word) as count_unique_words from ts_stat('select vods.transcript_vector from vods where vods.publish = true and vods.transcript is not null') as stats").Scan(&tempDest); result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": true,
-			"msg":   "Failed to get stats",
-		})
-		return
-	}
-	stats.CountTranscriptWords = tempDest.CountTranscriptWords
-	stats.CountUniqueWords = tempDest.CountUniqueWords
-	stats.CountAvgWords = float64(tempDest.CountTranscriptWords) / float64(stats.CountVodsTotal)
-
 	// get TrendVods
 	if result := database.DB.Raw("select (select count(vods.uuid) from vods where vods.date between (now() - interval '1 month') and now()) - count(vods.uuid) as vods_trend from vods where vods.date between (now() - interval '2 month') and (now() - interval '1 month')").Scan(&stats.TrendVods); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

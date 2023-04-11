@@ -1138,14 +1138,61 @@
                 "tags": [
                     "Vods"
                 ],
-                "summary": "Get all vods by full text search",
+                "summary": "Get all vods",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "The text to search in transcript",
-                        "name": "q",
-                        "in": "query",
-                        "required": true
+                        "description": "The uuid of a vod",
+                        "name": "uuid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "The title of a vod",
+                        "name": "title",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "The duration of a vod",
+                        "name": "duration",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "The date of a vod",
+                        "name": "date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "The filename of a vod",
+                        "name": "filename",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "The resolution of a vod",
+                        "name": "resolution",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "The fps of a vod",
+                        "name": "fps",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "The size of a vod",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Set order direction divided by comma. Possible ordering values: 'date', 'duration', 'size'. Possible directions: 'asc', 'desc'. Example: 'date,desc'",
+                        "name": "order",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1156,6 +1203,12 @@
                             "items": {
                                 "$ref": "#/definitions/models.Vod"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "404": {
@@ -1548,9 +1601,6 @@
                     "type": "integer"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "transcript": {
                     "type": "string"
                 },
                 "uuid": {

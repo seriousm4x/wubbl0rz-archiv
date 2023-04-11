@@ -57,4 +57,4 @@ go.work
 
 .env
 docker-compose.yml
-fill_db.py
+meili_data
