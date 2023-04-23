@@ -55,10 +55,10 @@ func DownloadVods() (int, error) {
 
 	vods_downloaded := 0
 	for _, vod := range vods {
-		// skip vod if created less then 24h ago (terms of service)
-		if !vod.CreatedAt.Before(time.Now().Add(time.Duration(-24) * time.Hour)) {
-			continue
-		}
+		// skip vod if created less then 24h ago (only relevant for affiliates)
+		// if !vod.CreatedAt.Before(time.Now().Add(time.Duration(-24) * time.Hour)) {
+		// 	continue
+		// }
 
 		var newVod models.Vod
 		newVod.Title = vod.Title
