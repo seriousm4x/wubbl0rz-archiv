@@ -1,6 +1,7 @@
 package cronjobs
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -48,12 +49,21 @@ func createSegmentsfromURL(input_url string, segmentsPath string, filename strin
 
 func DownloadVods() (int, error) {
 	logger.Debug.Println("[cronjob] vod download started")
+	vods_downloaded := 0
+
 	var vods []external_apis.TwitchHelixVideo
 	if err := external_apis.TwitchGetHelixVideos(&vods); err != nil {
-		logger.Error.Println(err)
+		return vods_downloaded, err
 	}
 
-	vods_downloaded := 0
+	var streams external_apis.TwitchStreamResponse
+	if err := external_apis.TwitchGetHelixStreams(&streams); err != nil {
+		return vods_downloaded, err
+	}
+	if len(streams.Data) > 0 {
+		return vods_downloaded, errors.New("stream is live. skipping vod download")
+	}
+
 	for _, vod := range vods {
 		// skip vod if created less then 24h ago (only relevant for affiliates)
 		// if !vod.CreatedAt.Before(time.Now().Add(time.Duration(-24) * time.Hour)) {

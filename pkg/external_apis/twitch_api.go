@@ -440,6 +440,42 @@ func TwitchGetHelixGames(games []models.Game) ([]TwitchHelixGame, error) {
 	return respondedGames, nil
 }
 
+func TwitchGetHelixStreams(streams *TwitchStreamResponse) error {
+	var settings models.Settings
+	if err := queries.GetSettings(&settings); err != nil {
+		return err
+	}
+
+	err := UpdateBearer(&settings)
+	if err != nil {
+		return err
+	}
+
+	url := "https://api.twitch.tv/helix/streams?user_id=" + settings.BroadcasterId
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Client-ID", settings.TtvClientId)
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", settings.TtvBearerToken))
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return err
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&streams); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func BuildDownloadURL(id string, isVod bool) (string, error) {
 	// this is a go implementation of streamlink's way to the m3u8 from a vod/clip
 	// https://github.com/streamlink/streamlink/blob/master/src/streamlink/plugins/twitch.py
