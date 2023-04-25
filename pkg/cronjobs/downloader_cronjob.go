@@ -154,10 +154,12 @@ func DownloadClips() (int, error) {
 	}
 
 	for _, clip := range clips {
-		// skip clip if created less then 24h ago (terms of service)
-		if !clip.CreatedAt.Before(time.Now().Add(time.Duration(-24) * time.Hour)) {
-			continue
-		}
+		// skip clip if created less then 24h ago (only relevant for affiliates)
+		// see: https://www.nbcnews.com/tech/twitch-partners-multiple-platforms-youtube-facebook-rcna44477
+		// and: https://esports.gg/news/streamers/twitch-exclusivity-removal/
+		// if !clip.CreatedAt.Before(time.Now().Add(time.Duration(-24) * time.Hour)) {
+		//	 continue
+		// }
 
 		if clip.ViewCount < 3 {
 			continue
