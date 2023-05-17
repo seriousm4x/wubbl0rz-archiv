@@ -114,7 +114,13 @@ func CreateThumbnails(destPath string, filename string, duration int) error {
 	cmd := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab,
 		"-i", m3u8, "-vframes", "1", "-f", "image2", "-y", src_png)
 	if err := cmd.Run(); err != nil {
-		return err
+		// try to run again but with seek timecode after input
+		c := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", m3u8, "-ss", timecode_framegrab,
+			"-vframes", "1", "-f", "image2", "-y", src_png)
+		if e := c.Run(); err != nil {
+			return e
+
+		}
 	}
 
 	// define final jpg thumbnails
