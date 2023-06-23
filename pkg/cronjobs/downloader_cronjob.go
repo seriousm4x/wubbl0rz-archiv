@@ -150,6 +150,7 @@ func DownloadClips() (int, error) {
 
 	var clips []external_apis.TwitchHelixClip
 	if err := external_apis.TwitchGetHelixClips(&clips); err != nil {
+		logger.Error.Println(err)
 		return clips_downloaded, err
 	}
 
@@ -168,8 +169,10 @@ func DownloadClips() (int, error) {
 		// update game
 		var game models.Game
 		if err := queries.GetOneGame(&game, clip.GameID); err != nil {
+			logger.Error.Println(err)
 			game.UUID = clip.GameID
 			if e := queries.AddNewGame(&game); e != nil {
+				logger.Error.Println(e)
 				return clips_downloaded, e
 			}
 		}
@@ -182,6 +185,7 @@ func DownloadClips() (int, error) {
 			creator.Name = clip.CreatorName
 			creator.Clips = nil
 			if e := queries.AddNewCreator(&creator); e != nil {
+				logger.Error.Println(e)
 				return clips_downloaded, e
 			}
 		}
@@ -195,6 +199,7 @@ func DownloadClips() (int, error) {
 				"Viewcount": clip.ViewCount,
 			}
 			if e := queries.PatchClip(changes, c.UUID); e != nil {
+				logger.Error.Println(e)
 				return clips_downloaded, e
 			}
 			clips_updated += 1
@@ -221,18 +226,21 @@ func DownloadClips() (int, error) {
 		clipsPath := filepath.Join("/var/www/media", "clips")
 		segmentsPath := filepath.Join(clipsPath, newClip.Filename+"-segments")
 		if err := os.MkdirAll(segmentsPath, 0755); err != nil && !os.IsExist(err) {
+			logger.Error.Println(err)
 			return clips_downloaded, err
 		}
 
 		// get clip url from twitch
 		downloadURL, err := external_apis.BuildDownloadURL(clip.ID, false)
 		if err != nil {
+			logger.Error.Println(err)
 			os.RemoveAll(segmentsPath)
 			return clips_downloaded, err
 		}
 
 		// pass the clip url to ffmpeg to create .ts segments
 		if err := createSegmentsfromURL(downloadURL, segmentsPath, clip.ID, "clip"); err != nil {
+			logger.Error.Println(err)
 			os.RemoveAll(segmentsPath)
 			return clips_downloaded, err
 		}
@@ -241,6 +249,7 @@ func DownloadClips() (int, error) {
 		var m filesystem.Meta
 		m.Filename = clip.ID
 		if err := filesystem.GetMetadata(segmentsPath, &m); err != nil {
+			logger.Error.Println(err)
 			os.RemoveAll(segmentsPath)
 			return clips_downloaded, err
 		}
@@ -251,11 +260,13 @@ func DownloadClips() (int, error) {
 
 		// create thumbnails ...
 		if err := filesystem.CreateThumbnails(clipsPath, clip.ID, newClip.Duration); err != nil {
+			logger.Error.Println(err)
 			return clips_downloaded, err
 		}
 
 		// create clip in database
 		if err := queries.AddNewClip(&newClip); err != nil {
+			logger.Error.Println(err)
 			return clips_downloaded, err
 		}
 
