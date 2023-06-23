@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/AgileProggers/archiv-backend-go/pkg/logger"
 )
 
 type Meta struct {
@@ -24,6 +26,7 @@ func getSegmentSize(path string) (int64, error) {
 	var size int64
 	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
 		if err != nil {
+			logger.Error.Println(err)
 			return err
 		}
 		if !info.IsDir() && strings.Contains(info.Name(), ".ts") {
@@ -44,6 +47,7 @@ func GetMetadata(destPath string, m *Meta) error {
 	cmd.Stdout = &stdout
 
 	if err := cmd.Run(); err != nil {
+		logger.Error.Println(err)
 		return err
 	}
 
@@ -60,10 +64,12 @@ func GetMetadata(destPath string, m *Meta) error {
 	fpsFraction := strings.Split(strings.TrimSpace(splittedStdout[2]), "/")
 	fpsNumerator, err := strconv.ParseFloat(fpsFraction[0], 64)
 	if err != nil {
+		logger.Error.Println(err)
 		return err
 	}
 	fpsDenominator, err := strconv.ParseFloat(fpsFraction[1], 64)
 	if err != nil {
+		logger.Error.Println(err)
 		return err
 	}
 	fps := fpsNumerator / fpsDenominator
@@ -71,6 +77,7 @@ func GetMetadata(destPath string, m *Meta) error {
 	// duration
 	duration, err := strconv.ParseFloat(strings.TrimSpace(splittedStdout[3]), 64)
 	if err != nil {
+		logger.Error.Println(err)
 		return err
 	}
 
@@ -92,6 +99,7 @@ func GetMetadata(destPath string, m *Meta) error {
 	// get filesize
 	size, err := getSegmentSize(destPath)
 	if err != nil {
+		logger.Error.Println(err)
 		return err
 	}
 	m.Size = int(size)
@@ -114,12 +122,13 @@ func CreateThumbnails(destPath string, filename string, duration int) error {
 	cmd := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab,
 		"-i", m3u8, "-vframes", "1", "-f", "image2", "-y", src_png)
 	if err := cmd.Run(); err != nil {
+		logger.Error.Println(err)
 		// try to run again but with seek timecode after input
 		c := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", m3u8, "-ss", timecode_framegrab,
 			"-vframes", "1", "-f", "image2", "-y", src_png)
 		if e := c.Run(); err != nil {
+			logger.Error.Println(e)
 			return e
-
 		}
 	}
 
@@ -149,6 +158,7 @@ func CreateThumbnails(destPath string, filename string, duration int) error {
 		cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", src_png,
 			"-vf", fmt.Sprintf("scale=%d:%d", thumb.Width, thumb.Height), "-y", filepath.Join(destPath, filename+thumb.Filename))
 		if err := cmd.Run(); err != nil {
+			logger.Error.Println(err)
 			return err
 		}
 	}
@@ -157,12 +167,14 @@ func CreateThumbnails(destPath string, filename string, duration int) error {
 			"-still-picture", "1", "-vf", fmt.Sprintf("scale=%d:%d", thumb.Width, thumb.Height), "-y",
 			filepath.Join(destPath, filename+thumb.Filename))
 		if err := cmd.Run(); err != nil {
+			logger.Error.Println(err)
 			return err
 		}
 	}
 
 	// remove source png
 	if err := os.Remove(src_png); err != nil {
+		logger.Error.Println(err)
 		return err
 	}
 
@@ -173,17 +185,20 @@ func CreateThumbnails(destPath string, filename string, duration int) error {
 		"0", "-compression_level", "3", "-q:v", "70", "-loop", "0", "-preset", "picture",
 		"-an", "-vsync", "0", "-t", "4", "-y", animated_webp)
 	if err := cmd.Run(); err != nil {
+		logger.Error.Println(err)
 		return err
 	}
 
 	// create sprites
 	sprite_dir := filepath.Join(destPath, filename+"-sprites")
 	if err := os.MkdirAll(sprite_dir, 0755); err != nil && !os.IsExist(err) {
+		logger.Error.Println(err)
 		return err
 	}
 	cmd = exec.Command("ffmpeg", "-skip_frame", "nokey", "-i", m3u8, "-vf", "fps=1/20,scale=-1:90,tile",
 		"-c:v", "libwebp", "-y", filepath.Join(sprite_dir, filename+"_%03d.webp"))
 	if err := cmd.Run(); err != nil {
+		logger.Error.Println(err)
 		return err
 	}
 
