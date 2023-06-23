@@ -119,17 +119,11 @@ func CreateThumbnails(destPath string, filename string, duration int) error {
 
 	// create lossless source png
 	src_png := filepath.Join(destPath, filename+"-source.png")
-	cmd := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab,
-		"-i", m3u8, "-vframes", "1", "-f", "image2", "-y", src_png)
+	cmd := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", m3u8, "-ss", timecode_framegrab,
+		"-vframes", "1", "-f", "image2", "-y", src_png)
 	if err := cmd.Run(); err != nil {
 		logger.Error.Println(err)
-		// try to run again but with seek timecode after input
-		c := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", m3u8, "-ss", timecode_framegrab,
-			"-vframes", "1", "-f", "image2", "-y", src_png)
-		if e := c.Run(); err != nil {
-			logger.Error.Println(e)
-			return e
-		}
+		return err
 	}
 
 	// define final jpg thumbnails
