@@ -150,6 +150,15 @@ A custom config is requires for our indexes. [Use the api](https://docs.meilisea
 }
 ```
 
+> PATCH `http://localhost:7700/indexes/transcripts`
+
+```json
+{
+	"primaryKey": "id"
+}
+```
+
+
 ## Documentation
 
 Docs are generated with swagger. Install `swag` to build docs:
