@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/AgileProggers/archiv-backend-go/pkg/controllers"
 	"github.com/gin-gonic/gin"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/controllers"
 )
 
 func PrivateRoutes(rg *gin.RouterGroup) {

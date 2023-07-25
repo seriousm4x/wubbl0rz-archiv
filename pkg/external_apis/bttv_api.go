@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/AgileProggers/archiv-backend-go/pkg/models"
-	"github.com/AgileProggers/archiv-backend-go/pkg/queries"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/models"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/queries"
 )
 
 type bttvEmote struct {

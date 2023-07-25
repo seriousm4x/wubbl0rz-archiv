@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/AgileProggers/archiv-backend-go/pkg/database"
-	"github.com/AgileProggers/archiv-backend-go/pkg/models"
 	"github.com/gin-gonic/gin"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/database"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/models"
 )
 
 // GetAllChatMessages godoc

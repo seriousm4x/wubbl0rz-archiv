@@ -1,9 +1,9 @@
 package cronjobs
 
 import (
-	"github.com/AgileProggers/archiv-backend-go/pkg/logger"
-	"github.com/AgileProggers/archiv-backend-go/pkg/router"
 	"github.com/robfig/cron/v3"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/logger"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/router"
 )
 
 var twitchDownloadsRunning bool

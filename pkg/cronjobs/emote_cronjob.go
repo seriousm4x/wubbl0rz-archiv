@@ -3,10 +3,10 @@ package cronjobs
 import (
 	"time"
 
-	"github.com/AgileProggers/archiv-backend-go/pkg/external_apis"
-	"github.com/AgileProggers/archiv-backend-go/pkg/logger"
-	"github.com/AgileProggers/archiv-backend-go/pkg/models"
-	"github.com/AgileProggers/archiv-backend-go/pkg/queries"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/external_apis"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/logger"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/models"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/queries"
 )
 
 func UpdateEmotes() {

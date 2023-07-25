@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/AgileProggers/archiv-backend-go/pkg/database"
-	"github.com/AgileProggers/archiv-backend-go/pkg/models"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/database"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/models"
 )
 
 func GetAllClips(c *[]models.Clip, query models.Clip, pagination Pagination, o string, date_from time.Time, date_to time.Time) (*Pagination, error) {

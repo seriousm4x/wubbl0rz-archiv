@@ -73,34 +73,26 @@ Required to upgrade major postgres versions.
 
 ## 🔎 Meilisearch
 
-Meilisearch index is filled with [archiv-transcribe](https://github.com/AgileProggers/archiv-transcribe).
+Meilisearch index is filled with [archiv-transcribe](https://github.com/seriousm4x/wubbl0rz-archiv-transcribe).
 
-A custom config is requires for our indexes. [Use the api](https://docs.meilisearch.com/reference/api/settings.html#update-settings) to patch the index settings like so:
+A custom config is required for our indexes. [Use the api](https://docs.meilisearch.com/reference/api/settings.html#update-settings) to patch the index settings like so:
 
 > PATCH `http://localhost:7700/indexes/transcripts/settings/`
 
 ```json
 {
-	"displayedAttributes": [
-		"*"
-	],
-	"searchableAttributes": [
-		"text"
-	],
-	"filterableAttributes": [],
-	"sortableAttributes": [
-		"date",
-		"duration",
-		"viewcount"
-	],
-	"rankingRules": [
-		"sort",
-		"words",
-		"typo",
-		"proximity",
-		"attribute",
-		"exactness"
-	]
+  "displayedAttributes": ["*"],
+  "searchableAttributes": ["text"],
+  "filterableAttributes": [],
+  "sortableAttributes": ["date", "duration", "viewcount"],
+  "rankingRules": [
+    "sort",
+    "words",
+    "typo",
+    "proximity",
+    "attribute",
+    "exactness"
+  ]
 }
 ```
 
@@ -108,26 +100,18 @@ A custom config is requires for our indexes. [Use the api](https://docs.meilisea
 
 ```json
 {
-	"displayedAttributes": [
-		"*"
-	],
-	"searchableAttributes": [
-		"title"
-	],
-	"filterableAttributes": [],
-	"sortableAttributes": [
-		"date",
-		"duration",
-		"viewcount"
-	],
-	"rankingRules": [
-		"sort",
-		"words",
-		"typo",
-		"proximity",
-		"attribute",
-		"exactness"
-	]
+  "displayedAttributes": ["*"],
+  "searchableAttributes": ["title"],
+  "filterableAttributes": [],
+  "sortableAttributes": ["date", "duration", "viewcount"],
+  "rankingRules": [
+    "sort",
+    "words",
+    "typo",
+    "proximity",
+    "attribute",
+    "exactness"
+  ]
 }
 ```
 
@@ -135,18 +119,10 @@ A custom config is requires for our indexes. [Use the api](https://docs.meilisea
 
 ```json
 {
-	"displayedAttributes": [
-		"*"
-	],
-	"searchableAttributes": [
-		"*"
-	],
-	"filterableAttributes": [],
-	"sortableAttributes": [
-		"date",
-		"duration",
-		"viewcount"
-	]
+  "displayedAttributes": ["*"],
+  "searchableAttributes": ["*"],
+  "filterableAttributes": [],
+  "sortableAttributes": ["date", "duration", "viewcount"]
 }
 ```
 

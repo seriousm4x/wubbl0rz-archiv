@@ -4,10 +4,10 @@ import (
 	"html"
 	"os"
 
-	"github.com/AgileProggers/archiv-backend-go/pkg/database"
-	"github.com/AgileProggers/archiv-backend-go/pkg/logger"
-	"github.com/AgileProggers/archiv-backend-go/pkg/models"
 	"github.com/gempir/go-twitch-irc/v3"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/database"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/logger"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/models"
 )
 
 func Run() {

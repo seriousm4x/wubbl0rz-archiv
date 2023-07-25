@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/AgileProggers/archiv-backend-go/pkg/logger"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/logger"
 	"gorm.io/gorm"
 )
 

@@ -3,9 +3,9 @@ package helpers
 import (
 	"os"
 
-	"github.com/AgileProggers/archiv-backend-go/pkg/external_apis"
-	"github.com/AgileProggers/archiv-backend-go/pkg/models"
-	"github.com/AgileProggers/archiv-backend-go/pkg/queries"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/external_apis"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/models"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/queries"
 )
 
 func ImportEnvToDb() error {

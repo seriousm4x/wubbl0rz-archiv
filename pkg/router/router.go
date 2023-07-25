@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/AgileProggers/archiv-backend-go/pkg/logger"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/logger"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )

@@ -3,10 +3,10 @@ package router
 import (
 	"time"
 
-	"github.com/AgileProggers/archiv-backend-go/pkg/controllers"
 	cache "github.com/chenyahui/gin-cache"
 	"github.com/chenyahui/gin-cache/persist"
 	"github.com/gin-gonic/gin"
+	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/controllers"
 )
 
 var MemoryStore *persist.MemoryStore
