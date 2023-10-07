@@ -184,17 +184,17 @@ func CreateThumbnails(destPath string, filename string, duration int) error {
 	}
 
 	// create sprites
-	sprite_dir := filepath.Join(destPath, filename+"-sprites")
-	if err := os.MkdirAll(sprite_dir, 0755); err != nil && !os.IsExist(err) {
-		logger.Error.Println(err)
-		return err
-	}
-	cmd = exec.Command("ffmpeg", "-skip_frame", "nokey", "-i", m3u8, "-vf", "fps=1/20,scale=-1:90,tile",
-		"-c:v", "libwebp", "-y", filepath.Join(sprite_dir, filename+"_%03d.webp"))
-	if err := cmd.Run(); err != nil {
-		logger.Error.Println(err)
-		return err
-	}
+	// sprite_dir := filepath.Join(destPath, filename+"-sprites")
+	// if err := os.MkdirAll(sprite_dir, 0755); err != nil && !os.IsExist(err) {
+	// 	logger.Error.Println(err)
+	// 	return err
+	// }
+	// cmd = exec.Command("ffmpeg", "-skip_frame", "nokey", "-i", m3u8, "-vf", "fps=1/20,scale=-1:90,tile",
+	// 	"-c:v", "libwebp", "-y", filepath.Join(sprite_dir, filename+"_%03d.webp"))
+	// if err := cmd.Run(); err != nil {
+	// 	logger.Error.Println(err)
+	// 	return err
+	// }
 
 	return nil
 }
