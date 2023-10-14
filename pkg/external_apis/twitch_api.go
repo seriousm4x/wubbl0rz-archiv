@@ -201,7 +201,7 @@ func TwitchUpdateBroadcasterID() error {
 
 	// save id in db
 	settings.BroadcasterId = helixUser.Data[0].ID
-	if err := queries.OverwriteAllSettings(&settings); err != nil {
+	if err := queries.PartiallyUpdateSettings(&settings); err != nil {
 		return err
 	}
 
