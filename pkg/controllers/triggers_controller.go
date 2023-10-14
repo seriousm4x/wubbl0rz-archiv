@@ -17,5 +17,8 @@ import (
 func TriggerDownloads(c *gin.Context) {
 	logger.Debug.Println("[trigger] manual download")
 	go cronjobs.RunTwitchDownloads()
-	c.JSON(http.StatusOK, nil)
+	c.JSON(http.StatusOK, gin.H{
+		"error": false,
+		"msg":   "triggered",
+	})
 }
