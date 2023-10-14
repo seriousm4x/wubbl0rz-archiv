@@ -6,8 +6,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/database"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/models"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/database"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/models"
 	"gorm.io/gorm"
 )
 

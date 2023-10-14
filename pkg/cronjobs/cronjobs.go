@@ -2,28 +2,27 @@ package cronjobs
 
 import (
 	"github.com/robfig/cron/v3"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/logger"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/router"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/logger"
 )
 
 var twitchDownloadsRunning bool
 
-func Init() error {
+func init() {
 	c := cron.New()
 
 	logger.Debug.Println("[cronjob] registering job: emote update")
 	if _, err := c.AddFunc("@every 1h", UpdateEmotes); err != nil {
-		return err
+		logger.Error.Println(err)
 	}
 
 	logger.Debug.Println("[cronjob] registering job: stream status")
 	if _, err := c.AddFunc("@every 1m", SetStreamStatus); err != nil {
-		return err
+		logger.Error.Println(err)
 	}
 
 	logger.Debug.Println("[cronjob] registering job: twitch downloads")
 	if _, err := c.AddFunc("@every 1h", RunTwitchDownloads); err != nil {
-		return err
+		logger.Error.Println(err)
 	}
 
 	logger.Debug.Printf("[cronjob] registered %d jobs", len(c.Entries()))
@@ -34,8 +33,6 @@ func Init() error {
 	}
 
 	c.Start()
-
-	return nil
 }
 
 func RunTwitchDownloads() {
@@ -64,11 +61,4 @@ func RunTwitchDownloads() {
 	}
 
 	twitchDownloadsRunning = false
-
-	// delete cached routes
-	if downloaded_items > 0 {
-		if err := router.MemoryStore.Cache.Purge(); err != nil {
-			logger.Error.Println(err)
-		}
-	}
 }

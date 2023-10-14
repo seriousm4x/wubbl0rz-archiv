@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/database"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/logger"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/models"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/database"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/logger"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/models"
 )
 
 func Run() {

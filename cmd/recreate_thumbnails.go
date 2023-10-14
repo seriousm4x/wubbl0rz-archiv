@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/filesystem"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/logger"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/filesystem"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/logger"
 )
 
 func recreate(p string, id string) error {

@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/controllers"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/controllers"
 )
 
 func PrivateRoutes(rg *gin.RouterGroup) {
@@ -39,5 +39,9 @@ func PrivateRoutes(rg *gin.RouterGroup) {
 		emotesGroup.POST("/", controllers.CreateEmote)
 		emotesGroup.PATCH("/:id", controllers.PatchEmote)
 		emotesGroup.DELETE("/:id", controllers.DeleteEmote)
+	}
+	triggerGroup := rg.Group("/trigger")
+	{
+		triggerGroup.GET("/downloads", controllers.TriggerDownloads)
 	}
 }

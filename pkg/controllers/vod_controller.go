@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/models"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/queries"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/models"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/queries"
 )
 
 // GetVods godoc

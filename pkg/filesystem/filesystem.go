@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/logger"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/logger"
 )
 
 type Meta struct {

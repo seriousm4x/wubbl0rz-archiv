@@ -3,10 +3,10 @@ package cronjobs
 import (
 	"os"
 
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/external_apis"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/logger"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/models"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/queries"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/external_apis"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/logger"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/models"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/queries"
 )
 
 func SetStreamStatus() {

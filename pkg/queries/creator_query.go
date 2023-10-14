@@ -3,8 +3,8 @@ package queries
 import (
 	"errors"
 
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/database"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/models"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/database"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/models"
 )
 
 func GetAllCreators(c *[]models.Creator, query models.Creator, pagination Pagination) (*Pagination, error) {

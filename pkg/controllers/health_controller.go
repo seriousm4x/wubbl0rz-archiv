@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/seriousm4x/wubbl0rz-archiv-transcribe/pkg/database"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/database"
 )
 
 func GetHealth(c *gin.Context) {
