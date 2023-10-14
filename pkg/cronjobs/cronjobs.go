@@ -7,22 +7,22 @@ import (
 
 var twitchDownloadsRunning bool
 
-func init() {
+func Init() error {
 	c := cron.New()
 
 	logger.Debug.Println("[cronjob] registering job: emote update")
 	if _, err := c.AddFunc("@every 1h", UpdateEmotes); err != nil {
-		logger.Error.Println(err)
+		return err
 	}
 
 	logger.Debug.Println("[cronjob] registering job: stream status")
 	if _, err := c.AddFunc("@every 1m", SetStreamStatus); err != nil {
-		logger.Error.Println(err)
+		return err
 	}
 
 	logger.Debug.Println("[cronjob] registering job: twitch downloads")
 	if _, err := c.AddFunc("@every 1h", RunTwitchDownloads); err != nil {
-		logger.Error.Println(err)
+		return err
 	}
 
 	logger.Debug.Printf("[cronjob] registered %d jobs", len(c.Entries()))
@@ -33,6 +33,8 @@ func init() {
 	}
 
 	c.Start()
+
+	return nil
 }
 
 func RunTwitchDownloads() {

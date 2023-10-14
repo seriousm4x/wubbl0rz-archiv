@@ -11,6 +11,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/seriousm4x/wubbl0rz-archiv-backend/docs"
 	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/chatlogger"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/cronjobs"
 	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/database"
 	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/helpers"
 	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/logger"
@@ -45,6 +46,11 @@ func main() {
 			logger.Error.Fatalf("[main] listen: %s\n", err)
 		}
 	}()
+
+	// start cronjobs
+	if err := cronjobs.Init(); err != nil {
+		panic(err)
+	}
 
 	// run chatlogger
 	go chatlogger.Run()
