@@ -1,4 +1,4 @@
-FROM golang:alpine3.17 as base
+FROM golang:alpine3.18 as base
 WORKDIR /build
 COPY main.go go.mod go.sum ./
 COPY pkg ./pkg
@@ -8,7 +8,7 @@ RUN go mod download && \
     apk add --no-cache libc-dev gcc && \
     go build -ldflags="-s -w" -o apiserver .
 
-FROM alpine:3.17
+FROM alpine:3.18
 WORKDIR /app
 COPY --from=base /build/apiserver ./
 RUN apk update && \
