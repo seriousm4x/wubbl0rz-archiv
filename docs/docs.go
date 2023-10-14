@@ -1139,6 +1139,26 @@ const docTemplate = `{
                 }
             }
         },
+        "/trigger/download": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Triggers"
+                ],
+                "summary": "Trigger downloads",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/vods/": {
             "get": {
                 "consumes": [
