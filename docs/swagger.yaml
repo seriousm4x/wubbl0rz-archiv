@@ -838,19 +838,6 @@ paths:
       summary: Get short statistics
       tags:
       - Statistics
-  /trigger/download:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Trigger downloads
-      tags:
-      - Triggers
   /vods/:
     get:
       consumes:

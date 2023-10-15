@@ -3,6 +3,7 @@ package cronjobs
 import (
 	"github.com/robfig/cron/v3"
 	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/logger"
+	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/router"
 )
 
 var twitchDownloadsRunning bool
@@ -63,4 +64,11 @@ func RunTwitchDownloads() {
 	}
 
 	twitchDownloadsRunning = false
+
+	// delete cached routes
+	if downloaded_items > 0 {
+		if err := router.MemoryStore.Cache.Purge(); err != nil {
+			logger.Error.Println(err)
+		}
+	}
 }

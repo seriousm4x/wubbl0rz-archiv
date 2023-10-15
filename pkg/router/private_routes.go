@@ -40,8 +40,4 @@ func PrivateRoutes(rg *gin.RouterGroup) {
 		emotesGroup.PATCH("/:id", controllers.PatchEmote)
 		emotesGroup.DELETE("/:id", controllers.DeleteEmote)
 	}
-	triggerGroup := rg.Group("/trigger")
-	{
-		triggerGroup.GET("/downloads", controllers.TriggerDownloads)
-	}
 }
