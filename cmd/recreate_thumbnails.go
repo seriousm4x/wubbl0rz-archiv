@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"flag"
-	"fmt"
 	"image"
 	_ "image/jpeg"
 	"os"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/filesystem"
 	"github.com/seriousm4x/wubbl0rz-archiv-backend/pkg/logger"
+	"golang.org/x/image/webp"
 )
 
 func recreate(p string, id string) error {
@@ -31,16 +31,26 @@ func recreate(p string, id string) error {
 
 func getImageDimension(imagePath string) (int, int, error) {
 	file, err := os.Open(imagePath)
-	defer file.Close()
 	if err != nil {
 		return 0, 0, err
+	}
+	defer file.Close()
+
+	var img image.Image
+
+	if strings.HasSuffix(imagePath, ".webp") {
+		img, err = webp.Decode(file)
+		if err != nil {
+			return 0, 0, err
+		}
+	} else {
+		img, _, err = image.Decode(file)
+		if err != nil {
+			return 0, 0, err
+		}
 	}
 
-	image, _, err := image.Decode(file)
-	if err != nil {
-		return 0, 0, err
-	}
-	bounds := image.Bounds()
+	bounds := img.Bounds()
 	return bounds.Max.X, bounds.Max.Y, nil
 }
 
@@ -55,21 +65,16 @@ func main() {
 	}
 
 	// find ids
-	err := filepath.Walk(*pathPtr, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			logger.Error.Panicln(err)
-		}
-
-		if info.IsDir() && strings.HasSuffix(path, "-segments") {
-			filename := strings.Split(filepath.Base(path), "-segments")[0]
-			files = append(files, filename)
-		}
-
-		return nil
-	})
-
+	logger.Info.Println("finding id's in", *pathPtr)
+	dir, err := os.ReadDir(*pathPtr)
 	if err != nil {
 		logger.Error.Panicln(err)
+	}
+	for _, d := range dir {
+		if d.IsDir() && strings.HasSuffix(d.Name(), "-segments") {
+			filename := strings.Split(filepath.Base(d.Name()), "-segments")[0]
+			files = append(files, filename)
+		}
 	}
 
 	type Thumbnail struct {
@@ -78,17 +83,15 @@ func main() {
 		Height   int
 	}
 	thumbnails := []Thumbnail{}
+	thumbnails = append(thumbnails, Thumbnail{Filename: "-sm.jpg", Width: 256, Height: 144})
+	thumbnails = append(thumbnails, Thumbnail{Filename: "-md.jpg", Width: 512, Height: 288})
+	thumbnails = append(thumbnails, Thumbnail{Filename: "-lg.jpg", Width: 1600, Height: 900})
+	thumbnails = append(thumbnails, Thumbnail{Filename: "-sm.avif", Width: 256, Height: 144})
+	thumbnails = append(thumbnails, Thumbnail{Filename: "-md.avif", Width: 512, Height: 288})
+	thumbnails = append(thumbnails, Thumbnail{Filename: "-preview.webp", Width: 360, Height: 203})
 
 	for i, id := range files {
-		logger.Info.Println(fmt.Sprintf("%d of %d: %s", i+1, len(files), id))
-
-		thumbnails = []Thumbnail{}
-		thumbnails = append(thumbnails, Thumbnail{Filename: "-sm.jpg", Width: 256, Height: 144})
-		thumbnails = append(thumbnails, Thumbnail{Filename: "-md.jpg", Width: 512, Height: 288})
-		thumbnails = append(thumbnails, Thumbnail{Filename: "-lg.jpg", Width: 1600, Height: 900})
-		thumbnails = append(thumbnails, Thumbnail{Filename: "-sm.avif", Width: 256, Height: 144})
-		thumbnails = append(thumbnails, Thumbnail{Filename: "-md.avif", Width: 512, Height: 288})
-
+		logger.Info.Printf("%d of %d: %s", i+1, len(files), id)
 		for _, thumb := range thumbnails {
 			imgPath := filepath.Join(*pathPtr, id+thumb.Filename)
 
@@ -112,10 +115,12 @@ func main() {
 
 			width, height, err := getImageDimension(imgPath)
 			if stat.Size() <= 8 || width != thumb.Width || height != thumb.Height || err != nil {
-				logger.Info.Println("Recrete", id)
+				logger.Info.Printf("Recreate: %s%s", id, thumb.Filename)
 				if err := recreate(*pathPtr, id); err != nil {
 					logger.Error.Panicln(err)
 				}
+			} else {
+				logger.Info.Printf("Ok: %s%s", id, thumb.Filename)
 			}
 		}
 	}

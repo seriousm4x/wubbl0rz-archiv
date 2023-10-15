@@ -175,8 +175,8 @@ func CreateThumbnails(destPath string, filename string, duration int) error {
 	// animated webp
 	animated_webp := filepath.Join(destPath, filename+"-preview.webp")
 	cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", m3u8, "-ss",
-		timecode_framegrab, "-c:v", "libwebp", "-vf", "scale=256:-1,fps=fps=15", "-lossless",
-		"0", "-compression_level", "3", "-q:v", "70", "-loop", "0", "-preset", "picture",
+		timecode_framegrab, "-c:v", "libwebp", "-vf", "scale=360:-1,fps=fps=15", "-lossless",
+		"0", "-compression_level", "6", "-quality", "95", "-loop", "0", "-preset", "picture",
 		"-an", "-vsync", "0", "-t", "4", "-y", animated_webp)
 	if err := cmd.Run(); err != nil {
 		logger.Error.Println(err)
