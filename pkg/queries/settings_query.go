@@ -49,7 +49,7 @@ func OverwriteAllSettings(s *models.Settings) error {
 		var changes map[string]interface{}
 		data, _ := json.Marshal(s)
 		json.Unmarshal(data, &changes)
-		if resUpdate := result.Updates(&changes); resUpdate.Error != nil {
+		if resUpdate := database.DB.Model(&s).Updates(&changes); resUpdate.Error != nil {
 			return resUpdate.Error
 		}
 	} else {
