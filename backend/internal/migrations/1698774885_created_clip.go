@@ -12,16 +12,16 @@ import (
 func init() {
 	m.Register(func(db dbx.Builder) error {
 		jsonData := `{
-			"id": "9wu419qp30znepf",
-			"created": "2023-11-09 19:56:30.938Z",
-			"updated": "2023-11-09 19:56:30.938Z",
-			"name": "vod",
+			"id": "ze75ahzrvxoq372",
+			"created": "2023-10-31 17:54:45.766Z",
+			"updated": "2023-10-31 17:54:45.766Z",
+			"name": "clip",
 			"type": "base",
 			"system": false,
 			"schema": [
 				{
 					"system": false,
-					"id": "vbdiu1fg",
+					"id": "magym7cc",
 					"name": "title",
 					"type": "text",
 					"required": false,
@@ -35,7 +35,7 @@ func init() {
 				},
 				{
 					"system": false,
-					"id": "yi7rcxpk",
+					"id": "uvtn9iaf",
 					"name": "duration",
 					"type": "number",
 					"required": false,
@@ -49,7 +49,7 @@ func init() {
 				},
 				{
 					"system": false,
-					"id": "u4zrms8a",
+					"id": "k4x0rmr1",
 					"name": "date",
 					"type": "date",
 					"required": false,
@@ -62,21 +62,7 @@ func init() {
 				},
 				{
 					"system": false,
-					"id": "rbd4cxr7",
-					"name": "viewcount",
-					"type": "number",
-					"required": false,
-					"presentable": false,
-					"unique": false,
-					"options": {
-						"min": null,
-						"max": null,
-						"noDecimal": false
-					}
-				},
-				{
-					"system": false,
-					"id": "5cdrv0os",
+					"id": "oqubiotz",
 					"name": "filename",
 					"type": "text",
 					"required": false,
@@ -90,7 +76,7 @@ func init() {
 				},
 				{
 					"system": false,
-					"id": "5ay4apy8",
+					"id": "de3itj52",
 					"name": "resolution",
 					"type": "text",
 					"required": false,
@@ -104,7 +90,7 @@ func init() {
 				},
 				{
 					"system": false,
-					"id": "fu9c5gef",
+					"id": "a2lz9oap",
 					"name": "fps",
 					"type": "number",
 					"required": false,
@@ -118,7 +104,7 @@ func init() {
 				},
 				{
 					"system": false,
-					"id": "smojzwjt",
+					"id": "8dhws7aa",
 					"name": "size",
 					"type": "number",
 					"required": false,
@@ -132,42 +118,84 @@ func init() {
 				},
 				{
 					"system": false,
-					"id": "rv2bfwwv",
-					"name": "publish",
-					"type": "bool",
-					"required": false,
-					"presentable": false,
-					"unique": false,
-					"options": {}
-				},
-				{
-					"system": false,
-					"id": "wprkbol0",
-					"name": "custom_thumbnail",
-					"type": "file",
+					"id": "yeshn6b1",
+					"name": "viewcount",
+					"type": "number",
 					"required": false,
 					"presentable": false,
 					"unique": false,
 					"options": {
+						"min": null,
+						"max": null,
+						"noDecimal": false
+					}
+				},
+				{
+					"system": false,
+					"id": "1yjcfmqr",
+					"name": "vod_offset",
+					"type": "number",
+					"required": false,
+					"presentable": false,
+					"unique": false,
+					"options": {
+						"min": null,
+						"max": null,
+						"noDecimal": false
+					}
+				},
+				{
+					"system": false,
+					"id": "dbrbmyfs",
+					"name": "creator",
+					"type": "relation",
+					"required": false,
+					"presentable": false,
+					"unique": false,
+					"options": {
+						"collectionId": "u6cxge211isaeir",
+						"cascadeDelete": false,
+						"minSelect": null,
 						"maxSelect": 1,
-						"maxSize": 20970000,
-						"mimeTypes": [
-							"image/jpeg",
-							"image/png",
-							"image/svg+xml",
-							"image/gif",
-							"image/webp",
-							"image/avif",
-							"image/tiff"
-						],
-						"thumbs": [],
-						"protected": false
+						"displayFields": null
+					}
+				},
+				{
+					"system": false,
+					"id": "b1cv2dmw",
+					"name": "game",
+					"type": "relation",
+					"required": false,
+					"presentable": false,
+					"unique": false,
+					"options": {
+						"collectionId": "89iooxk3q5xdsdj",
+						"cascadeDelete": false,
+						"minSelect": null,
+						"maxSelect": 1,
+						"displayFields": null
+					}
+				},
+				{
+					"system": false,
+					"id": "cx2yzzjl",
+					"name": "vod",
+					"type": "relation",
+					"required": false,
+					"presentable": false,
+					"unique": false,
+					"options": {
+						"collectionId": "9wu419qp30znepf",
+						"cascadeDelete": false,
+						"minSelect": null,
+						"maxSelect": 1,
+						"displayFields": null
 					}
 				}
 			],
 			"indexes": [],
-			"listRule": "publish = true",
-			"viewRule": "publish = true",
+			"listRule": "",
+			"viewRule": "",
 			"createRule": null,
 			"updateRule": null,
 			"deleteRule": null,
@@ -183,7 +211,7 @@ func init() {
 	}, func(db dbx.Builder) error {
 		dao := daos.New(db);
 
-		collection, err := dao.FindCollectionByNameOrId("9wu419qp30znepf")
+		collection, err := dao.FindCollectionByNameOrId("ze75ahzrvxoq372")
 		if err != nil {
 			return err
 		}

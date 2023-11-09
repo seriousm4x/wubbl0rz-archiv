@@ -12,25 +12,47 @@ import (
 func init() {
 	m.Register(func(db dbx.Builder) error {
 		jsonData := `{
-			"id": "u6cxge211isaeir",
-			"created": "2023-11-09 19:56:30.937Z",
-			"updated": "2023-11-09 19:56:30.937Z",
-			"name": "creator",
+			"id": "9z7wm13frssw10d",
+			"created": "2023-10-31 17:54:45.767Z",
+			"updated": "2023-10-31 17:54:45.767Z",
+			"name": "public_infos",
 			"type": "base",
 			"system": false,
 			"schema": [
 				{
 					"system": false,
-					"id": "0jddvtgh",
-					"name": "name",
-					"type": "text",
+					"id": "an7f52sn",
+					"name": "is_live",
+					"type": "bool",
+					"required": false,
+					"presentable": false,
+					"unique": false,
+					"options": {}
+				},
+				{
+					"system": false,
+					"id": "4rt1u0ts",
+					"name": "last_emote_sync",
+					"type": "date",
 					"required": false,
 					"presentable": false,
 					"unique": false,
 					"options": {
-						"min": null,
-						"max": null,
-						"pattern": ""
+						"min": "",
+						"max": ""
+					}
+				},
+				{
+					"system": false,
+					"id": "zwoyyshz",
+					"name": "last_vod_sync",
+					"type": "date",
+					"required": false,
+					"presentable": false,
+					"unique": false,
+					"options": {
+						"min": "",
+						"max": ""
 					}
 				}
 			],
@@ -52,7 +74,7 @@ func init() {
 	}, func(db dbx.Builder) error {
 		dao := daos.New(db);
 
-		collection, err := dao.FindCollectionByNameOrId("u6cxge211isaeir")
+		collection, err := dao.FindCollectionByNameOrId("9z7wm13frssw10d")
 		if err != nil {
 			return err
 		}

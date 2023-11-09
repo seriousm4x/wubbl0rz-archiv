@@ -12,16 +12,16 @@ import (
 func init() {
 	m.Register(func(db dbx.Builder) error {
 		jsonData := `{
-			"id": "ykzh82gu8eife0x",
-			"created": "2023-11-09 19:56:30.937Z",
-			"updated": "2023-11-09 19:56:30.937Z",
-			"name": "emote",
+			"id": "89iooxk3q5xdsdj",
+			"created": "2023-10-31 17:54:45.768Z",
+			"updated": "2023-10-31 17:54:45.768Z",
+			"name": "game",
 			"type": "base",
 			"system": false,
 			"schema": [
 				{
 					"system": false,
-					"id": "nbnalo5b",
+					"id": "0qiqnsvu",
 					"name": "name",
 					"type": "text",
 					"required": false,
@@ -35,8 +35,8 @@ func init() {
 				},
 				{
 					"system": false,
-					"id": "rt68h1rn",
-					"name": "url",
+					"id": "nmwr6y8e",
+					"name": "box_art_url",
 					"type": "url",
 					"required": false,
 					"presentable": false,
@@ -48,27 +48,17 @@ func init() {
 				},
 				{
 					"system": false,
-					"id": "jnjpz0xl",
-					"name": "provider",
-					"type": "text",
+					"id": "gp92trb1",
+					"name": "ttv_id",
+					"type": "number",
 					"required": false,
 					"presentable": false,
 					"unique": false,
 					"options": {
 						"min": null,
 						"max": null,
-						"pattern": ""
+						"noDecimal": false
 					}
-				},
-				{
-					"system": false,
-					"id": "khnjfohy",
-					"name": "outdated",
-					"type": "bool",
-					"required": false,
-					"presentable": false,
-					"unique": false,
-					"options": {}
 				}
 			],
 			"indexes": [],
@@ -89,7 +79,7 @@ func init() {
 	}, func(db dbx.Builder) error {
 		dao := daos.New(db);
 
-		collection, err := dao.FindCollectionByNameOrId("ykzh82gu8eife0x")
+		collection, err := dao.FindCollectionByNameOrId("89iooxk3q5xdsdj")
 		if err != nil {
 			return err
 		}
