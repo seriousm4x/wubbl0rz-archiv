@@ -1,0 +1,39 @@
+version: "3"
+services:
+    backend:
+        container_name: archiv-backend
+        build:
+            context: backend/
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        env_file: backend/.env
+        ports:
+            - 127.0.0.1:8090:8090
+        volumes:
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+            - /mnt/nas/Archiv/media/:/var/www/media/
+    meili:
+        container_name: archiv-meili
+        image: getmeili/meilisearch:v1.4.2
+        env_file: backend/.env
+        ports:
+            - 127.0.0.1:7700:7700
+        volumes:
+            - ./meili_data:/meili_data
+        restart: unless-stopped
+    frontend:
+        container_name: archiv-frontend
+        build:
+            context: frontend/
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        env_file: frontend/.env
+        ports:
+            - 127.0.0.1:3000:3000
+        volumes:
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        depends_on:
+            - backend
+            - meili

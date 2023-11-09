@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/go,visualstudiocode
-# Edit at https://www.toptal.com/developers/gitignore?templates=go,visualstudiocode
+# Created by https://www.toptal.com/developers/gitignore/api/go,linux,windows,macos,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=go,linux,windows,macos,visualstudiocode
 
 ### Go ###
 # If you prefer the allow list template instead of the deny list, see community template:
@@ -24,9 +24,53 @@
 # Go workspace file
 go.work
 
-### Go Patch ###
-/vendor/
-/Godeps/
+### Linux ###
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+### macOS Patch ###
+# iCloud generated files
+*.icloud
 
 ### VisualStudioCode ###
 .vscode/*
@@ -47,14 +91,33 @@ go.work
 .history
 .ionide
 
-# Support for Project snippet scope
-.vscode/*.code-snippets
+### Windows ###
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
 
-# Ignore code-workspaces
-*.code-workspace
+# Dump file
+*.stackdump
 
-# End of https://www.toptal.com/developers/gitignore/api/go,visualstudiocode
+# Folder config file
+[Dd]esktop.ini
 
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# End of https://www.toptal.com/developers/gitignore/api/go,linux,windows,macos,visualstudiocode
+
+pb_data
 .env
-docker-compose.yml
-meili_data
