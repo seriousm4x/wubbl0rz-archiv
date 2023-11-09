@@ -4,7 +4,7 @@
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
 	import Icon from '@iconify/svelte';
 	import { formatRelative, parseISO } from 'date-fns';
-	import de from 'date-fns/locale/de';
+	import de from 'date-fns/locale/de/index.js';
 	import type { RecordModel } from 'pocketbase';
 
 	export let data;

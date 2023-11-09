@@ -9,7 +9,7 @@
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
 	import Icon from '@iconify/svelte';
 	import { format, formatDistance, parseISO } from 'date-fns';
-	import de from 'date-fns/locale/de';
+	import de from 'date-fns/locale/de/index.js';
 	import type { RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 	import type { MediaPlayerElement } from 'vidstack/elements.js';
