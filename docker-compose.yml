@@ -12,16 +12,17 @@ services:
         volumes:
             - /etc/timezone:/etc/timezone:ro
             - /etc/localtime:/etc/localtime:ro
-            - /mnt/nas/Archiv/media/:/var/www/media/
+            - /mnt/archiv/media/:/var/www/media/
+            - /mnt/archiv/pb_data:/app/pb_data
     meili:
         container_name: archiv-meili
         image: getmeili/meilisearch:v1.4.2
+        restart: unless-stopped
         env_file: backend/.env
         ports:
             - 127.0.0.1:7700:7700
         volumes:
-            - ./meili_data:/meili_data
-        restart: unless-stopped
+            - /mnt/archiv/meili_data:/meili_data
     frontend:
         container_name: archiv-frontend
         build:
