@@ -49,7 +49,10 @@
 							class="font-semibold drop-shadow-md"
 							style="color: {message?.tags['color'] || 'inherit'}">{message.user_display_name}</span
 						>
-						<div title={format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}>
+						<div
+							class="inline-block"
+							title={format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}
+						>
 							<time class="text-xs opacity-50">
 								{formatDistance(parseISO(message.date), Date.now(), {
 									addSuffix: true,
@@ -97,7 +100,10 @@
 							class="font-semibold drop-shadow-md"
 							style="color: {message?.tags['color'] || 'inherit'}">{message.user_display_name}</span
 						>
-						<div title={format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}>
+						<div
+							class="inline-block"
+							title={format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}
+						>
 							<time class="text-xs opacity-50">
 								{formatDistance(parseISO(message.date), Date.now(), {
 									addSuffix: true,
