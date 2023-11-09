@@ -4,7 +4,7 @@ COPY . .
 RUN npm i -g pnpm && \
     pnpm i &&\
     source .env && \
-    if [[ -n "$DOCKER_FRONTEND_URL" && "$DOCKER_ALLOW_SEARCH_INDEXING" == "true" ]]; then echo -e "User-agent: *\nDisallow:\n\nSitemap: ${DOCKER_FRONTEND_URL}/sitemap.xml" > static/robots.txt; else echo -e "User-agent: *\nDisallow: /" > static/robots.txt; fi && \
+    if [[ -n "$PUBLIC_FRONTEND_URL" && "$PRIVATE_ALLOW_SEARCH_INDEXING" == "true" ]]; then echo -e "User-agent: *\nDisallow:\n\nSitemap: ${PUBLIC_FRONTEND_URL}/sitemap.xml" > static/robots.txt; else echo -e "User-agent: *\nDisallow: /" > static/robots.txt; fi && \
     pnpm run build
 
 FROM node:alpine
