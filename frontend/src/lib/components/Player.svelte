@@ -26,7 +26,7 @@
 	let thumbnails: string;
 	$: type = video.collectionName === 'vod' ? 'vods' : 'clips';
 
-	function setPosition() {
+	function onCanPlay() {
 		thumbnails = `${PUBLIC_API_URL}/${type}/${video.filename}-sprites/${video.filename}.vtt`;
 		if (type in $watchHistory) {
 			const lsTime = $watchHistory[type as keyof WatchHistory][video.id];
@@ -56,7 +56,7 @@
 		src="{PUBLIC_API_URL}/{type}/{video.filename}-segments/{video.filename}.m3u8"
 		crossorigin
 		bind:this={player}
-		on:can-play={setPosition}
+		on:can-play={onCanPlay}
 		on:provider-change={onProviderChange}
 		on:time-update={onTimeUpdate}
 	>
