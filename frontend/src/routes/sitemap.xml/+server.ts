@@ -3,7 +3,7 @@ import { error } from '@sveltejs/kit';
 import { PUBLIC_API_URL } from '$env/static/public';
 import { PRIVATE_ALLOW_SEARCH_INDEXING } from '$env/static/private';
 import { PUBLIC_FRONTEND_URL } from '$env/static/public';
-import parseISO from 'date-fns/parseISO';
+import parseISO from 'date-fns/parseISO/index.js';
 
 export async function GET() {
     if (PRIVATE_ALLOW_SEARCH_INDEXING !== 'true') {
