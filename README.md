@@ -1,5 +1,5 @@
 <div align="center" width="100%">
-    <img src="https://raw.githubusercontent.com/AgileProggers/archiv-frontend/master/static/favicon.ico" width="128"/>
+    <img src="https://wubbl0rz.tv/favicon.png" width="128"/>
 </div>
 
 <div align="center" width="100%">
@@ -10,8 +10,8 @@
 
 ## 🐳 Deploy
 
--   Check the `.env.sample` files in [frontend/](frontend/) and [backend/](backend/) and copy them to `*/.env`.
--   `docker-compose up`
+- Check the `.env.sample` files in [frontend/](frontend/) and [backend/](backend/) and copy them to `*/.env`.
+- `docker-compose up`
 
 ## 🚪 Reverse Proxy
 
@@ -44,18 +44,18 @@ A custom config is required for our indexes. [Use the api](https://docs.meilisea
 
 ```json
 {
-    "displayedAttributes": ["*"],
-    "searchableAttributes": ["text"],
-    "filterableAttributes": [],
-    "sortableAttributes": ["date", "duration", "viewcount"],
-    "rankingRules": [
-        "sort",
-        "words",
-        "typo",
-        "proximity",
-        "attribute",
-        "exactness"
-    ]
+  "displayedAttributes": ["*"],
+  "searchableAttributes": ["text"],
+  "filterableAttributes": [],
+  "sortableAttributes": ["date", "duration", "viewcount"],
+  "rankingRules": [
+    "sort",
+    "words",
+    "typo",
+    "proximity",
+    "attribute",
+    "exactness"
+  ]
 }
 ```
 
@@ -63,29 +63,18 @@ A custom config is required for our indexes. [Use the api](https://docs.meilisea
 
 ```json
 {
-    "displayedAttributes": ["*"],
-    "searchableAttributes": ["title"],
-    "filterableAttributes": [],
-    "sortableAttributes": ["date", "duration", "viewcount"],
-    "rankingRules": [
-        "sort",
-        "words",
-        "typo",
-        "proximity",
-        "attribute",
-        "exactness"
-    ]
-}
-```
-
-> PATCH `http://localhost:7700/indexes/clips/settings/`
-
-```json
-{
-    "displayedAttributes": ["*"],
-    "searchableAttributes": ["*"],
-    "filterableAttributes": [],
-    "sortableAttributes": ["date", "duration", "viewcount"]
+  "displayedAttributes": ["*"],
+  "searchableAttributes": ["title"],
+  "filterableAttributes": [],
+  "sortableAttributes": ["date", "duration", "viewcount"],
+  "rankingRules": [
+    "sort",
+    "words",
+    "typo",
+    "proximity",
+    "attribute",
+    "exactness"
+  ]
 }
 ```
 
@@ -93,6 +82,6 @@ A custom config is required for our indexes. [Use the api](https://docs.meilisea
 
 ```json
 {
-    "primaryKey": "id"
+  "primaryKey": "meili_id"
 }
 ```
