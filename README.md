@@ -1,5 +1,5 @@
 <div align="center" width="100%">
-    <img src="https://wubbl0rz.tv/favicon.png" width="128"/>
+    <img src="frontend/static/favicon.png" width="128"/>
 </div>
 
 <div align="center" width="100%">
