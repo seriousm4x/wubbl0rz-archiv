@@ -36,6 +36,7 @@ func FfzUpdateEmotes(app *pocketbase.PocketBase) error {
 	resp, err := http.Get(url)
 	if err != nil {
 		logger.Error.Println(err)
+		logger.Error.Printf("%+v", resp)
 		return err
 	}
 	defer resp.Body.Close()

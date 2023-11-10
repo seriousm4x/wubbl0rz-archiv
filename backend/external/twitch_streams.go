@@ -50,14 +50,15 @@ func TwitchGetHelixStreams(app *pocketbase.PocketBase, streams *TwitchStreamResp
 	resp, err := client.Do(req)
 	if err != nil {
 		logger.Error.Println(err)
+		logger.Error.Printf("%+v", resp)
 		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		err := fmt.Errorf("status code was %d", resp.StatusCode)
-		logger.Error.Printf(err.Error())
-		logger.Error.Printf("%+v", req)
+		logger.Error.Println(err)
+		logger.Error.Printf("%+v", resp)
 		return err
 	}
 

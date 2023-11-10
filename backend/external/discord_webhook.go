@@ -82,13 +82,15 @@ func DiscordSendWebhook(app *pocketbase.PocketBase, d TwitchStreamResponse) erro
 
 	resp, err := http.Post(os.Getenv("DISCORD_WEBHOOK"), "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
+		logger.Error.Println(err)
+		logger.Error.Printf("%+v", resp)
 		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusNoContent {
 		err := fmt.Errorf("status code was %d", resp.StatusCode)
-		logger.Error.Printf(err.Error())
+		logger.Error.Println(err)
 		logger.Error.Printf("%+v", resp)
 		return err
 	}

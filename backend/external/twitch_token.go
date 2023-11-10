@@ -44,13 +44,14 @@ func TwitchUpdateBearer(app *pocketbase.PocketBase) error {
 	resp, err := http.Post("https://id.twitch.tv/oauth2/token", "application/json", bytes.NewBuffer(buf))
 	if err != nil {
 		logger.Error.Println(err)
+		logger.Error.Printf("%+v", resp)
 		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		err := fmt.Errorf("status code was %d", resp.StatusCode)
-		logger.Error.Printf(err.Error())
+		logger.Error.Println(err)
 		logger.Error.Printf("%+v", resp)
 		return err
 	}
