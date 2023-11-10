@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import PocketBase from 'pocketbase';
 import { PUBLIC_API_URL, PUBLIC_MEILI_URL } from '$env/static/public';
-import { PRIVATE_MEILI_MASTER_KEY } from '$env/static/private';
+import { PRIVATE_MEILI_ADMIN_KEY } from '$env/static/private';
 
 export async function load({ fetch }) {
 	const pb = new PocketBase(PUBLIC_API_URL);
@@ -17,7 +17,7 @@ export async function load({ fetch }) {
 		// meilisearch stats
 		fetch(`${PUBLIC_MEILI_URL}/stats`, {
 			headers: {
-				Authorization: `Bearer ${PRIVATE_MEILI_MASTER_KEY}`
+				Authorization: `Bearer ${PRIVATE_MEILI_ADMIN_KEY}`
 			}
 		})
 			.then((response) => response.json())
