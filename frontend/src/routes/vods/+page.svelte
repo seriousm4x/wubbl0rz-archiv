@@ -10,7 +10,7 @@
 	$: og = {
 		...DefaultOpenGraph,
 		title: 'Alle Streams',
-		updated_time: parseISO(data.items[0]?.date).toISOString()
+		updated_time: parseISO(data.items?.[0]?.date).toISOString()
 	};
 </script>
 

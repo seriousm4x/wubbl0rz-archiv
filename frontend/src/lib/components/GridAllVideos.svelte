@@ -192,7 +192,7 @@
 		>
 			<img
 				src={data.items[0]?.filename
-					? `${PUBLIC_API_URL}/${type}/${data.items[0].filename}-sm.webp`
+					? `${PUBLIC_API_URL}/${type}/${data.items[0]?.filename}-sm.webp`
 					: ''}
 				alt={data.items[0]?.title}
 				class="w-full h-auto"

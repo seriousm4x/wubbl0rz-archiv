@@ -11,7 +11,7 @@
 
 	$: og = {
 		...DefaultOpenGraph,
-		updated_time: parseISO(data.new.items[0]?.date).toISOString()
+		updated_time: parseISO(data.new?.items?.[0]?.date).toISOString()
 	};
 
 	$: showHero = innerWidth > 767;
@@ -21,7 +21,7 @@
 
 <SEO bind:og />
 
-{#if showHero && data.new.items.length > 0}
+{#if showHero && data.new?.items?.length > 0}
 	<Hero vod={data.new.items[0]} />
 {/if}
 
@@ -38,19 +38,19 @@
 		class="absolute top-0 left-0 w-full h-auto aspect-video bg-cover bg-center blur-2xl opacity-40 -z-10"
 	>
 		<img
-			src={data.new.items[0]?.filename
-				? `${PUBLIC_API_URL}/vods/${data.new.items[0].filename}-sm.webp`
+			src={data.new?.items?.[0]?.filename
+				? `${PUBLIC_API_URL}/vods/${data.new?.items?.[0]?.filename}-sm.webp`
 				: ''}
-			alt={data.new.items[0]?.title}
+			alt={data.new?.items?.[0]?.title}
 			class="w-full h-auto"
 		/>
 	</div>
-	{#if showHero && data.new.items.length > 0}
-		{#each data.new.items.filter((vod) => vod !== data.new.items[0]) as video}
+	{#if showHero && data.new?.items?.length > 0}
+		{#each data.new?.items?.filter((vod) => vod !== data.new?.items?.[0]) as video}
 			<Card {video} />
 		{/each}
 	{:else}
-		{#each data.new.items as video}
+		{#each data.new?.items as video}
 			<Card {video} />
 		{/each}
 	{/if}
@@ -65,7 +65,7 @@
 <div
 	class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"
 >
-	{#each data.popular.items as video}
+	{#each data.popular?.items as video}
 		<Card {video} />
 	{/each}
 </div>
@@ -79,7 +79,7 @@
 <div
 	class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"
 >
-	{#each data.clips.items as video}
+	{#each data.clips?.items as video}
 		<Card {video} />
 	{/each}
 </div>

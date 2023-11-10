@@ -52,7 +52,7 @@ export async function getEmotes(): Promise<[Emotes, RegExp]> {
 			.then((response) => response.json())
 			.then((data) => {
 				data.forEach((e: ttvEmote) => {
-					finalEmotes[e.code.toLowerCase()] = e.urls[0].url;
+					finalEmotes[e.code.toLowerCase()] = e.urls[0]?.url || '';
 				});
 			}),
 
@@ -67,7 +67,7 @@ export async function getEmotes(): Promise<[Emotes, RegExp]> {
 		fetch('https://api.frankerfacez.com/v1/set/global')
 			.then((response) => response.json())
 			.then((data) => {
-				data.sets[data.default_sets[0]].emoticons.forEach((e: ffzEmote) => {
+				data.sets[data.default_sets[0]]?.emoticons.forEach((e: ffzEmote) => {
 					finalEmotes[e.name.toLowerCase()] = `https://cdn.frankerfacez.com/emoticon/${e.id}/1`;
 				});
 			}),
@@ -76,9 +76,9 @@ export async function getEmotes(): Promise<[Emotes, RegExp]> {
 			.then((response) => response.json())
 			.then((data) => {
 				data.emotes.forEach((e: seventvEmote) => {
-					finalEmotes[
-						e.name.toLowerCase()
-					] = `https://cdn.7tv.app/emote/${e.id}/${e.data.host.files[0].name}`;
+					finalEmotes[e.name.toLowerCase()] = `https://cdn.7tv.app/emote/${e.id}/${
+						e.data.host.files[0]?.name || ''
+					}`;
 				});
 			})
 	]);
