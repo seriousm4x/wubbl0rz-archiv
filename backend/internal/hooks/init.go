@@ -41,11 +41,11 @@ func InitBackend(app *pocketbase.PocketBase) error {
 	}
 	lastEmoteSync := publicSettings.GetDateTime("last_emote_sync")
 	if lastEmoteSync.IsZero() || lastEmoteSync.Time().Add(1*time.Hour).Before(time.Now()) {
-		cronjobs.UpdateEmotes(app)
+		go cronjobs.UpdateEmotes(app)
 	}
 	lastVodSync := publicSettings.GetDateTime("last_vod_sync")
 	if lastVodSync.IsZero() || lastVodSync.Time().Add(1*time.Hour).Before(time.Now()) {
-		cronjobs.RunTwitchDownloads(app)
+		go cronjobs.RunTwitchDownloads(app)
 	}
 
 	// schedule cronjobs
