@@ -27,8 +27,6 @@
 			headers: {
 				Authorization: `Bearer ${pb.authStore.token}`
 			}
-		}).catch((e) => {
-			console.log(e);
 		});
 	}
 </script>
