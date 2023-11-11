@@ -105,10 +105,12 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 	// create temp video file
 	filename := vod.GetString("filename")
 	tempDir := filepath.Join(assets.ArchiveDir, "_temp")
-	if err := os.Mkdir(tempDir, 700); err != nil {
-		logger.Error.Println(err)
-		setVodState(app, vod, "")
-		return err
+	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
+		if err := os.Mkdir(tempDir, 700); err != nil {
+			logger.Error.Println(err)
+			setVodState(app, vod, "")
+			return err
+		}
 	}
 
 	tempVideo := filepath.Join(tempDir, id+".mp4")
@@ -118,11 +120,11 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 		"-c", "copy",
 		"-bsf:a", "aac_adtstoasc",
 		"-movflags", "frag_keyframe+empty_moov",
-		"-f", "mp4", tempVideo)
+		"-f", "mp4", "-y", tempVideo)
 	if err := cmd.Run(); err != nil {
 		logger.Error.Println(err)
 		setVodState(app, vod, "")
-		if err := os.RemoveAll(tempDir); err != nil {
+		if err := os.Remove(tempVideo); err != nil {
 			logger.Error.Println(err)
 			return err
 		}
@@ -134,7 +136,7 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 	if err != nil {
 		logger.Error.Println(err)
 		setVodState(app, vod, "")
-		if err := os.RemoveAll(tempDir); err != nil {
+		if err := os.Remove(tempVideo); err != nil {
 			logger.Error.Println(err)
 			return err
 		}
@@ -145,7 +147,7 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 	if err != nil {
 		logger.Error.Println(err)
 		setVodState(app, vod, "")
-		if err := os.RemoveAll(tempDir); err != nil {
+		if err := os.Remove(tempVideo); err != nil {
 			logger.Error.Println(err)
 			return err
 		}
@@ -153,7 +155,7 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 	}
 	logger.Info.Printf("Upload successful! Video ID: %v\n", youtubeVideo.Id)
 
-	if err := os.RemoveAll(tempDir); err != nil {
+	if err := os.Remove(tempVideo); err != nil {
 		logger.Error.Println(err)
 		setVodState(app, vod, "")
 		return err
