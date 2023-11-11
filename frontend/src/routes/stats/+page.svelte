@@ -180,13 +180,16 @@
 				</tbody>
 			</table>
 		</div>
-		<h1 class="text-4xl font-bold mt-8">
-			<span
-				class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 drop-shadow-md"
-				>Emotes</span
-			>
+		<h1 class="text-4xl font-bold mt-8 flex flex-row flex-wrap items-center gap-4 drop-shadow-md">
+			<span class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
+				Emotes
+			</span>
+			<span class="badge badge-primary">{data.emotes.length}</span>
 		</h1>
-		<h1 class="text-2xl font-bold mt-4">7tv</h1>
+		<h1 class="text-2xl font-bold mt-4 flex flex-row flex-wrap items-center gap-4">
+			<span>7tv</span>
+			<span class="badge badge-neutral">{sevenTv.length}</span>
+		</h1>
 		<div class="flex flex-row flex-wrap gap-2">
 			{#each sevenTv as emote}
 				<div title="{emote.name} (7tv)">
@@ -202,7 +205,10 @@
 				Keine Emotes
 			{/each}
 		</div>
-		<h1 class="text-2xl font-bold mt-4">BetterTTV</h1>
+		<h1 class="text-2xl font-bold mt-4 flex flex-row flex-wrap items-center gap-4">
+			<span>BetterTTV</span>
+			<span class="badge badge-neutral">{bttv.length}</span>
+		</h1>
 		<div class="flex flex-row flex-wrap gap-2">
 			{#each bttv as emote}
 				<div title={emote.name}>
@@ -212,7 +218,10 @@
 				Keine Emotes
 			{/each}
 		</div>
-		<h1 class="text-2xl font-bold mt-4">FrankerFaceZ</h1>
+		<h1 class="text-2xl font-bold mt-4 flex flex-row flex-wrap items-center gap-4">
+			<span>FrankerFaceZ</span>
+			<span class="badge badge-neutral">{ffz.length}</span>
+		</h1>
 		<div class="flex flex-row flex-wrap gap-2">
 			{#each ffz as emote}
 				<div title={emote.name}>
@@ -222,7 +231,10 @@
 				Keine Emotes
 			{/each}
 		</div>
-		<h1 class="text-2xl font-bold mt-4">Twitch</h1>
+		<h1 class="text-2xl font-bold mt-4 flex flex-row flex-wrap items-center gap-4">
+			<span>Twitch</span>
+			<span class="badge badge-neutral">{twitch.length}</span>
+		</h1>
 		<div class="flex flex-row flex-wrap gap-2">
 			{#each twitch as emote}
 				<div title={emote.name}>
