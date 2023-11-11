@@ -121,3 +121,5 @@ $RECYCLE.BIN/
 
 pb_data
 .env
+client_secret.json
+bearer_token.json

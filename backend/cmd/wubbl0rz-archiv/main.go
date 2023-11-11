@@ -89,6 +89,15 @@ func main() {
 		},
 	})
 
+	app.RootCmd.AddCommand(&cobra.Command{
+		Use:   "youtubeAuth",
+		Short: "Creates the Youtube bearer token file",
+		Long:  "Make sure you have 'client_secret.json' (from cloud console) in the current directory.",
+		Run: func(cmd *cobra.Command, args []string) {
+			CreateAuthFiles()
+		},
+	})
+
 	migratecmd.MustRegister(app, app.RootCmd, migratecmd.Config{
 		Dir:         "internal/migrations",
 		Automigrate: true,
