@@ -142,6 +142,15 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 	}
 
 	youtubeVideo, err := call.Media(file).Do()
+	if err != nil {
+		logger.Error.Println(err)
+		setVodState(app, vod, "")
+		if err := os.RemoveAll(tempDir); err != nil {
+			logger.Error.Println(err)
+			return err
+		}
+		return err
+	}
 	logger.Info.Printf("Upload successful! Video ID: %v\n", youtubeVideo.Id)
 
 	if err := os.RemoveAll(tempDir); err != nil {
