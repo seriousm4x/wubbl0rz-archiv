@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"os"
 	"runtime"
 	"strings"
@@ -109,6 +110,20 @@ func main() {
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		e.Router.GET("/stats", func(c echo.Context) error {
 			return routes.Stats(app, c)
+		})
+		return nil
+	})
+
+	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		e.Router.AddRoute(echo.Route{
+			Method: http.MethodGet,
+			Path:   "/youtube/upload/:id",
+			Handler: func(c echo.Context) error {
+				return routes.YoutubeUpload(app, c)
+			},
+			Middlewares: []echo.MiddlewareFunc{
+				apis.RequireRecordAuth("users"),
+			},
 		})
 		return nil
 	})

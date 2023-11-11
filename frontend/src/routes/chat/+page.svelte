@@ -1,14 +1,13 @@
 <script lang="ts">
-	import { PUBLIC_API_URL } from '$env/static/public';
 	import SEO from '$lib/components/SEO.svelte';
 	import { getEmotes } from '$lib/emotes';
 	import { replaceEmotesInString } from '$lib/functions';
+	import { pb } from '$lib/pocketbase';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
 	import Icon from '@iconify/svelte';
 	import { format, formatDistance, parseISO } from 'date-fns';
 	import de from 'date-fns/locale/de/index.js';
 	import type { ListResult, RecordModel } from 'pocketbase';
-	import PocketBase from 'pocketbase';
 	import { onMount } from 'svelte';
 
 	export let data: ListResult<RecordModel>;
@@ -20,7 +19,6 @@
 	};
 
 	onMount(async () => {
-		const pb = new PocketBase(PUBLIC_API_URL);
 		pb.collection('chatmessage').subscribe('*', function (e) {
 			data.items = [e.record, ...data.items];
 			if (sliderValue === 500) return;

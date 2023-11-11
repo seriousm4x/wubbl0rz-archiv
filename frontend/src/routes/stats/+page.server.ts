@@ -1,11 +1,9 @@
-import { error } from '@sveltejs/kit';
-import PocketBase from 'pocketbase';
-import { PUBLIC_API_URL, PUBLIC_MEILI_URL } from '$env/static/public';
 import { PRIVATE_MEILI_ADMIN_KEY } from '$env/static/private';
+import { PUBLIC_API_URL, PUBLIC_MEILI_URL } from '$env/static/public';
+import { pb } from '$lib/pocketbase.js';
+import { error } from '@sveltejs/kit';
 
 export async function load({ fetch }) {
-	const pb = new PocketBase(PUBLIC_API_URL);
-
 	const [stats, meili, emotes] = await Promise.all([
 		// pocketbase stats
 		fetch(`${PUBLIC_API_URL}/stats`)

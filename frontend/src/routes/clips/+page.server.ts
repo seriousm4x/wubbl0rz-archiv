@@ -1,9 +1,7 @@
+import { pb } from '$lib/pocketbase.js';
 import { error } from '@sveltejs/kit';
-import PocketBase from 'pocketbase';
-import { PUBLIC_API_URL } from '$env/static/public';
 
 export async function load({ url }) {
-	const pb = new PocketBase(PUBLIC_API_URL);
 	const allClips = await pb
 		.collection('clip')
 		.getList(1, 36, {

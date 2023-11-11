@@ -1,10 +1,8 @@
+import { pb } from '$lib/pocketbase.js';
 import { error } from '@sveltejs/kit';
-import PocketBase, { type RecordModel } from 'pocketbase';
-import type { ListResult } from 'pocketbase';
-import { PUBLIC_API_URL } from '$env/static/public';
+import type { ListResult, RecordModel } from 'pocketbase';
 
 export async function load({ url }) {
-	const pb = new PocketBase(PUBLIC_API_URL);
 	const allVods = await pb
 		.collection('vod')
 		.getList(1, 36, {

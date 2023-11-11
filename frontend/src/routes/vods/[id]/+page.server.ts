@@ -1,12 +1,11 @@
+import { pb } from '$lib/pocketbase.js';
+import { error } from '@sveltejs/kit';
 import add from 'date-fns/add/index.js';
 import format from 'date-fns/format/index.js';
 import parseISO from 'date-fns/parseISO/index.js';
-import PocketBase, { type RecordModel } from 'pocketbase';
-import { PUBLIC_API_URL } from '$env/static/public';
-import { error } from '@sveltejs/kit';
+import type { RecordModel } from 'pocketbase';
 
 export async function load({ params }) {
-	const pb = new PocketBase(PUBLIC_API_URL);
 	const [vod, allVods] = await Promise.all([
 		pb
 			.collection('vod')

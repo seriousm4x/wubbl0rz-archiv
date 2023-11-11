@@ -1,11 +1,9 @@
+import { pb } from '$lib/pocketbase';
 import { error } from '@sveltejs/kit';
 import add from 'date-fns/add/index.js';
 import format from 'date-fns/format/index.js';
-import PocketBase from 'pocketbase';
-import { PUBLIC_API_URL } from '$env/static/public';
 
 export async function load() {
-	const pb = new PocketBase(PUBLIC_API_URL);
 	const [newestVods, popularVods, clips] = await Promise.all([
 		// new vods
 		pb

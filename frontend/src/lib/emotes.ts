@@ -1,5 +1,4 @@
-import PocketBase from 'pocketbase';
-import { PUBLIC_API_URL } from '$env/static/public';
+import { pb } from '$lib/pocketbase';
 
 export type Emotes = {
 	[name: string]: string;
@@ -36,7 +35,6 @@ type seventvEmote = {
 
 export async function getEmotes(): Promise<[Emotes, RegExp]> {
 	const finalEmotes: Emotes = {};
-	const pb = new PocketBase(PUBLIC_API_URL);
 
 	await Promise.all([
 		pb

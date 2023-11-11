@@ -1,16 +1,15 @@
-import PocketBase, { type RecordModel } from 'pocketbase';
-import { error } from '@sveltejs/kit';
-import { PUBLIC_API_URL } from '$env/static/public';
 import { PRIVATE_ALLOW_SEARCH_INDEXING } from '$env/static/private';
-import { PUBLIC_FRONTEND_URL } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_FRONTEND_URL } from '$env/static/public';
+import { pb } from '$lib/pocketbase';
+import { error } from '@sveltejs/kit';
 import parseISO from 'date-fns/parseISO/index.js';
+import type { RecordModel } from 'pocketbase';
 
 export async function GET() {
 	if (PRIVATE_ALLOW_SEARCH_INDEXING !== 'true') {
 		throw error(404, 'not found');
 	}
 
-	const pb = new PocketBase(PUBLIC_API_URL);
 	const [vods, clips, stats] = await Promise.all([
 		// all vods
 		pb
