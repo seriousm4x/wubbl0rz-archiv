@@ -12,6 +12,7 @@
 	import { onMount } from 'svelte';
 
 	export let data: ListResult<RecordModel>;
+	let sliderValue = 200;
 
 	$: og = {
 		...DefaultOpenGraph,
@@ -22,6 +23,8 @@
 		const pb = new PocketBase(PUBLIC_API_URL);
 		pb.collection('chatmessage').subscribe('*', function (e) {
 			data.items = [e.record, ...data.items];
+			if (sliderValue === 500) return;
+			data.items = data.items.slice(0, sliderValue);
 		});
 	});
 </script>
@@ -35,8 +38,27 @@
 			>Livechat</span
 		>
 	</h1>
-	<div class="flex flex-col gap-2">
-		<p class="text-sm text-base-content/80 mb-8">Neue Nachrichten werden automatisch geladen...</p>
+	<p class="text-sm text-base-content/80 mb-8">Neue Nachrichten werden automatisch geladen...</p>
+	<h2 class="text-xl">Zu behaltende Nachrichten</h2>
+	<div class="flex flex-row flex-wrap gap-4">
+		<input
+			type="range"
+			class="range"
+			min="100"
+			max="500"
+			step="100"
+			bind:value={sliderValue}
+			on:change={() => (data.items = data.items.slice(0, sliderValue))}
+		/>
+		<div class="w-full flex justify-between text-xs px-2">
+			<span>100</span>
+			<span>200</span>
+			<span>300</span>
+			<span>400</span>
+			<span>Unendlich</span>
+		</div>
+	</div>
+	<div class="flex flex-col gap-2 mt-8">
 		{#await getEmotes()}
 			<div class="w-full text-center">
 				<span class="loading loading-spinner loading-lg"></span>
