@@ -46,7 +46,7 @@ export async function load({ fetch }) {
 	};
 
 	if (data) {
-		return data;
+		return structuredClone(data);
 	}
 
 	throw error(404, 'Not found');

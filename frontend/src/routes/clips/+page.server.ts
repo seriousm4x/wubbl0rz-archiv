@@ -15,7 +15,7 @@ export async function load({ url }) {
 		});
 
 	if (allClips) {
-		return allClips;
+		return structuredClone(allClips);
 	}
 
 	throw error(404, 'Not found');

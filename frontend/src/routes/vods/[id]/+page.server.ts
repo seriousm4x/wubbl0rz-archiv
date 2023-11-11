@@ -58,9 +58,11 @@ export async function load({ params }) {
 	]);
 
 	return {
-		vod: vod,
-		vodsCount: allVods.totalItems,
-		vodPosition: vodPosition.totalItems,
-		recommendations: recommendations.items.filter((v: RecordModel) => v.id !== vod.id)
+		vod: structuredClone(vod),
+		vodsCount: structuredClone(allVods.totalItems),
+		vodPosition: structuredClone(vodPosition.totalItems),
+		recommendations: structuredClone(
+			recommendations.items.filter((v: RecordModel) => v.id !== vod.id)
+		)
 	};
 }

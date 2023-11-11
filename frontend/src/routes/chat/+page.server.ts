@@ -10,7 +10,7 @@ export async function load() {
 		});
 
 	if (chatmessages.items.length > 0) {
-		return chatmessages;
+		return structuredClone(chatmessages);
 	}
 
 	throw error(404, 'Not found');

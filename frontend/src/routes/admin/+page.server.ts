@@ -19,7 +19,7 @@ export async function load({ locals }) {
 		});
 
 	return {
-		vods,
-		user: locals.user
+		vods: structuredClone(vods),
+		user: structuredClone(locals.user)
 	};
 }

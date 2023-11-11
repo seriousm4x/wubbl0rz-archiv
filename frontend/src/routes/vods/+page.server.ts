@@ -16,7 +16,7 @@ export async function load({ url }) {
 		});
 
 	if ((allVods as ListResult<RecordModel>).totalItems > 0) {
-		return allVods;
+		return structuredClone(allVods);
 	}
 
 	throw error(404, 'Not found');

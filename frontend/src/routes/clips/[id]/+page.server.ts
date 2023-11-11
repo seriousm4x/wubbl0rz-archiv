@@ -51,9 +51,11 @@ export async function load({ params }) {
 	]);
 
 	return {
-		clip: clip,
-		clipsCount: allClips.totalItems,
-		clipPosition: clipPosition.totalItems,
-		recommendations: recommendations.items.filter((v: RecordModel) => v.id !== clip.id)
+		clip: structuredClone(clip),
+		clipsCount: structuredClone(allClips.totalItems),
+		clipPosition: structuredClone(clipPosition.totalItems),
+		recommendations: structuredClone(
+			recommendations.items.filter((v: RecordModel) => v.id !== clip.id)
+		)
 	};
 }
