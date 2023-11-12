@@ -5,7 +5,7 @@
 	const sidebarHome = {
 		title: 'Home',
 		href: '/',
-		icon: '/favicon.png',
+		icon: '/home.webp',
 		iconInactive: 'grayscale group-hover:grayscale-0',
 		bgColor: 'from-yellow-800 to-orange-800'
 	};

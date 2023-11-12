@@ -1,9 +1,12 @@
 <script>
+	import { page } from '$app/stores';
+	import Favicons from '$lib/components/Favicons.svelte';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import '../app.css';
-	import { page } from '$app/stores';
 </script>
+
+<Favicons />
 
 <Sidebar>
 	<div class="w-full h-full">
