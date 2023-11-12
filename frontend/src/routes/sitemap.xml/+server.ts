@@ -3,19 +3,28 @@ import { PUBLIC_API_URL, PUBLIC_FRONTEND_URL } from '$env/static/public';
 import { pb } from '$lib/pocketbase';
 import { error } from '@sveltejs/kit';
 import parseISO from 'date-fns/parseISO/index.js';
-import type { RecordModel } from 'pocketbase';
+import type { ListResult, RecordModel } from 'pocketbase';
 
 export async function GET() {
 	if (PRIVATE_ALLOW_SEARCH_INDEXING !== 'true') {
 		throw error(404, 'not found');
 	}
 
-	const [vods, clips, stats] = await Promise.all([
+	let vods = [] as RecordModel[];
+	let clips = [] as RecordModel[];
+	let stats = {
+		last_update: Date.now()
+	};
+
+	await Promise.all([
 		// all vods
 		pb
 			.collection('vod')
 			.getFullList({
 				requestKey: 'all_vods'
+			})
+			.then((data) => {
+				vods = data;
 			})
 			.catch((e) => {
 				return e;
@@ -27,6 +36,9 @@ export async function GET() {
 			.getFullList({
 				requestKey: 'all_clips'
 			})
+			.then((data) => {
+				clips = data;
+			})
 			.catch((e) => {
 				return e;
 			}),
@@ -34,6 +46,9 @@ export async function GET() {
 		// stats
 		fetch(`${PUBLIC_API_URL}/stats`)
 			.then((response) => response.json())
+			.then((data) => {
+				stats = data;
+			})
 			.catch((e) => {
 				return e;
 			})

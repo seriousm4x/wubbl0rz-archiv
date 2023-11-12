@@ -2,13 +2,21 @@ import { pb } from '$lib/pocketbase';
 import { error } from '@sveltejs/kit';
 import add from 'date-fns/add/index.js';
 import format from 'date-fns/format/index.js';
+import type { ListResult, RecordModel } from 'pocketbase';
 
 export async function load() {
-	const [newestVods, popularVods, clips] = await Promise.all([
+	let newestVods = {} as ListResult<RecordModel>;
+	let popularVods = {} as ListResult<RecordModel>;
+	let clips = {} as ListResult<RecordModel>;
+
+	await Promise.all([
 		// new vods
 		pb
 			.collection('vod')
 			.getList(1, 13, { sort: '-date', skipTotal: true, requestKey: 'newest_vods' })
+			.then((data) => {
+				newestVods = data;
+			})
 			.catch((e) => {
 				return e;
 			}),
@@ -19,6 +27,9 @@ export async function load() {
 				sort: '-viewcount',
 				skipTotal: true,
 				requestKey: 'popular_vods'
+			})
+			.then((data) => {
+				popularVods = data;
 			})
 			.catch((e) => {
 				return e;
@@ -32,10 +43,17 @@ export async function load() {
 				skipTotal: true,
 				requestKey: 'clips_last_month'
 			})
+			.then((data) => {
+				clips = data;
+			})
 			.catch((e) => {
 				return e;
 			})
 	]);
+
+	if (!newestVods.items || !popularVods.items || !clips.items) {
+		throw error(404, 'Not found');
+	}
 
 	const data = {
 		new: newestVods,
@@ -43,9 +61,5 @@ export async function load() {
 		clips: clips
 	};
 
-	if (data) {
-		return structuredClone(data);
-	}
-
-	throw error(404, 'Not found');
+	return structuredClone(data);
 }

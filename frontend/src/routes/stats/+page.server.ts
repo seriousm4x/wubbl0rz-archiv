@@ -2,12 +2,31 @@ import { PRIVATE_MEILI_ADMIN_KEY } from '$env/static/private';
 import { PUBLIC_API_URL, PUBLIC_MEILI_URL } from '$env/static/public';
 import { pb } from '$lib/pocketbase.js';
 import { error } from '@sveltejs/kit';
+import type { RecordModel } from 'pocketbase';
 
 export async function load({ fetch }) {
-	const [stats, meili, emotes] = await Promise.all([
+	let emotes = [] as RecordModel[];
+	let stats = {};
+	let meili = {
+		indexes: {
+			transcripts: {
+				numberOfDocuments: 0
+			},
+			vods: {
+				numberOfDocuments: 0
+			}
+		},
+		lastUpdate: Date.now(),
+		databaseSize: 0
+	};
+
+	await Promise.all([
 		// pocketbase stats
 		fetch(`${PUBLIC_API_URL}/stats`)
 			.then((response) => response.json())
+			.then((data) => {
+				stats = data;
+			})
 			.catch((e) => {
 				return e;
 			}),
@@ -19,6 +38,9 @@ export async function load({ fetch }) {
 			}
 		})
 			.then((response) => response.json())
+			.then((data) => {
+				meili = data;
+			})
 			.catch((e) => {
 				return e;
 			}),
@@ -28,6 +50,9 @@ export async function load({ fetch }) {
 			.collection('emote')
 			.getFullList({
 				requestKey: 'all_emotes'
+			})
+			.then((data) => {
+				emotes = data;
 			})
 			.catch((e) => {
 				return e;
@@ -45,9 +70,5 @@ export async function load({ fetch }) {
 		emotes: emotes
 	};
 
-	if (data) {
-		return structuredClone(data);
-	}
-
-	throw error(404, 'Not found');
+	return structuredClone(data);
 }

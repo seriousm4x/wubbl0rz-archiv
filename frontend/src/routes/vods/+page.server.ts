@@ -3,7 +3,9 @@ import { error } from '@sveltejs/kit';
 import type { ListResult, RecordModel } from 'pocketbase';
 
 export async function load({ url }) {
-	const allVods = await pb
+	let allVods = {} as ListResult<RecordModel>;
+
+	await pb
 		.collection('vod')
 		.getList(1, 36, {
 			sort: url.searchParams.get('sort') || '-date',
@@ -11,11 +13,14 @@ export async function load({ url }) {
 			page: parseInt(url.searchParams.get('page') || '1') || 1,
 			requestKey: 'vod_grid'
 		})
+		.then((data) => {
+			allVods = data;
+		})
 		.catch((e) => {
 			return e;
 		});
 
-	if ((allVods as ListResult<RecordModel>).totalItems > 0) {
+	if (allVods.totalItems > 0) {
 		return structuredClone(allVods);
 	}
 
