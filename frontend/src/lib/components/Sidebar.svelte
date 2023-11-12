@@ -67,7 +67,7 @@
 					/>
 					<img
 						src={sidebarHome.icon}
-						alt={sidebarHome.title}
+						alt="{sidebarHome.title} Icon"
 						class="w-10 h-10 mask mask-squircle group-hover:-rotate-6 duration-200 group-hover:scale-110 contrast-[1.3] saturate-[.75] {$page
 							.url.pathname === sidebarHome.href
 							? ''

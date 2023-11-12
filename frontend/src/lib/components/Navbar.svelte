@@ -149,6 +149,7 @@
 					</span>
 					<select
 						class="join-item select select-bordered rounded-e-full border-base-200/70 bg-base-200"
+						aria-label="Sortieren"
 						bind:value={selectedSort}
 					>
 						{#each sorts as sort}

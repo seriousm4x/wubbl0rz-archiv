@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { RecordModel, ListResult } from 'pocketbase';
-	import Card from '$lib/components/Card.svelte';
-	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
-	import { PUBLIC_API_URL } from '$env/static/public';
-	import Icon from '@iconify/svelte';
-	import Pagination from '$lib/components/Pagination.svelte';
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { PUBLIC_API_URL } from '$env/static/public';
+	import Card from '$lib/components/Card.svelte';
+	import Pagination from '$lib/components/Pagination.svelte';
+	import Icon from '@iconify/svelte';
+	import type { ListResult, RecordModel } from 'pocketbase';
 
 	export let data: ListResult<RecordModel>;
 	export let title: string;
@@ -124,6 +124,7 @@
 					</span>
 					<select
 						class="join-item select select-bordered rounded-e-full border-base-200/70 bg-base-200"
+						aria-label="Sortieren"
 						bind:value={selectedSort}
 					>
 						{#each sorts as sort}
