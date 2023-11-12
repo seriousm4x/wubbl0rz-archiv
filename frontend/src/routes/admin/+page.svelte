@@ -64,7 +64,7 @@
 
 	{#each vods as vod}
 		<div
-			class="collapse bg-base-200 {vod.youtube_upload === 'done'
+			class="collapse {vod.youtube_upload === 'done'
 				? 'bg-green-500/30'
 				: vod.youtube_upload === 'pending'
 				? 'bg-amber-300/40'
