@@ -1,25 +1,33 @@
 import { pb } from '$lib/pocketbase.js';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
+import type { ListResult, RecordModel } from 'pocketbase';
 
-export async function load({ locals }) {
+export async function load({ locals, url }) {
 	// check if auth valid
 	if (!locals.pb.authStore.isValid) {
 		throw redirect(302, '/login');
 	}
 
 	// get vods
-	const vods = await pb
+	let vods = {} as ListResult<RecordModel>;
+	await pb
 		.collection('vod')
-		.getFullList({
+		.getList(1, 20, {
 			sort: '-date',
+			page: parseInt(url.searchParams.get('page') || '1') || 1,
 			requestKey: 'all_vods'
 		})
+		.then((data) => (vods = data))
 		.catch((e) => {
 			return e;
 		});
 
-	return {
-		vods: structuredClone(vods),
-		user: structuredClone(locals.user)
-	};
+	if (vods.totalItems === 0) {
+		throw error(404, 'No vods found');
+	}
+
+	return structuredClone({
+		vods: vods,
+		user: locals.user
+	});
 }

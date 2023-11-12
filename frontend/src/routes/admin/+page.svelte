@@ -9,9 +9,16 @@
 	import type { RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
+	import Pagination from '$lib/components/Pagination.svelte';
+	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
-	let vods = data.vods as RecordModel[];
+	let currentPage = parseInt($page.url.searchParams.get('page') || `${data.vods.page}`);
+
+	$: vods = data.vods.items as RecordModel[];
+	$: if (browser) goto(`/admin?page=${currentPage}`);
 	$: currentUser.set(data.user);
 
 	onMount(() => {
@@ -104,4 +111,6 @@
 			</div>
 		</div>
 	{/each}
+
+	<Pagination totalPages={data.vods.totalPages} bind:currentPage />
 </div>
