@@ -15,9 +15,9 @@ export async function load() {
 			return e;
 		});
 
-	if (chatmessages.items.length > 0) {
-		return structuredClone(chatmessages);
+	if (chatmessages.totalItems === 0) {
+		throw error(404, 'Not found');
 	}
 
-	throw error(404, 'Not found');
+	return structuredClone(chatmessages);
 }
