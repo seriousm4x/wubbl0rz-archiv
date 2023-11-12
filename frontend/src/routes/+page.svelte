@@ -39,10 +39,12 @@
 	>
 		<img
 			src={data.new?.items?.[0]?.filename
-				? `${PUBLIC_API_URL}/vods/${data.new?.items?.[0]?.filename}-sm.webp`
+				? `${PUBLIC_API_URL}/vods/${data.new?.items?.[0]?.filename}-lg.webp`
 				: ''}
 			alt={data.new?.items?.[0]?.title}
 			class="w-full h-auto"
+			width="1536"
+			height="860"
 		/>
 	</div>
 	{#if showHero && data.new?.items?.length > 0}
