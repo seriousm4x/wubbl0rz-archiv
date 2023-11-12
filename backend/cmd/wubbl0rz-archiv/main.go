@@ -137,7 +137,7 @@ func main() {
 
 		// route for triggering twitch downloads
 		e.Router.GET("/trigger/downloads", func(c echo.Context) error {
-			return routes.TriggerTwitchDownloads(app)
+			return routes.TriggerTwitchDownloads(app, c)
 		},
 			apis.RequireAdminAuth())
 
