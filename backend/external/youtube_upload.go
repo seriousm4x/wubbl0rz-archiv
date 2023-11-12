@@ -170,12 +170,7 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 		return nil
 	}
 
-	collection, err := app.Dao().FindCollectionByNameOrId("vod")
-	if err != nil {
-		logger.Error.Println(err)
-		return err
-	}
-	thumbPath := path.Join(app.DataDir(), "storage", collection.Id, vod.Id, thumb)
+	thumbPath := path.Join(assets.ArchiveDir, "vods", fmt.Sprintf("%s-lg.webp", filename))
 	thumbReader, err := os.Open(thumbPath)
 	if err != nil {
 		logger.Error.Println(err)
