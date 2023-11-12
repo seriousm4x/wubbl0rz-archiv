@@ -103,27 +103,27 @@ func main() {
 		Automigrate: true,
 	})
 
+	// public routes
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		// serves static files from the provided public dir (if exists)
 		e.Router.GET("/*", apis.StaticDirectoryHandler(os.DirFS(assets.ArchiveDir), false))
-		return nil
-	})
 
-	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		// route for downloading vods and clips
 		e.Router.GET("/download/:type/:id", func(c echo.Context) error {
 			return routes.Download(app, c)
 		})
-		return nil
-	})
 
-	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		// route for statistics
 		e.Router.GET("/stats", func(c echo.Context) error {
 			return routes.Stats(app, c)
 		})
+
 		return nil
 	})
 
+	// auth routes
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		// route for vod upload to youtube
 		e.Router.AddRoute(echo.Route{
 			Method: http.MethodGet,
 			Path:   "/youtube/upload/:id",
@@ -134,9 +134,17 @@ func main() {
 				apis.RequireRecordAuth("users"),
 			},
 		})
+
+		// route for triggering vod download from twitch
+		e.Router.GET("/trigger/vods", func(c echo.Context) error {
+			return routes.TriggerVodDownloads(app)
+		},
+			apis.RequireAdminAuth())
+
 		return nil
 	})
 
+	// init backend once on start
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		go func() {
 			if err := hooks.InitBackend(app); err != nil {
