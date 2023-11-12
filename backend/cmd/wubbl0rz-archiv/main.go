@@ -135,9 +135,9 @@ func main() {
 			},
 		})
 
-		// route for triggering vod download from twitch
-		e.Router.GET("/trigger/vods", func(c echo.Context) error {
-			return routes.TriggerVodDownloads(app)
+		// route for triggering twitch downloads
+		e.Router.GET("/trigger/downloads", func(c echo.Context) error {
+			return routes.TriggerTwitchDownloads(app)
 		},
 			apis.RequireAdminAuth())
 
