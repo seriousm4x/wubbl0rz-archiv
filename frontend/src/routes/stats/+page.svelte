@@ -142,7 +142,7 @@
 					<Icon icon="solar:smartphone-update-bold-duotone" class="text-5xl" />
 				</div>
 				<div class="stat-title">Letztes Update</div>
-				<div class="stat-value text-red-400">
+				<div class="stat-value text-red-400 whitespace-break-spaces">
 					{formatRelative(parseISO(data.meili.lastUpdate), Date.now(), { locale: de })}
 				</div>
 			</div>
