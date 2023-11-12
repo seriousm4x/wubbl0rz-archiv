@@ -96,7 +96,9 @@
 								</div>
 								{message.tags['reply-parent-display-name']}: {message.tags['reply-parent-msg-body']}
 							</a>
-							<div class="text-slate-100 flex flex-row flex-wrap items-center gap-1">
+							<div
+								class="text-slate-100 flex flex-row flex-wrap items-center gap-1 [overflow-wrap:anywhere]"
+							>
 								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 								{@html replaceEmotesInString(message.message, emotes, re)}
 							</div>
@@ -104,7 +106,7 @@
 					{:else}
 						<div
 							id={message.tags['id']}
-							class="chat-bubble transition duration-100 hover:shadow-lg scroll-mt-24 text-slate-100 flex flex-row flex-wrap items-center gap-1"
+							class="chat-bubble transition duration-100 hover:shadow-lg scroll-mt-24 text-slate-100 flex flex-row flex-wrap items-center gap-1 [overflow-wrap:anywhere]"
 						>
 							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 							{@html replaceEmotesInString(message.message, emotes, re)}
@@ -135,7 +137,7 @@
 					</div>
 					<div
 						id={message.tags['id']}
-						class="chat-bubble transition duration-100 hover:shadow-lg scroll-mt-24 text-slate-100"
+						class="chat-bubble transition duration-100 hover:shadow-lg scroll-mt-24 text-slate-100 [overflow-wrap:anywhere]"
 					>
 						{message.message}
 					</div>

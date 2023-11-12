@@ -3,7 +3,7 @@ import { PUBLIC_API_URL, PUBLIC_FRONTEND_URL } from '$env/static/public';
 import { pb } from '$lib/pocketbase';
 import { error } from '@sveltejs/kit';
 import parseISO from 'date-fns/parseISO/index.js';
-import type { ListResult, RecordModel } from 'pocketbase';
+import type { RecordModel } from 'pocketbase';
 
 export async function GET() {
 	if (PRIVATE_ALLOW_SEARCH_INDEXING !== 'true') {

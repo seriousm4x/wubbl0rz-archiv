@@ -1,7 +1,6 @@
 import { PRIVATE_MEILI_ADMIN_KEY } from '$env/static/private';
 import { PUBLIC_API_URL, PUBLIC_MEILI_URL } from '$env/static/public';
 import { pb } from '$lib/pocketbase.js';
-import { error } from '@sveltejs/kit';
 import type { RecordModel } from 'pocketbase';
 
 export async function load({ fetch }) {
