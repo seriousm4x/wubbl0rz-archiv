@@ -57,7 +57,7 @@ https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
 // CreateAuthFiles uses a Config to retrieve a Token
 // then generate a Client. It returns the generated Client.
 func CreateAuthFiles() error {
-	scope := youtube.YoutubeReadonlyScope
+	scope := youtube.YoutubeUploadScope
 
 	b, err := os.ReadFile("client_secret.json")
 	if err != nil {
