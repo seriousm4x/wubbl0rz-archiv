@@ -183,7 +183,11 @@
 		<hr class="rounded border-base-content/20 w-full" />
 		<div class="flex flex-col w-full h-full gap-4 p-6 overflow-y-scroll">
 			{#if searchText}
-				{#await client.index(meiliIndex).search(searchText, searchConfig) then result}
+				{#await client.index(meiliIndex).search(searchText, searchConfig)}
+					<div class="w-full text-center">
+						<span class="loading loading-spinner loading-lg"></span>
+					</div>
+				{:then result}
 					<p class="text-sm font-semibold">
 						{#if result.totalHits === 1000}
 							&gt;&equals;
