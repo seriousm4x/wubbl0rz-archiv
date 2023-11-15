@@ -82,11 +82,11 @@ var (
 	}, {
 		Name:        "suche",
 		Type:        discordgo.ChatApplicationCommand,
-		Description: "Archiv nach Titel oder Transcript durchsuchen",
+		Description: "Archiv nach Transcript durchsuchen",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
 				Name:        "text",
-				Description: "Titel oder Transcript",
+				Description: "Transcript",
 				Type:        discordgo.ApplicationCommandOptionString,
 			},
 		},
@@ -100,7 +100,6 @@ var (
 	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
 		"neuestes": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			logger.Info.Println("Received \"/neuestes\"")
-
 			contentMsg := ":timer: Lade neuestes Vod"
 			err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -112,8 +111,7 @@ var (
 				logger.Error.Println(err)
 				return
 			}
-
-			vods, err := pb.Dao().FindRecordsByFilter("vod", "", "-date", 1, 0)
+			vods, err := pb.Dao().FindRecordsByFilter("vod", "id != ''", "-date", 1, 0)
 			if err != nil || len(vods) == 0 {
 				contentMsg = ":x: Keine Ergebnisse"
 				_, err := s.InteractionResponseEdit(i.Interaction, &discordgo.WebhookEdit{
@@ -284,7 +282,12 @@ var (
 # :clapper: Top Chatter
 :one: **%s**, %d Nachrichten
 :two: **%s**, %d Views
-:three: **%s**, %d Views`,
+:three: **%s**, %d Views
+:four: **%s**, %d Views
+:five: **%s**, %d Views
+:six: **%s**, %d Views
+:seven: **%s**, %d Views
+:eight: **%s**, %d Views`,
 				response.CountVods,
 				response.CountClips,
 				response.CountH,
@@ -295,6 +298,16 @@ var (
 				response.TopChatter[1].MsgCount,
 				response.TopChatter[2].Name,
 				response.TopChatter[2].MsgCount,
+				response.TopChatter[3].Name,
+				response.TopChatter[3].MsgCount,
+				response.TopChatter[4].Name,
+				response.TopChatter[4].MsgCount,
+				response.TopChatter[5].Name,
+				response.TopChatter[5].MsgCount,
+				response.TopChatter[6].Name,
+				response.TopChatter[6].MsgCount,
+				response.TopChatter[7].Name,
+				response.TopChatter[7].MsgCount,
 			)
 			_, err = s.InteractionResponseEdit(i.Interaction, &discordgo.WebhookEdit{
 				Content: &content,
