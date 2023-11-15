@@ -33,6 +33,9 @@ func InitBackend(app *pocketbase.PocketBase) error {
 	}
 	go cl.Run(os.Getenv("BROADCASTER_NAME"))
 
+	// run discord bot
+	go RunDiscordBot(app)
+
 	// run all cronjobs once
 	cronjobs.SetStreamStatus(app)
 	publicSettings, err := app.Dao().FindFirstRecordByFilter("public_infos", "id != ''")

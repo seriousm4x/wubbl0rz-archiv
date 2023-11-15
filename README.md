@@ -4,14 +4,35 @@
 
 <div align="center" width="100%">
     <h2>wubbl0rz VOD Archiv</h2>
-    <p>Backend Stack: Go, PocketBase, Echo, FFmpeg</p>
+    <p>Backend Stack: Go, PocketBase, Echo, FFmpeg, discordgo</p>
     <p>Frontend Stack: SvelteKit, Tailwind (DaisyUI), VidStack, PNPM</p>
 </div>
 
 ## 🐳 Deploy
 
--   Check the `.env.sample` files in [frontend/](frontend/) and [backend/](backend/) and copy them to `*/.env`.
+-   Copy the `.env.sample` to `.env` and fill in the strings
 -   `docker-compose up`
+
+## 🔧 Developing
+
+-   Copy the `.env.sample` to `.env` and fill in the strings
+-   `source .env`
+
+Frontend:
+
+```bash
+cd frontend
+pnpm i
+pnpm run dev --host
+```
+
+Backend:
+
+```bash
+cd backend
+go get ./cmd/archiv-wubbl0rz
+go run ./cmd/archiv-wubbl0rz serve --http 0.0.0.0:8090
+```
 
 ## 🚪 Reverse Proxy
 
@@ -29,8 +50,11 @@ wubbl0rz.tv {
 api.wubbl0rz.tv {
     reverse_proxy localhost:8090
     encode zstd gzip
-    header /media/* Cache-Control "max-age=31536000"
-    header Access-Control-Allow-Origin *
+    root / /path/to/archiv/media
+    @not {
+        not path /vods /clips
+    }
+    reverse_proxy @not localhost:8090
 }
 meili.wubbl0rz.tv {
     reverse_proxy localhost:7700
