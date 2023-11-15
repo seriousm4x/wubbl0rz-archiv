@@ -10,12 +10,12 @@
 
 ## 🐳 Deploy
 
--   Copy the `.env.sample` to `.env` and fill in the strings
+-   Copy the `SAMPLE.env` to `.env` and fill in the strings
 -   `docker-compose up`
 
 ## 🔧 Developing
 
--   Copy the `.env.sample` to `.env` and fill in the strings
+-   Copy the `SAMPLE.env` to `.env` and fill in the strings
 -   `source .env`
 
 Frontend:
