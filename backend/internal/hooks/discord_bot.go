@@ -279,7 +279,7 @@ var (
 %.2f Stunden gestreamt
 %.2fTiB Archivgröße
 
-# :clapper: Top Chatter
+# :keyboard: Top Chatter
 :one: **%s**, %d Nachrichten
 :two: **%s**, %d Views
 :three: **%s**, %d Views
