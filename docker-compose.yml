@@ -26,6 +26,9 @@ services:
         build:
             context: frontend/
             dockerfile: Dockerfile
+            args:
+                - "PUBLIC_FRONTEND_URL:${PUBLIC_FRONTEND_URL}"
+                - "PRIVATE_ALLOW_SEARCH_INDEXING:${PRIVATE_ALLOW_SEARCH_INDEXING}"
         env_file: .env
         ports:
             - 127.0.0.1:3000:3000
