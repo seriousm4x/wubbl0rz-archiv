@@ -281,13 +281,13 @@ var (
 
 # :keyboard: Top Chatter
 :one: **%s**, %d Nachrichten
-:two: **%s**, %d Views
-:three: **%s**, %d Views
-:four: **%s**, %d Views
-:five: **%s**, %d Views
-:six: **%s**, %d Views
-:seven: **%s**, %d Views
-:eight: **%s**, %d Views`,
+:two: **%s**, %d Nachrichten
+:three: **%s**, %d Nachrichten
+:four: **%s**, %d Nachrichten
+:five: **%s**, %d Nachrichten
+:six: **%s**, %d Nachrichten
+:seven: **%s**, %d Nachrichten
+:eight: **%s**, %d Nachrichten`,
 				response.CountVods,
 				response.CountClips,
 				response.CountH,
