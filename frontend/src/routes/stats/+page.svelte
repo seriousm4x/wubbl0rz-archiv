@@ -192,14 +192,8 @@
 		</h1>
 		<div class="flex flex-row flex-wrap gap-2">
 			{#each sevenTv as emote}
-				<div title="{emote.name} (7tv)">
-					<img
-						src={emote.url}
-						alt={emote.name}
-						class="h-14"
-						loading="lazy"
-						title="{emote.name} (7tv)"
-					/>
+				<div title={emote.name}>
+					<img src={emote.url} alt={emote.name} class="h-14" loading="lazy" title={emote.name} />
 				</div>
 			{:else}
 				Keine Emotes
