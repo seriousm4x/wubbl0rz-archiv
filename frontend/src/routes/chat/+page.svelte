@@ -85,20 +85,18 @@
 					{#if 'tags' in message && 'reply-parent-msg-body' in message.tags}
 						<div
 							id={message.tags['id']}
-							class="chat-bubble transition duration-100 hover:shadow-lg scroll-mt-24 flex flex-col gap-2"
+							class="chat-bubble bg-gray-200 dark:bg-base-300 text-base-content transition duration-100 hover:shadow-lg scroll-mt-24 flex flex-col gap-1 [overflow-wrap:anywhere]"
 						>
 							<a
 								href={`#${message.tags['reply-parent-msg-id']}`}
-								class="text-xs font-bold bg-base-200 text-base-content/80 px-2 py-1 rounded-lg w-fit flex flex-row items-center gap-1"
+								class="text-xs font-bold bg-gray-100 dark:bg-base-200 text-base-content/80 px-2 py-1 rounded-lg w-fit flex flex-row items-center gap-1"
 							>
 								<div>
 									<Icon icon="solar:chat-square-arrow-bold-duotone" class="text-lg text-primary" />
 								</div>
 								{message.tags['reply-parent-display-name']}: {message.tags['reply-parent-msg-body']}
 							</a>
-							<div
-								class="text-slate-100 flex flex-row flex-wrap items-center gap-1 [overflow-wrap:anywhere]"
-							>
+							<div class="flex flex-row flex-wrap items-center gap-1 [overflow-wrap:anywhere]">
 								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 								{@html replaceEmotesInString(message.message, emotes, re)}
 							</div>
@@ -106,7 +104,7 @@
 					{:else}
 						<div
 							id={message.tags['id']}
-							class="chat-bubble transition duration-100 hover:shadow-lg scroll-mt-24 text-slate-100 flex flex-row flex-wrap items-center gap-1 [overflow-wrap:anywhere]"
+							class="chat-bubble bg-gray-200 dark:bg-base-300 text-base-content transition duration-100 hover:shadow-lg scroll-mt-24 flex flex-row flex-wrap items-center gap-1 [overflow-wrap:anywhere]"
 						>
 							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 							{@html replaceEmotesInString(message.message, emotes, re)}
@@ -137,7 +135,7 @@
 					</div>
 					<div
 						id={message.tags['id']}
-						class="chat-bubble transition duration-100 hover:shadow-lg scroll-mt-24 text-slate-100 [overflow-wrap:anywhere]"
+						class="chat-bubble bg-gray-200 dark:bg-base-300 text-base-content transition duration-100 hover:shadow-lg scroll-mt-24 flex flex-row flex-wrap items-center gap-1 [overflow-wrap:anywhere]"
 					>
 						{message.message}
 					</div>
