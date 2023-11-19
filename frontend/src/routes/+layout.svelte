@@ -9,7 +9,7 @@
 <Favicons />
 
 <Sidebar>
-	<div class="w-full h-full">
+	<div class="h-full w-full">
 		<Navbar />
 		<div class="p-4">
 			<slot />

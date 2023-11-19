@@ -52,16 +52,16 @@
 <SEO bind:og />
 
 <div
-	class="absolute top-0 left-0 w-full h-full aspect-video bg-cover bg-center blur-2xl opacity-10 -z-10"
+	class="absolute left-0 top-0 -z-10 aspect-video h-full w-full bg-cover bg-center opacity-10 blur-2xl"
 	style="background-image: url('{PUBLIC_API_URL}/vods/{vod.filename}-lg.webp');"
 />
-<div class="max-w-[120rem] mx-auto flex flex-col xl:flex-row gap-8">
-	<div class="xl:basis-4/5 flex flex-col gap-4">
+<div class="mx-auto flex max-w-[120rem] flex-col gap-8 xl:flex-row">
+	<div class="flex flex-col gap-4 xl:basis-4/5">
 		<Player bind:player bind:currentTime video={vod} />
 		<h1 class="text-4xl font-bold">
 			{vod.title}
 		</h1>
-		<div class="stats stats-vertical lg:stats-horizontal shadow bg-base-200 w-full">
+		<div class="stats stats-vertical w-full bg-base-200 shadow lg:stats-horizontal">
 			<div class="stat">
 				<div class="stat-title text-lg">Gestreamt am</div>
 				<div class="stat-value text-2xl">
@@ -88,17 +88,17 @@
 			</div>
 			<div class="stat">
 				<div class="stat-title text-lg">Platz</div>
-				<div class="stat-value text-2xl flex items-center gap-1">
+				<div class="stat-value flex items-center gap-1 text-2xl">
 					#{vodPosition}
 					{#if percentile <= 5}
 						<div title="Top {percentileRounded}%">
-							<Icon icon="solar:fire-bold-duotone" class="text-red-500 text-3xl" />
+							<Icon icon="solar:fire-bold-duotone" class="text-3xl text-red-500" />
 						</div>
 					{:else if percentile <= 33}
 						<div title="Top {percentileRounded}%">
 							<Icon
 								icon="solar:round-arrow-right-up-bold-duotone"
-								class="text-green-500 text-3xl"
+								class="text-3xl text-green-500"
 							/>
 						</div>
 					{:else if percentile <= 66}
@@ -109,7 +109,7 @@
 						<div title="Top {percentileRounded}%">
 							<Icon
 								icon="solar:round-arrow-right-down-bold-duotone"
-								class="text-red-500 text-3xl"
+								class="text-3xl text-red-500"
 							/>
 						</div>
 					{/if}
@@ -124,13 +124,13 @@
 				<div class="stat-desc">{vod.fps} FPS</div>
 			</div>
 		</div>
-		<div class="flex flex-col md:flex-row md:flex-wrap gap-4 justify-start">
+		<div class="flex flex-col justify-start gap-4 md:flex-row md:flex-wrap">
 			<div>
 				<div
 					title="Beim Download kann die genaue Dateigröße nicht vorhergesagt werden, weil das Video nicht als Ganzes existiert und die Videosegmente im Hintergrund zusammengesetzt werden, was nur eine grobe Schätzung ermöglicht."
 				>
 					<Button href="{PUBLIC_API_URL}/download/vods/{vod.id}" color="">
-						<Icon icon="solar:download-square-bold-duotone" class="text-violet-500 text-2xl" /> Download
+						<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download
 						(~ {formatBytes(vod.size)})
 					</Button>
 				</div>
@@ -140,14 +140,14 @@
 					<label
 						for="btn-share"
 						tabindex="-1"
-						class="btn shadow rounded-xl bg-gradient-to-r border-none hover:shadow-lg transition duration-200"
+						class="btn rounded-xl border-none bg-gradient-to-r shadow transition duration-200 hover:shadow-lg"
 					>
-						<Icon icon="solar:share-bold-duotone" class="text-violet-500 text-2xl" /> Teilen
+						<Icon icon="solar:share-bold-duotone" class="text-2xl text-violet-500" /> Teilen
 					</label>
 					<ul
 						id="btn-share"
 						tabindex="-1"
-						class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box"
+						class="menu dropdown-content z-[1] rounded-box bg-base-200 p-2 shadow"
 					>
 						<li>
 							<button on:click={() => copyLink(false)}>Link kopieren</button>
@@ -165,11 +165,11 @@
 			{#if vod['expand']['clip(vod)'] && vod['expand']['clip(vod)'].length > 0}
 				<h2 class="text-3xl font-bold">
 					<span
-						class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 drop-shadow-md"
+						class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 						>Clips für diesen Stream</span
 					>
 				</h2>
-				<div class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+				<div class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 					{#each vod['expand']['clip(vod)'] as video}
 						<Card {video} />
 					{/each}
@@ -177,10 +177,10 @@
 			{/if}
 		{/if}
 	</div>
-	<div class="xl:basis-1/5 hidden xl:flex xl:flex-col xl:gap-4">
+	<div class="hidden xl:flex xl:basis-1/5 xl:flex-col xl:gap-4">
 		<h2 class="text-3xl font-bold">
 			<span
-				class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 drop-shadow-md"
+				class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 				>Empfohlene Streams</span
 			>
 		</h2>
@@ -192,14 +192,14 @@
 			{/each}
 		</div>
 	</div>
-	<div class="xl:hidden flex flex-col gap-4">
+	<div class="flex flex-col gap-4 xl:hidden">
 		<h2 class="text-3xl font-bold">
 			<span
-				class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 drop-shadow-md"
+				class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 				>Empfohlene Streams</span
 			>
 		</h2>
-		<div class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+		<div class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{#each recommendations as video}
 				<Card {video} />
 			{:else}

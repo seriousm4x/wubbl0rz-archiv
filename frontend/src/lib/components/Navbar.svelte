@@ -88,19 +88,19 @@
 <svelte:window bind:scrollY on:keydown={onKeyDown} />
 
 <div
-	class="navbar backdrop-blur-sm sticky top-0 z-40 justify-center transition duration-200 {scrollY >
+	class="navbar sticky top-0 z-40 justify-center backdrop-blur-sm transition duration-200 {scrollY >
 	0
 		? 'bg-base-200/70'
 		: ''}"
 >
 	<label
 		for="menu-drawer"
-		class="btn btn-ghost p-0 mask mask-squircle drawer-button md:hidden flex-nowrap"
+		class="btn btn-ghost mask drawer-button mask-squircle flex-nowrap p-0 md:hidden"
 	>
 		<Icon icon="solar:menu-dots-square-bold-duotone" class="text-5xl text-primary" />
 	</label>
 	<button
-		class="input border-base-content/20 md:max-w-lg w-full bg-base-300/50 drop-shadow-md hover:bg-base-300/80 hover:border-base-content/50 cursor-pointer transition duration-200 rounded-full text-base-content/50 hover:text-base-content"
+		class="input w-full cursor-pointer rounded-full border-base-content/20 bg-base-300/50 text-base-content/50 drop-shadow-md transition duration-200 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content md:max-w-lg"
 		on:click={showModal}
 	>
 		<span>Suchen</span>
@@ -108,24 +108,24 @@
 	</button>
 </div>
 <dialog
-	class="modal items-start backdrop-blur-md transition duration-200 overflow-hidden"
+	class="modal items-start overflow-hidden backdrop-blur-md transition duration-200"
 	bind:this={modal}
 	on:close={onModalClose}
 >
 	<div
-		class="modal-box p-0 md:mt-20 max-w-6xl h-full md:h-4/5 max-h-full flex flex-col items-center bg-base-300/90 border border-base-content/20 backdrop-blur-md"
+		class="modal-box flex h-full max-h-full max-w-6xl flex-col items-center border border-base-content/20 bg-base-300/90 p-0 backdrop-blur-md md:mt-20 md:h-4/5"
 	>
-		<div class="flex flex-col w-full gap-4 p-6">
+		<div class="flex w-full flex-col gap-4 p-6">
 			<input
 				type="text"
 				placeholder="Suchen"
-				class="input border-base-content/20 w-full bg-base-300/50 drop-shadow-md hover:bg-base-300/80 hover:border-base-content/50 transition duration-200 rounded-full"
+				class="input w-full rounded-full border-base-content/20 bg-base-300/50 drop-shadow-md transition duration-200 hover:border-base-content/50 hover:bg-base-300/80"
 				bind:value={searchText}
 			/>
 			<div class="flex flex-row flex-wrap gap-4">
 				<div class="join rounded-full">
 					<input
-						class="join-item btn btn-sm md:btn-md bg-base-100"
+						class="btn join-item btn-sm bg-base-100 md:btn-md"
 						type="radio"
 						name="searchIn"
 						aria-label="Transcripts"
@@ -133,7 +133,7 @@
 						bind:group={meiliIndex}
 					/>
 					<input
-						class="join-item btn btn-sm md:btn-md bg-base-100"
+						class="btn join-item btn-sm bg-base-100 md:btn-md"
 						type="radio"
 						name="searchIn"
 						aria-label="Streamtitel"
@@ -143,7 +143,7 @@
 				</div>
 				<div class="join rounded-full">
 					<span
-						class="join-item flex items-center px-4 justify-center border-base-200/70 bg-base-100"
+						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
 					>
 						Sortieren
 					</span>
@@ -159,7 +159,7 @@
 					{#if selectedSort.value !== 'relevancy'}
 						<div title="Aufsteigend">
 							<input
-								class="join-item btn"
+								class="btn join-item"
 								type="radio"
 								name="options"
 								aria-label="&#9650;"
@@ -169,7 +169,7 @@
 						</div>
 						<div title="Absteigend">
 							<input
-								class="join-item btn"
+								class="btn join-item"
 								type="radio"
 								name="options"
 								aria-label="&#9660;"
@@ -181,8 +181,8 @@
 				</div>
 			</div>
 		</div>
-		<hr class="rounded border-base-content/20 w-full" />
-		<div class="flex flex-col w-full h-full gap-4 p-6 overflow-y-scroll">
+		<hr class="w-full rounded border-base-content/20" />
+		<div class="flex h-full w-full flex-col gap-4 overflow-y-scroll p-6">
 			{#if searchText}
 				{#await client.index(meiliIndex).search(searchText, searchConfig)}
 					<div class="w-full text-center">
@@ -195,7 +195,7 @@
 						{/if}
 						{result.totalHits} Ergebnisse in {result.processingTimeMs}ms
 					</p>
-					<div class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+					<div class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 						{#each result.hits as hit}
 							<SearchResult {hit} searchIn={meiliIndex} />
 						{/each}

@@ -9,9 +9,9 @@
 	const type = video.collectionName === 'vod' ? 'vods' : 'clips';
 </script>
 
-<div class="card w-full rounded-xl bg-base-200 hover:shadow-lg transition overflow-hidden">
+<div class="card w-full overflow-hidden rounded-xl bg-base-200 transition hover:shadow-lg">
 	<VideoThumbnail {video} {offset} />
-	<div class="card-body p-3 justify-between gap-1">
+	<div class="card-body justify-between gap-1 p-3">
 		<a href="/{type}/{video.id}{offset > 0 ? `?t=${offset}` : ''}">
 			<h2 class="text-md font-bold">{video.title}</h2>
 		</a>

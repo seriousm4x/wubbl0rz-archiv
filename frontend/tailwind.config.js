@@ -11,7 +11,7 @@ export default {
 		themes: [
 			{
 				light: {
-					...themes['[data-theme=light]'],
+					...themes['light'],
 					primary: '#9147ff',
 					'primary-content': '#ffffff',
 					secondary: '#1f1b27'
@@ -19,7 +19,7 @@ export default {
 			},
 			{
 				dark: {
-					...themes['[data-theme=dark]'],
+					...themes['dark'],
 					primary: '#9147ff',
 					'primary-content': '#ffffff',
 					secondary: '#1f1b27',

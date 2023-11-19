@@ -42,13 +42,13 @@
 
 <div class="container mx-auto">
 	<div class="flex flex-col gap-4">
-		<h1 class="text-4xl flex flex-row gap-4 drop-shadow-md">
+		<h1 class="flex flex-row gap-4 text-4xl drop-shadow-md">
 			<img src="/pocketbase.svg" alt="pocketbase" class="h-10" />
 			<span>
 				Pocket<span class="font-bold">Base</span>
 			</span>
 		</h1>
-		<div class="stats stats-vertical lg:stats-horizontal shadow bg-base-200 w-full">
+		<div class="stats stats-vertical w-full bg-base-200 shadow lg:stats-horizontal">
 			<div class="stat">
 				<div class="stat-figure text-primary">
 					<Icon icon="solar:videocamera-record-bold-duotone" class="text-5xl" />
@@ -111,13 +111,13 @@
 				<div class="stat-desc">Vods und Clips gemeinsam</div>
 			</div>
 		</div>
-		<h1 class="text-4xl font-bold flex flex-row gap-4 mt-8 drop-shadow-md">
+		<h1 class="mt-8 flex flex-row gap-4 text-4xl font-bold drop-shadow-md">
 			<img src="/meilisearch.svg" alt="meilisearch" class="h-10" />
 			<span>
 				meili<span class="font-light">search</span>
 			</span>
 		</h1>
-		<div class="stats stats-vertical lg:stats-horizontal shadow bg-base-200 w-full">
+		<div class="stats stats-vertical w-full bg-base-200 shadow lg:stats-horizontal">
 			<div class="stat">
 				<div class="stat-figure text-emerald-500">
 					<Icon icon="solar:subtitles-bold-duotone" class="text-5xl" />
@@ -142,7 +142,7 @@
 					<Icon icon="solar:smartphone-update-bold-duotone" class="text-5xl" />
 				</div>
 				<div class="stat-title">Letztes Update</div>
-				<div class="stat-value text-red-400 whitespace-break-spaces">
+				<div class="stat-value whitespace-break-spaces text-red-400">
 					{formatRelative(parseISO(data.meili.lastUpdate), Date.now(), { locale: de })}
 				</div>
 			</div>
@@ -155,9 +155,9 @@
 				<div class="stat-desc">Transkripte und Vods</div>
 			</div>
 		</div>
-		<h1 class="text-4xl font-bold mt-8">
+		<h1 class="mt-8 text-4xl font-bold">
 			<span
-				class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 drop-shadow-md"
+				class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 				>Top Chatter</span
 			>
 		</h1>
@@ -180,13 +180,13 @@
 				</tbody>
 			</table>
 		</div>
-		<h1 class="text-4xl font-bold mt-8 flex flex-row flex-wrap items-center gap-4 drop-shadow-md">
-			<span class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
+		<h1 class="mt-8 flex flex-row flex-wrap items-center gap-4 text-4xl font-bold drop-shadow-md">
+			<span class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent">
 				Emotes
 			</span>
 			<span class="badge badge-primary">{data.emotes.length}</span>
 		</h1>
-		<h1 class="text-2xl font-bold mt-4 flex flex-row flex-wrap items-center gap-4">
+		<h1 class="mt-4 flex flex-row flex-wrap items-center gap-4 text-2xl font-bold">
 			<span>7tv</span>
 			<span class="badge badge-neutral">{sevenTv.length}</span>
 		</h1>
@@ -199,7 +199,7 @@
 				Keine Emotes
 			{/each}
 		</div>
-		<h1 class="text-2xl font-bold mt-4 flex flex-row flex-wrap items-center gap-4">
+		<h1 class="mt-4 flex flex-row flex-wrap items-center gap-4 text-2xl font-bold">
 			<span>BetterTTV</span>
 			<span class="badge badge-neutral">{bttv.length}</span>
 		</h1>
@@ -212,7 +212,7 @@
 				Keine Emotes
 			{/each}
 		</div>
-		<h1 class="text-2xl font-bold mt-4 flex flex-row flex-wrap items-center gap-4">
+		<h1 class="mt-4 flex flex-row flex-wrap items-center gap-4 text-2xl font-bold">
 			<span>FrankerFaceZ</span>
 			<span class="badge badge-neutral">{ffz.length}</span>
 		</h1>
@@ -225,7 +225,7 @@
 				Keine Emotes
 			{/each}
 		</div>
-		<h1 class="text-2xl font-bold mt-4 flex flex-row flex-wrap items-center gap-4">
+		<h1 class="mt-4 flex flex-row flex-wrap items-center gap-4 text-2xl font-bold">
 			<span>Twitch</span>
 			<span class="badge badge-neutral">{twitch.length}</span>
 		</h1>

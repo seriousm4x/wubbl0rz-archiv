@@ -49,9 +49,9 @@
 	}
 </script>
 
-<div class="rounded-xl overflow-hidden aspect-video">
+<div class="aspect-video overflow-hidden rounded-xl">
 	<media-player
-		class="player w-full h-full"
+		class="player h-full w-full"
 		title={video.title}
 		src="{PUBLIC_API_URL}/{type}/{video.filename}-segments/{video.filename}.m3u8"
 		crossorigin

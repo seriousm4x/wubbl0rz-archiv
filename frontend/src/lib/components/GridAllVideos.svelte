@@ -92,33 +92,33 @@
 </script>
 
 <div class="flex flex-col gap-4">
-	<div class="flex flex-row justify-between items-center">
-		<div class="text-4xl font-bold w-full">
+	<div class="flex flex-row items-center justify-between">
+		<div class="w-full text-4xl font-bold">
 			<span
-				class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 drop-shadow-md"
+				class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 				>{title}</span
 			>
 		</div>
 		<div>
 			<button
-				class="btn btn-sm rounded-full flex-nowrap"
+				class="btn btn-sm flex-nowrap rounded-full"
 				on:click={() => (showFilter = !showFilter)}
 			>
-				<Icon icon="solar:filter-bold-duotone" class="text-violet-500 text-lg" /> Filter
+				<Icon icon="solar:filter-bold-duotone" class="text-lg text-violet-500" /> Filter
 			</button>
 		</div>
 	</div>
 	{#if showFilter}
 		<form on:submit|preventDefault={() => search()}>
-			<div class="flex md:flex-row flex-col flex-wrap gap-2 justify-end">
+			<div class="flex flex-col flex-wrap justify-end gap-2 md:flex-row">
 				<input
-					class="input input-bordered border-base-content/20 md:max-w-lg w-full bg-base-300/50 drop-shadow-md hover:bg-base-300/80 hover:border-base-content/50 cursor-pointer transition duration-200 rounded-full text-base-content/50 hover:text-base-content"
+					class="input input-bordered w-full cursor-pointer rounded-full border-base-content/20 bg-base-300/50 text-base-content/50 drop-shadow-md transition duration-200 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content md:max-w-lg"
 					{placeholder}
 					bind:value={searchValue}
 				/>
 				<div class="join rounded-full">
 					<span
-						class="join-item flex items-center px-4 justify-center border-base-200/70 bg-base-100"
+						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
 					>
 						Sortieren
 					</span>
@@ -133,7 +133,7 @@
 					</select>
 					<div title="Aufsteigend">
 						<input
-							class="join-item btn"
+							class="btn join-item"
 							type="radio"
 							name="options"
 							aria-label="&#9650;"
@@ -143,7 +143,7 @@
 					</div>
 					<div title="Absteigend">
 						<input
-							class="join-item btn"
+							class="btn join-item"
 							type="radio"
 							name="options"
 							aria-label="&#9660;"
@@ -154,31 +154,31 @@
 				</div>
 				<div class="join rounded-full">
 					<span
-						class="join-item flex items-center px-4 justify-center border-base-200/70 bg-base-100"
+						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
 					>
 						Von
 					</span>
 					<input
 						type="date"
-						class="join-item input border-base-200/70 bg-base-200"
+						class="input join-item border-base-200/70 bg-base-200"
 						bind:value={dateFrom}
 					/>
 				</div>
 				<div class="join rounded-full">
 					<span
-						class="join-item flex items-center px-4 justify-center border-base-200/70 bg-base-100"
+						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
 					>
 						Bis
 					</span>
 					<input
 						type="date"
-						class="join-item input border-base-200/70 bg-base-200"
+						class="input join-item border-base-200/70 bg-base-200"
 						bind:value={dateTo}
 					/>
 				</div>
 				<div class="flex gap-2">
-					<button class="btn btn-primary rounded-full w-fit" type="submit">Suchen</button>
-					<button class="btn btn-error rounded-full w-fit" type="button" on:click={reset}
+					<button class="btn btn-primary w-fit rounded-full" type="submit">Suchen</button>
+					<button class="btn btn-error w-fit rounded-full" type="button" on:click={reset}
 						>Reset</button
 					>
 				</div>
@@ -186,17 +186,17 @@
 		</form>
 	{/if}
 	<div
-		class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"
+		class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
 	>
 		<div
-			class="absolute top-0 left-0 w-full h-auto aspect-video bg-cover bg-center blur-2xl opacity-40 -z-10 transition- duration-200"
+			class="transition- absolute left-0 top-0 -z-10 aspect-video h-auto w-full bg-cover bg-center opacity-40 blur-2xl duration-200"
 		>
 			<img
 				src={data.items[0]?.filename
 					? `${PUBLIC_API_URL}/${type}/${data.items[0]?.filename}-sm.webp`
 					: ''}
 				alt={data.items[0]?.title}
-				class="w-full h-auto"
+				class="h-auto w-full"
 			/>
 		</div>
 		{#each data.items as video}

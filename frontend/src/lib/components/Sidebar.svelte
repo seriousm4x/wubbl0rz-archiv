@@ -55,20 +55,20 @@
 	<div class="drawer-side z-50 shadow-xl">
 		<label for="menu-drawer" aria-label="close sidebar" class="drawer-overlay" />
 		<ul
-			class="menu w-20 xl:w-28 min-h-full backdrop-blur-md md:backdrop-blur-none bg-base-200/80 md:bg-base-200/40 text-base-content justify-items-center gap-2"
+			class="menu min-h-full w-20 justify-items-center gap-2 bg-base-200/80 text-base-content backdrop-blur-md md:bg-base-200/40 md:backdrop-blur-none xl:w-28"
 		>
-			<li class="mask mask-squircle relative group md:my-4">
+			<li class="group mask mask-squircle relative md:my-4">
 				<a
 					href={sidebarHome.href}
-					class="p-2 flex flex-col gap-1 justify-center text-center group hover:bg-transparent"
+					class="group flex flex-col justify-center gap-1 p-2 text-center hover:bg-transparent"
 				>
 					<div
-						class="absolute -inset-0.5 bg-gradient-to-r opacity-0 group-hover:opacity-[.2] transition duration-200 group-hover:duration-200 {sidebarHome.bgColor}"
+						class="absolute -inset-0.5 bg-gradient-to-r opacity-0 transition duration-200 group-hover:opacity-[.2] group-hover:duration-200 {sidebarHome.bgColor}"
 					/>
 					<img
 						src={sidebarHome.icon}
 						alt="{sidebarHome.title} Icon"
-						class="w-10 h-10 mask mask-squircle group-hover:-rotate-6 duration-200 group-hover:scale-110 contrast-[1.3] saturate-[.75] {$page
+						class="mask mask-squircle h-10 w-10 contrast-[1.3] saturate-[.75] duration-200 group-hover:-rotate-6 group-hover:scale-110 {$page
 							.url.pathname === sidebarHome.href
 							? ''
 							: sidebarHome.iconInactive}"
@@ -76,19 +76,19 @@
 					<span class="text-xs font-bold uppercase transition">{sidebarHome.title}</span>
 				</a>
 			</li>
-			<li class="menu-title md:mb-4"><hr class="opacity-25 rounded border-base-content" /></li>
+			<li class="menu-title md:mb-4"><hr class="rounded border-base-content opacity-25" /></li>
 			{#each sidebarItems as item}
-				<li class="mask mask-squircle relative group">
+				<li class="group mask mask-squircle relative">
 					<a
 						href={item.href}
-						class="p-2 flex flex-col gap-0 justify-center text-center group hover:bg-transparent"
+						class="group flex flex-col justify-center gap-0 p-2 text-center hover:bg-transparent"
 					>
 						<div
-							class="absolute -inset-0.5 bg-gradient-to-r opacity-0 group-hover:opacity-[.2] transition duration-200 group-hover:duration-200 {item.bgColor}"
+							class="absolute -inset-0.5 bg-gradient-to-r opacity-0 transition duration-200 group-hover:opacity-[.2] group-hover:duration-200 {item.bgColor}"
 						/>
 						<Icon
 							icon={item.icon}
-							class="text-5xl group-hover:-rotate-6 duration-200 group-hover:scale-110 {$page.url.pathname.startsWith(
+							class="text-5xl duration-200 group-hover:-rotate-6 group-hover:scale-110 {$page.url.pathname.startsWith(
 								item.href
 							)
 								? item.iconActive

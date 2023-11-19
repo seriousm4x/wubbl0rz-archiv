@@ -25,24 +25,24 @@
 	<Hero vod={data.new.items[0]} />
 {/if}
 
-<h1 class="text-4xl font-bold md:mt-10 md:ms-3 mb-4">
+<h1 class="mb-4 text-4xl font-bold md:ms-3 md:mt-10">
 	<span
-		class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 drop-shadow-md"
+		class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 		>Neue Streams</span
 	>
 </h1>
 <div
-	class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"
+	class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
 >
 	<div
-		class="absolute top-0 left-0 w-full h-auto aspect-video bg-cover bg-center blur-2xl opacity-40 -z-10"
+		class="absolute left-0 top-0 -z-10 aspect-video h-auto w-full bg-cover bg-center opacity-40 blur-2xl"
 	>
 		<img
 			src={data.new?.items?.[0]?.filename
 				? `${PUBLIC_API_URL}/vods/${data.new?.items?.[0]?.filename}-lg.webp`
 				: ''}
 			alt={data.new?.items?.[0]?.title}
-			class="w-full h-auto"
+			class="h-auto w-full"
 			width="1536"
 			height="860"
 		/>
@@ -58,28 +58,28 @@
 	{/if}
 </div>
 
-<h1 class="text-4xl font-bold mt-10 mb-4 ms-3">
+<h1 class="mb-4 ms-3 mt-10 text-4xl font-bold">
 	<span
-		class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 drop-shadow-md"
+		class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 		>Beliebte Streams</span
 	>
 </h1>
 <div
-	class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"
+	class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
 >
 	{#each data.popular?.items as video}
 		<Card {video} />
 	{/each}
 </div>
 
-<h1 class="text-4xl font-bold mt-10 mb-4 ms-3">
+<h1 class="mb-4 ms-3 mt-10 text-4xl font-bold">
 	<span
-		class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 drop-shadow-md"
+		class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 		>Top Clips des Monats</span
 	>
 </h1>
 <div
-	class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"
+	class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
 >
 	{#each data.clips?.items as video}
 		<Card {video} />

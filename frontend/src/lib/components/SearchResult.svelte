@@ -12,13 +12,13 @@
 	const offset = searchIn === 'transcripts' ? hit.start : 0;
 </script>
 
-<div class="card w-full rounded-xl bg-base-200 hover:shadow-lg transition overflow-hidden">
+<div class="card w-full overflow-hidden rounded-xl bg-base-200 transition hover:shadow-lg">
 	<VideoThumbnail {video} isVod={true} {offset} />
-	<div class="card-body p-4 gap-1">
+	<div class="card-body gap-1 p-4">
 		<a href="/{searchIn}/{video.id}{offset > 0 ? `?t=${offset}` : ''}">
 			{#if searchIn === 'vods'}
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				<h2 class="text-md font-bold matched-string">{@html hit?._formatted?.title}</h2>
+				<h2 class="text-md matched-string font-bold">{@html hit?._formatted?.title}</h2>
 			{:else}
 				<h2 class="text-md font-bold">{hit.title}</h2>
 			{/if}
@@ -33,7 +33,7 @@
 		</p>
 		{#if searchIn === 'transcripts'}
 			<a
-				class="text-sm font-medium font-mono bg-base-300 h-full p-2 matched-string rounded-lg hover:shadow-md"
+				class="matched-string h-full rounded-lg bg-base-300 p-2 font-mono text-sm font-medium hover:shadow-md"
 				href="/vods/{hit.id}{offset > 0 ? `?t=${offset}` : ''}"
 			>
 				<span class="underline">{toHHMMSS(hit.start, false)}</span>:

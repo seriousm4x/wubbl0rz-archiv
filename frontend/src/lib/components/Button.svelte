@@ -6,13 +6,13 @@
 {#if href !== ''}
 	<a
 		{href}
-		class="btn shadow rounded-xl bg-gradient-to-r hover:shadow-lg transition duration-200 {color}"
+		class="btn rounded-xl bg-gradient-to-r shadow transition duration-200 hover:shadow-lg {color}"
 	>
 		<slot />
 	</a>
 {:else}
 	<button
-		class="btn shadow rounded-xl bg-gradient-to-r hover:shadow-lg transition duration-200 {color}"
+		class="btn rounded-xl bg-gradient-to-r shadow transition duration-200 hover:shadow-lg {color}"
 	>
 		<slot />
 	</button>

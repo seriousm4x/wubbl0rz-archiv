@@ -39,9 +39,9 @@
 </script>
 
 <div class="container mx-auto flex flex-col gap-4">
-	<h1 class="text-4xl font-bold md:mt-10 md:ms-3 mb-4">
+	<h1 class="mb-4 text-4xl font-bold md:ms-3 md:mt-10">
 		<span
-			class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 drop-shadow-md"
+			class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 			>Admin</span
 		>
 	</h1>
@@ -57,7 +57,7 @@
 			};
 		}}
 	>
-		<button class="btn btn-error btn-outline"
+		<button class="btn btn-outline btn-error"
 			><Icon icon="solar:logout-3-bold-duotone" class="text-3xl" /> Log out</button
 		>
 	</form>
@@ -72,10 +72,10 @@
 		>
 			<input type="checkbox" />
 			<div class="collapse-title">
-				<p class="text-xl font-medium break-all">{vod.title}</p>
+				<p class="break-all text-xl font-medium">{vod.title}</p>
 				<p class="flex flex-row flex-wrap gap-1">
 					<span class="badge badge-neutral"
-						><span class="font-bold me-1">Datum:</span>{parseISO(vod.date).toLocaleDateString(
+						><span class="me-1 font-bold">Datum:</span>{parseISO(vod.date).toLocaleDateString(
 							'de',
 							{
 								weekday: 'long',
@@ -86,26 +86,26 @@
 						)}</span
 					>
 					<span class="badge badge-neutral"
-						><span class="font-bold me-1">Länge:</span>{toHHMMSS(vod.duration, true)}</span
+						><span class="me-1 font-bold">Länge:</span>{toHHMMSS(vod.duration, true)}</span
 					>
 					<span class="badge badge-neutral"
-						><span class="font-bold me-1">Views:</span>{vod.viewcount.toLocaleString('de-DE')}</span
+						><span class="me-1 font-bold">Views:</span>{vod.viewcount.toLocaleString('de-DE')}</span
 					>
-					<span class="badge badge-neutral"><span class="font-bold me-1">ID:</span>{vod.id}</span>
+					<span class="badge badge-neutral"><span class="me-1 font-bold">ID:</span>{vod.id}</span>
 				</p>
 			</div>
 			<div class="collapse-content bg-base-300/40">
 				<dir class="flex flex-col gap-2 p-0">
 					{#if vod.youtube_upload === ''}
-						<button class="btn btn-success btn-outline" on:click={() => upload(vod.id)}
+						<button class="btn btn-outline btn-success" on:click={() => upload(vod.id)}
 							>Export zu YouTube</button
 						>
 					{:else if vod.youtube_upload === 'done'}
-						<button class="btn btn-success btn-outline" on:click={() => upload(vod.id)}
+						<button class="btn btn-outline btn-success" on:click={() => upload(vod.id)}
 							>Bereits hochgeladen. Du kannst den Stream aber erneut hochladen</button
 						>
 					{:else}
-						<button class="btn btn-success btn-outline btn-disabled">Upload läuft...</button>
+						<button class="btn btn-disabled btn-outline btn-success">Upload läuft...</button>
 					{/if}
 				</dir>
 			</div>

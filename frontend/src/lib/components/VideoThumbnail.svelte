@@ -25,7 +25,7 @@
 			loop
 			autoplay
 			transition:fade={{ duration: 250 }}
-			class="absolute top-0 left-0 w-full h-auto z-10"
+			class="absolute left-0 top-0 z-10 h-auto w-full"
 		>
 			<source
 				src="{PUBLIC_API_URL}/{type}/{video.filename}-preview.webm"
@@ -44,7 +44,7 @@
 				type="image/webp"
 				srcset="{PUBLIC_API_URL}/{type}/{video.filename}-sm.webp"
 				media="(max-width: 545px)"
-				class="w-full h-auto"
+				class="h-auto w-full"
 				width="512"
 				height="286"
 			/>
@@ -52,7 +52,7 @@
 				type="image/webp"
 				srcset="{PUBLIC_API_URL}/{type}/{video.filename}-md.webp"
 				media="(max-width: 767px)"
-				class="w-full h-auto"
+				class="h-auto w-full"
 				width="768"
 				height="430"
 			/>
@@ -60,25 +60,25 @@
 				type="image/webp"
 				srcset="{PUBLIC_API_URL}/{type}/{video.filename}-sm.webp"
 				media="(min-width: 768px)"
-				class="w-full h-auto"
+				class="h-auto w-full"
 				width="512"
 				height="286"
 			/>
 			<img
 				src="{PUBLIC_API_URL}/{type}/{video.filename}-md.webp"
-				class="w-full h-auto"
+				class="h-auto w-full"
 				alt={video.title}
 				loading="lazy"
 				width="768"
 				height="430"
 			/>
 		</picture>
-		<div class="absolute bottom-0 right-0 mx-2 my-3 px-1 rounded-md bg-base-300 font-bold">
+		<div class="absolute bottom-0 right-0 mx-2 my-3 rounded-md bg-base-300 px-1 font-bold">
 			{toHHMMSS(video.duration, false)}
 		</div>
 		{#if type in $watchHistory && video.id in $watchHistory[type]}
 			<progress
-				class="progress progress-primary bg-base-100 rounded-none w-full bottom-0 absolute"
+				class="progress progress-primary absolute bottom-0 w-full rounded-none bg-base-100"
 				value={$watchHistory[type][video.id]}
 				max={video.duration}
 			></progress>

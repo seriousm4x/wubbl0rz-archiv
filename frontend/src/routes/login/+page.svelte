@@ -5,7 +5,7 @@
 	let error = '';
 </script>
 
-<div class="container mx-auto flex flex-col justify-center items-center gap-4">
+<div class="container mx-auto flex flex-col items-center justify-center gap-4">
 	<form
 		method="POST"
 		use:enhance={() => {
@@ -42,7 +42,7 @@
 				required
 			/>
 		</div>
-		<div class="form-control w-full max-w-xs mt-4">
+		<div class="form-control mt-4 w-full max-w-xs">
 			<button class="btn" type="submit">Login</button>
 		</div>
 	</form>
@@ -50,7 +50,7 @@
 		<div class="alert alert-error">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
-				class="stroke-current shrink-0 h-6 w-6"
+				class="h-6 w-6 shrink-0 stroke-current"
 				fill="none"
 				viewBox="0 0 24 24"
 				><path
