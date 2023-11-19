@@ -112,7 +112,7 @@
 		<form on:submit|preventDefault={() => search()}>
 			<div class="flex flex-col flex-wrap justify-end gap-2 md:flex-row">
 				<input
-					class="input input-bordered w-full cursor-pointer rounded-full border-base-content/20 bg-base-300/50 text-base-content/50 drop-shadow-md transition duration-200 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content md:max-w-lg"
+					class="input w-full cursor-pointer rounded-full border-base-content/20 bg-base-300/50 text-base-content/50 drop-shadow-md transition duration-200 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content md:max-w-lg"
 					{placeholder}
 					bind:value={searchValue}
 				/>
@@ -123,7 +123,7 @@
 						Sortieren
 					</span>
 					<select
-						class="join-item select select-bordered rounded-e-full border-base-200/70 bg-base-200"
+						class="join-item select rounded-e-full border-base-200/70 bg-base-200"
 						aria-label="Sortieren"
 						bind:value={selectedSort}
 					>
