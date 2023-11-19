@@ -100,7 +100,7 @@
 		<Icon icon="solar:menu-dots-square-bold-duotone" class="text-5xl text-primary" />
 	</label>
 	<button
-		class="input input-bordered border-base-content/20 md:max-w-lg w-full bg-base-300/50 drop-shadow-md hover:bg-base-300/80 hover:border-base-content/50 cursor-pointer transition duration-200 rounded-full text-base-content/50 hover:text-base-content"
+		class="input border-base-content/20 md:max-w-lg w-full bg-base-300/50 drop-shadow-md hover:bg-base-300/80 hover:border-base-content/50 cursor-pointer transition duration-200 rounded-full text-base-content/50 hover:text-base-content"
 		on:click={showModal}
 	>
 		<span>Suchen</span>
@@ -119,7 +119,7 @@
 			<input
 				type="text"
 				placeholder="Suchen"
-				class="input input-bordered border-base-content/20 w-full bg-base-300/50 drop-shadow-md hover:bg-base-300/80 hover:border-base-content/50 cursor-pointer transition duration-200 rounded-full"
+				class="input border-base-content/20 w-full bg-base-300/50 drop-shadow-md hover:bg-base-300/80 hover:border-base-content/50 transition duration-200 rounded-full"
 				bind:value={searchText}
 			/>
 			<div class="flex flex-row flex-wrap gap-4">
@@ -148,7 +148,7 @@
 						Sortieren
 					</span>
 					<select
-						class="join-item select select-bordered rounded-e-full border-base-200/70 bg-base-200"
+						class="join-item select rounded-e-full border-base-200/70 bg-base-200"
 						aria-label="Sortieren"
 						bind:value={selectedSort}
 					>
