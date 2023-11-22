@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"path"
 	"path/filepath"
 
 	"github.com/pocketbase/pocketbase"
@@ -101,6 +100,9 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 	}
 
 	call := service.Videos.Insert([]string{"snippet", "status"}, upload)
+	call.ProgressUpdater(func(current, total int64) {
+		logger.Debug.Printf("Upload progress: %d%%\n", current*100/total)
+	})
 
 	// create temp video file
 	filename := vod.GetString("filename")
@@ -170,8 +172,23 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 		return nil
 	}
 
-	thumbPath := path.Join(assets.ArchiveDir, "vods", fmt.Sprintf("%s-lg.webp", filename))
-	thumbReader, err := os.Open(thumbPath)
+	// convert our thumbnail to jpg, because webp isn't supported and we need to shrink it's site as well
+	tempThumb := filepath.Join(tempDir, id+".jpg")
+
+	cmd = exec.Command("ffmpeg",
+		"-i", filepath.Join(app.DataDir(), "storage", vod.Collection().Id, vod.Id, thumb),
+		"-vf", "scale=-2:1080",
+		"-y", tempThumb)
+	if err := cmd.Run(); err != nil {
+		logger.Error.Println(err)
+		if err := os.Remove(tempThumb); err != nil {
+			logger.Error.Println(err)
+			return err
+		}
+		return err
+	}
+
+	thumbReader, err := os.Open(tempThumb)
 	if err != nil {
 		logger.Error.Println(err)
 		return err
@@ -182,6 +199,12 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 	if err != nil {
 		logger.Error.Println(err)
 		logger.Error.Printf("%+v", resp)
+		return err
+	}
+
+	thumbReader.Close()
+	if err := os.Remove(tempThumb); err != nil {
+		logger.Error.Println(err)
 		return err
 	}
 
