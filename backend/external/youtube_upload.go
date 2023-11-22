@@ -178,9 +178,10 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 	}
 	defer thumbReader.Close()
 
-	_, err = service.Thumbnails.Set(youtubeVideo.Id).Media(thumbReader).Do()
+	resp, err := service.Thumbnails.Set(youtubeVideo.Id).Media(thumbReader).Do()
 	if err != nil {
 		logger.Error.Println(err)
+		logger.Error.Printf("%+v", resp)
 		return err
 	}
 
