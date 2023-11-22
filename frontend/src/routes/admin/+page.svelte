@@ -30,7 +30,7 @@
 	});
 
 	function upload(id: string) {
-		fetch(`${PUBLIC_API_URL}/youtube/upload/${id}`, {
+		fetch(`${PUBLIC_API_URL}/wubbl0rz/youtube/upload/${id}`, {
 			headers: {
 				Authorization: `Bearer ${pb.authStore.token}`
 			}

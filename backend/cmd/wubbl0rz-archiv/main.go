@@ -127,7 +127,7 @@ func main() {
 			apis.RequireRecordAuth("users"))
 
 		// route for triggering twitch downloads
-		e.Router.GET("/trigger/downloads", routes.TriggerTwitchDownloads, apis.RequireAdminAuth())
+		e.Router.GET("/wubbl0rz/trigger/downloads", routes.TriggerTwitchDownloads, apis.RequireAdminAuth())
 
 		routes.YoutubeRegisterHandler(app)
 
