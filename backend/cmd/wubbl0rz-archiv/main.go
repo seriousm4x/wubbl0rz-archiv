@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"os"
 	"runtime"
 	"strings"
@@ -89,15 +88,6 @@ func main() {
 		},
 	})
 
-	app.RootCmd.AddCommand(&cobra.Command{
-		Use:   "youtubeAuth",
-		Short: "Creates the Youtube bearer token file",
-		Long:  "Make sure you have 'client_secret.json' (from cloud console) in the current directory.",
-		Run: func(cmd *cobra.Command, args []string) {
-			CreateAuthFiles()
-		},
-	})
-
 	migratecmd.MustRegister(app, app.RootCmd, migratecmd.Config{
 		Dir:         "internal/migrations",
 		Automigrate: true,
@@ -123,23 +113,23 @@ func main() {
 
 	// auth routes
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		// route for youtube login
+		e.Router.GET("/wubbl0rz/youtube/login",
+			routes.YoutubeHandleLogin,
+			apis.RequireRecordAuth("users"))
+
+		// route for youtube login callback
+		e.Router.GET("/wubbl0rz/youtube/callback", routes.YoutubeHandleCallback)
+
 		// route for vod upload to youtube
-		e.Router.AddRoute(echo.Route{
-			Method: http.MethodGet,
-			Path:   "/youtube/upload/:id",
-			Handler: func(c echo.Context) error {
-				return routes.YoutubeUpload(app, c)
-			},
-			Middlewares: []echo.MiddlewareFunc{
-				apis.RequireRecordAuth("users"),
-			},
-		})
+		e.Router.GET("/wubbl0rz/youtube/upload/:id",
+			routes.YoutubeUpload,
+			apis.RequireRecordAuth("users"))
 
 		// route for triggering twitch downloads
-		e.Router.GET("/trigger/downloads", func(c echo.Context) error {
-			return routes.TriggerTwitchDownloads(app, c)
-		},
-			apis.RequireAdminAuth())
+		e.Router.GET("/trigger/downloads", routes.TriggerTwitchDownloads, apis.RequireAdminAuth())
+
+		routes.YoutubeRegisterHandler(app)
 
 		return nil
 	})
