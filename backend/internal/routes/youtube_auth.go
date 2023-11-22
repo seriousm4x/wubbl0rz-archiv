@@ -28,31 +28,30 @@ var (
 
 func YoutubeRegisterHandler(app *pocketbase.PocketBase) {
 	App = app
+	stateStorage = NewStateStorage()
+}
 
+func YoutubeHandleLogin(c echo.Context) error {
 	settings, err := App.Dao().FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
-		return
+		return err
 	}
 
 	ytClientSecret := settings.GetString("yt_client_secret")
 	if ytClientSecret == "" {
 		logger.Error.Println("yt_client_secret is empty")
-		return
+		return err
 	}
 
 	scope := "https://www.googleapis.com/auth/youtube.upload"
 	googleOAuthConfig, err = google.ConfigFromJSON([]byte(ytClientSecret), scope)
 	if err != nil {
 		logger.Error.Println(err)
-		return
+		return err
 	}
 	googleOAuthConfig.RedirectURL = fmt.Sprintf("%s/wubbl0rz/youtube/callback", os.Getenv("PUBLIC_API_URL"))
 
-	stateStorage = NewStateStorage()
-}
-
-func YoutubeHandleLogin(c echo.Context) error {
 	state, err := generateRandomState()
 	if err != nil {
 		return apis.NewApiError(http.StatusInternalServerError, "failed to create random state", nil)
