@@ -54,6 +54,25 @@ func YoutubeHandleVerify(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+func YoutubeHandleRevoke(c echo.Context) error {
+	settings, err := App.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	if err != nil {
+		logger.Error.Println(err)
+		return apis.NewApiError(http.StatusInternalServerError, "failed to get settings", nil)
+	}
+
+	settings.Set("yt_bearer_token", "")
+	if err := App.Dao().SaveRecord(settings); err != nil {
+		logger.Error.Println(err)
+		return apis.NewApiError(http.StatusInternalServerError, "failed to delete yt_bearer_token", nil)
+	}
+
+	// clear state storage
+	stateStorage = NewStateStorage()
+
+	return c.NoContent(http.StatusOK)
+}
+
 func YoutubeHandleLogin(c echo.Context) error {
 	settings, err := App.Dao().FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {

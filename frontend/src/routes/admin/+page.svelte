@@ -30,6 +30,14 @@
 		});
 	});
 
+	function youtubeRevoke() {
+		fetch(`${PUBLIC_API_URL}/wubbl0rz/youtube/revoke`, {
+			headers: {
+				Authorization: `Bearer ${pb.authStore.token}`
+			}
+		}).then(() => goto('/admin', { invalidateAll: true }));
+	}
+
 	function youtubeLogin() {
 		fetch(`${PUBLIC_API_URL}/wubbl0rz/youtube/login`, {
 			headers: {
@@ -74,21 +82,26 @@
 			>
 		</h1>
 
-		<form
-			class="ms-auto"
-			method="POST"
-			action="/logout"
-			use:enhance={() => {
-				return async ({ result }) => {
-					pb.authStore.clear();
-					await applyAction(result);
-				};
-			}}
-		>
-			<button class="btn btn-outline btn-error"
-				><Icon icon="solar:logout-3-bold-duotone" class="text-3xl" /> Log out</button
+		<div class="ms-auto flex flex-row flex-wrap gap-2">
+			<button class="btn btn-outline btn-error" on:click={youtubeRevoke}
+				><Icon icon="solar:trash-bin-2-bold-duotone" class="text-3xl" /> YouTube Token Löschen</button
 			>
-		</form>
+
+			<form
+				method="POST"
+				action="/logout"
+				use:enhance={() => {
+					return async ({ result }) => {
+						pb.authStore.clear();
+						await applyAction(result);
+					};
+				}}
+			>
+				<button class="btn btn-outline btn-error"
+					><Icon icon="solar:logout-3-bold-duotone" class="text-3xl" /> Log out</button
+				>
+			</form>
+		</div>
 
 		{#each vods as vod}
 			<div

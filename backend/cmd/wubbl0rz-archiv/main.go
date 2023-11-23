@@ -118,13 +118,19 @@ func main() {
 			routes.YoutubeHandleVerify,
 			apis.RequireRecordAuth("users"))
 
+		// route for youtube to revoke bearer token
+		e.Router.GET("/wubbl0rz/youtube/revoke",
+			routes.YoutubeHandleRevoke,
+			apis.RequireRecordAuth("users"))
+
 		// route for youtube login
 		e.Router.GET("/wubbl0rz/youtube/login",
 			routes.YoutubeHandleLogin,
 			apis.RequireRecordAuth("users"))
 
 		// route for youtube login callback
-		e.Router.GET("/wubbl0rz/youtube/callback", routes.YoutubeHandleCallback)
+		e.Router.GET("/wubbl0rz/youtube/callback",
+			routes.YoutubeHandleCallback)
 
 		// route for vod upload to youtube
 		e.Router.GET("/wubbl0rz/youtube/upload/:id",
@@ -132,7 +138,9 @@ func main() {
 			apis.RequireRecordAuth("users"))
 
 		// route for triggering twitch downloads
-		e.Router.GET("/wubbl0rz/trigger/downloads", routes.TriggerTwitchDownloads, apis.RequireAdminAuth())
+		e.Router.GET("/wubbl0rz/trigger/downloads",
+			routes.TriggerTwitchDownloads,
+			apis.RequireAdminAuth())
 
 		routes.YoutubeRegisterHandler(app)
 
