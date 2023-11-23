@@ -154,7 +154,7 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 		}
 		return err
 	}
-	logger.Info.Printf("Upload successful! Video ID: %v\n", youtubeVideo.Id)
+	logger.Debug.Printf("[external] upload successful! video id: %v\n", youtubeVideo.Id)
 
 	if err := os.Remove(tempVideo); err != nil {
 		logger.Error.Println(err)
