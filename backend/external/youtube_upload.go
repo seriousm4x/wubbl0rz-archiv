@@ -100,9 +100,6 @@ func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 	}
 
 	call := service.Videos.Insert([]string{"snippet", "status"}, upload)
-	call.ProgressUpdater(func(current, total int64) {
-		logger.Debug.Printf("Upload progress: %d%%\n", current*100/total)
-	})
 
 	// create temp video file
 	filename := vod.GetString("filename")
