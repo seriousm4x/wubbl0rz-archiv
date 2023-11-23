@@ -68,6 +68,8 @@ func getClient(app *pocketbase.PocketBase, scope string) (*http.Client, error) {
 }
 
 func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
+	logger.Debug.Println("[external] youtube upload started for id", id)
+
 	vod, err := app.Dao().FindRecordById("vod", id)
 	if err != nil {
 		logger.Error.Println(err)
