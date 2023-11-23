@@ -50,8 +50,6 @@ func getClient(app *pocketbase.PocketBase, scope string) (*http.Client, error) {
 	}
 	config.RedirectURL = "urn:ietf:wg:oauth:2.0:oob"
 
-	tok := &oauth2.Token{}
-
 	bearerToken := settings.GetString("yt_bearer_token")
 	if bearerToken == "" {
 		err := fmt.Errorf("yt_bearer_token is empty")
@@ -59,6 +57,7 @@ func getClient(app *pocketbase.PocketBase, scope string) (*http.Client, error) {
 		return nil, err
 	}
 
+	tok := &oauth2.Token{}
 	if err := json.Unmarshal([]byte(bearerToken), &tok); err != nil {
 		logger.Error.Println(err)
 		return nil, err

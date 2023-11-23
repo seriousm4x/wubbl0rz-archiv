@@ -113,6 +113,11 @@ func main() {
 
 	// auth routes
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		// route to verify if youtube bearer token is ok
+		e.Router.GET("/wubbl0rz/youtube/verify",
+			routes.YoutubeHandleVerify,
+			apis.RequireRecordAuth("users"))
+
 		// route for youtube login
 		e.Router.GET("/wubbl0rz/youtube/login",
 			routes.YoutubeHandleLogin,

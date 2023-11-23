@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -31,24 +32,46 @@ func YoutubeRegisterHandler(app *pocketbase.PocketBase) {
 	stateStorage = NewStateStorage()
 }
 
+func YoutubeHandleVerify(c echo.Context) error {
+	settings, err := App.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	if err != nil {
+		logger.Error.Println(err)
+		return apis.NewApiError(http.StatusInternalServerError, "failed to get settings", nil)
+	}
+
+	ytBearerToken := settings.GetString("yt_bearer_token")
+	if ytBearerToken == "" || ytBearerToken == "\"\"" {
+		logger.Warning.Println("yt_bearer_token is empty")
+		return apis.NewApiError(http.StatusInternalServerError, "yt_bearer_token is empty", nil)
+	}
+
+	tok := &oauth2.Token{}
+	if err := json.Unmarshal([]byte(ytBearerToken), &tok); err != nil {
+		logger.Error.Println(err)
+		return apis.NewApiError(http.StatusInternalServerError, "failed to unmarshal bearer token", nil)
+	}
+
+	return c.NoContent(http.StatusOK)
+}
+
 func YoutubeHandleLogin(c echo.Context) error {
 	settings, err := App.Dao().FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
-		return err
+		return apis.NewApiError(http.StatusInternalServerError, "failed to get settings", nil)
 	}
 
 	ytClientSecret := settings.GetString("yt_client_secret")
 	if ytClientSecret == "" {
 		logger.Error.Println("yt_client_secret is empty")
-		return err
+		return apis.NewApiError(http.StatusInternalServerError, "yt_client_secret is empty", nil)
 	}
 
 	scope := "https://www.googleapis.com/auth/youtube.upload"
 	googleOAuthConfig, err = google.ConfigFromJSON([]byte(ytClientSecret), scope)
 	if err != nil {
 		logger.Error.Println(err)
-		return err
+		return apis.NewApiError(http.StatusInternalServerError, "failed to create config from json", nil)
 	}
 	googleOAuthConfig.RedirectURL = fmt.Sprintf("%s/wubbl0rz/youtube/callback", os.Getenv("PUBLIC_API_URL"))
 
@@ -71,19 +94,19 @@ func YoutubeHandleLogin(c echo.Context) error {
 	// Store the state and code verifier for later verification
 	stateStorage.Store(state, codeVerifier)
 
-	return c.Redirect(http.StatusTemporaryRedirect, authURL)
+	return c.String(http.StatusOK, authURL)
 }
 
 func YoutubeHandleCallback(c echo.Context) error {
 	state := c.FormValue("state")
 	codeVerifier, err := stateStorage.GetCodeVerifier(state)
 	if err != nil {
-		return err
+		return apis.NewApiError(http.StatusInternalServerError, "failed to get code verifier", nil)
 	}
 
 	// Verify that the state parameter is valid
 	if !stateStorage.Verify(state) {
-		return c.JSON(http.StatusUnauthorized, "invalid state parameter")
+		return apis.NewUnauthorizedError("invalid state parameter", nil)
 	}
 
 	code := c.FormValue("code")

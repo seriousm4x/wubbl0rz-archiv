@@ -1,3 +1,4 @@
+import { PUBLIC_API_URL } from '$env/static/public';
 import { pb } from '$lib/pocketbase.js';
 import { error, redirect } from '@sveltejs/kit';
 import type { ListResult, RecordModel } from 'pocketbase';
@@ -6,6 +7,21 @@ export async function load({ locals, url }) {
 	// check if auth valid
 	if (!locals.pb.authStore.isValid) {
 		throw redirect(302, '/login');
+	}
+
+	// check valid youtube bearer token
+	const resp = await fetch(`${PUBLIC_API_URL}/wubbl0rz/youtube/verify`, {
+		headers: {
+			Authorization: `Bearer ${locals.pb.authStore.token}`
+		}
+	});
+
+	if (resp.status !== 200) {
+		return structuredClone({
+			tokenErr: resp.statusText,
+			vods: {} as ListResult<RecordModel>,
+			user: locals.user
+		});
 	}
 
 	// get vods
@@ -27,6 +43,7 @@ export async function load({ locals, url }) {
 	}
 
 	return structuredClone({
+		tokenErr: null,
 		vods: vods,
 		user: locals.user
 	});
