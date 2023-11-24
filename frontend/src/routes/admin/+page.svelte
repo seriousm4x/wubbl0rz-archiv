@@ -7,7 +7,6 @@
 	import Pagination from '$lib/components/Pagination.svelte';
 	import { toHHMMSS } from '$lib/functions';
 	import { pb } from '$lib/pocketbase';
-	import { currentUser } from '$lib/stores/user.js';
 	import Icon from '@iconify/svelte';
 	import { parseISO } from 'date-fns';
 	import type { RecordModel } from 'pocketbase';
@@ -19,7 +18,6 @@
 
 	$: vods = data.vods.items as RecordModel[];
 	$: if (browser) goto(`/admin?page=${currentPage}`);
-	$: currentUser.set(data.user);
 
 	onMount(() => {
 		if (data.tokenErr) return;
