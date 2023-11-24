@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { applyAction, enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { PUBLIC_API_URL } from '$env/static/public';
@@ -189,16 +188,7 @@
 				</button>
 			</div>
 			<div class="ms-auto flex flex-row flex-wrap gap-2">
-				<form
-					method="POST"
-					action="/logout"
-					use:enhance={() => {
-						return async ({ result }) => {
-							$pb.authStore.clear();
-							await applyAction(result);
-						};
-					}}
-				>
+				<form on:submit|preventDefault={logout}>
 					<button class="btn btn-outline btn-error"
 						><Icon icon="solar:logout-3-bold-duotone" class="text-3xl" /> Log out</button
 					>
