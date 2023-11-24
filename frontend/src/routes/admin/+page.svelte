@@ -15,7 +15,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	let currentPage = parseInt($page.url.searchParams.get('page') || `${data.vods.page}` || '1');
+	let currentPage = parseInt($page.url.searchParams.get('page') || `${data.vods.page || '1'}`);
 
 	$: vods = data.vods.items as RecordModel[];
 	$: if (browser) goto(`/admin?page=${currentPage}`);
@@ -60,6 +60,12 @@
 </script>
 
 <div class="container mx-auto flex flex-col gap-4">
+	<h1 class="mb-4 text-4xl font-bold md:ms-3 md:mt-10">
+		<span
+			class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
+			>Admin</span
+		>
+	</h1>
 	{#if data.tokenErr}
 		<div role="alert" class="alert alert-error shadow-lg">
 			<Icon icon="solar:danger-triangle-bold-duotone" class="text-4xl" />
@@ -74,19 +80,7 @@
 				<Icon icon="solar:login-3-bold-duotone" class="text-2xl" /> Login
 			</button>
 		</div>
-	{:else}
-		<h1 class="mb-4 text-4xl font-bold md:ms-3 md:mt-10">
-			<span
-				class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
-				>Admin</span
-			>
-		</h1>
-
 		<div class="ms-auto flex flex-row flex-wrap gap-2">
-			<button class="btn btn-outline btn-error" on:click={youtubeRevoke}
-				><Icon icon="solar:trash-bin-2-bold-duotone" class="text-3xl" /> YouTube Token Löschen</button
-			>
-
 			<form
 				method="POST"
 				action="/logout"
@@ -102,7 +96,26 @@
 				>
 			</form>
 		</div>
-
+	{:else}
+		<div class="ms-auto flex flex-row flex-wrap gap-2">
+			<button class="btn btn-outline btn-error" on:click={youtubeRevoke}
+				><Icon icon="solar:trash-bin-2-bold-duotone" class="text-3xl" /> YouTube Token Löschen</button
+			>
+			<form
+				method="POST"
+				action="/logout"
+				use:enhance={() => {
+					return async ({ result }) => {
+						pb.authStore.clear();
+						await applyAction(result);
+					};
+				}}
+			>
+				<button class="btn btn-outline btn-error"
+					><Icon icon="solar:logout-3-bold-duotone" class="text-3xl" /> Log out</button
+				>
+			</form>
+		</div>
 		{#each vods as vod}
 			<div
 				class="collapse {vod.youtube_upload === 'done'
