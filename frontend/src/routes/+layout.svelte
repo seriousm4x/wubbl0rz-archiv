@@ -18,7 +18,7 @@
 		// set cookie as auth
 		$pb.authStore.loadFromCookie('pb_auth=' + pbCookie);
 		try {
-			$pb.authStore.isValid && (await $pb.collection('users').authRefresh({ $autoCancel: false }));
+			$pb.authStore.isValid && (await $pb.collection('users').authRefresh({ autoCancel: false }));
 		} catch (_) {
 			$pb.authStore.clear();
 		}
