@@ -95,7 +95,7 @@
 </script>
 
 <div class="container mx-auto flex flex-col gap-4">
-	<h1 class="mb-4 text-4xl font-bold md:ms-3 md:mt-10">
+	<h1 class="text-4xl font-bold">
 		<span
 			class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 			>Admin</span
