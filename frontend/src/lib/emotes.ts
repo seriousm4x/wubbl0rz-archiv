@@ -1,4 +1,5 @@
-import { pb } from '$lib/pocketbase';
+import { createInstance } from './stores/pocketbase';
+const pb = createInstance();
 
 export type Emotes = {
 	[name: string]: string;

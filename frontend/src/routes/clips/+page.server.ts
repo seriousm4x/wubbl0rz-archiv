@@ -1,8 +1,9 @@
-import { pb } from '$lib/pocketbase.js';
+import { createInstance } from '$lib/stores/pocketbase.js';
 import { error } from '@sveltejs/kit';
 import type { ListResult, RecordModel } from 'pocketbase';
 
 export async function load({ url }) {
+	const pb = createInstance();
 	let allClips = {} as ListResult<RecordModel>;
 
 	await pb

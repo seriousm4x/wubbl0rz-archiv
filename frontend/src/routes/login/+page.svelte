@@ -1,31 +1,37 @@
 <script lang="ts">
-	import { applyAction, enhance } from '$app/forms';
-	import { pb } from '$lib/pocketbase';
+	import { goto } from '$app/navigation';
+	import { pb } from '$lib/stores/pocketbase';
 
+	let username: string;
+	let password: string;
 	let error = '';
+
+	function login() {
+		$pb
+			.collection('users')
+			.authWithPassword(username, password)
+			.then(() => {
+				goto('/admin');
+			})
+			.catch((e) => {
+				error = e;
+			});
+	}
 </script>
 
 <div class="container mx-auto flex flex-col items-center justify-center gap-4">
-	<form
-		method="POST"
-		use:enhance={() => {
-			return async ({ result }) => {
-				pb.authStore.loadFromCookie(document.cookie);
-				await applyAction(result);
-			};
-		}}
-	>
+	<form on:submit|preventDefault={login}>
 		<div class="form-control">
 			<label class="label" for="username">
 				<span class="label-text">Username</span>
 			</label>
 			<input
 				id="username"
-				name="username"
 				type="text"
 				placeholder="Username"
 				class="input input-bordered w-full max-w-xs rounded-full"
 				required
+				bind:value={username}
 			/>
 		</div>
 		<div class="form-control w-full max-w-xs">
@@ -34,12 +40,12 @@
 			</label>
 			<input
 				id="password"
-				name="password"
 				type="password"
 				placeholder="Password"
 				class="input input-bordered w-full max-w-xs rounded-full"
 				min="8"
 				required
+				bind:value={password}
 			/>
 		</div>
 		<div class="form-control mt-4 w-full max-w-xs">

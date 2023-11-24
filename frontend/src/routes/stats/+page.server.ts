@@ -1,9 +1,10 @@
 import { PRIVATE_MEILI_ADMIN_KEY } from '$env/static/private';
 import { PUBLIC_API_URL, PUBLIC_MEILI_URL } from '$env/static/public';
-import { pb } from '$lib/pocketbase.js';
+import { createInstance } from '$lib/stores/pocketbase.js';
 import type { RecordModel } from 'pocketbase';
 
 export async function load({ fetch }) {
+	const pb = createInstance();
 	let emotes = [] as RecordModel[];
 	let stats = {};
 	let meili = {

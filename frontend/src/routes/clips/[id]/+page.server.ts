@@ -1,4 +1,4 @@
-import { pb } from '$lib/pocketbase.js';
+import { createInstance } from '$lib/stores/pocketbase.js';
 import add from 'date-fns/add/index.js';
 import format from 'date-fns/format/index.js';
 import parseISO from 'date-fns/parseISO/index.js';
@@ -6,6 +6,7 @@ import type { ListResult, RecordModel } from 'pocketbase';
 import { error } from '@sveltejs/kit';
 
 export async function load({ params }) {
+	const pb = createInstance();
 	let clip = {} as RecordModel;
 	let allClips = {} as ListResult<RecordModel>;
 	let clipPosition = {} as ListResult<RecordModel>;

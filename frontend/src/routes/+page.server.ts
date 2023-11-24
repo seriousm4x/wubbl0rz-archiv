@@ -1,10 +1,11 @@
-import { pb } from '$lib/pocketbase';
 import { error } from '@sveltejs/kit';
 import add from 'date-fns/add/index.js';
 import format from 'date-fns/format/index.js';
 import type { ListResult, RecordModel } from 'pocketbase';
+import { createInstance } from '$lib/stores/pocketbase';
 
 export async function load() {
+	const pb = createInstance();
 	let newestVods = {} as ListResult<RecordModel>;
 	let popularVods = {} as ListResult<RecordModel>;
 	let clips = {} as ListResult<RecordModel>;

@@ -2,7 +2,7 @@
 	import SEO from '$lib/components/SEO.svelte';
 	import { getEmotes } from '$lib/emotes';
 	import { replaceEmotesInString } from '$lib/functions';
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '$lib/stores/pocketbase';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
 	import Icon from '@iconify/svelte';
 	import { format, formatDistance, parseISO } from 'date-fns';
@@ -19,7 +19,7 @@
 	};
 
 	onMount(async () => {
-		pb.collection('chatmessage').subscribe('*', function (e) {
+		$pb.collection('chatmessage').subscribe('*', function (e) {
 			data.items = [e.record, ...data.items];
 			if (sliderValue === 500) return;
 			data.items = data.items.slice(0, sliderValue);
