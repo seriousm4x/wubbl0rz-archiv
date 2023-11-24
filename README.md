@@ -8,6 +8,35 @@
     <p>Frontend Stack: SvelteKit, Tailwind (DaisyUI), VidStack, PNPM</p>
 </div>
 
+## 🤩 Features
+
+-   👉 Automatically **downloads vods and clips**
+-   👉 Automatically **creates all assets** like thumbnails, preview videos and sprite thumbnails for player hover
+-   👉 **Full text search** of every spoken word powered by [whisper and meilisearch](https://github.com/seriousm4x/wubbl0rz-archiv-transcribe)
+-   👉 **Filter and sorting** for vods and clips
+-   👉 **Chatlogger with auto update** as new messages come in
+-   👉 Set **custom thumbnails** by uploading them to the api backend
+-   👉 Admin backend to **upload vods to YouTube**
+-   👉 **Free to use api** using [PocketBase](https://pocketbase.io/)
+-   👉 **Statistics page** to see PocketBase and meilisearch stats as well as top chatters and emotes
+-   👉 **Discord bot** to automatically post stream live notifications and slash commands
+
+## 📷 Screenshots
+
+<details open>
+    <summary>click to close</summary>
+
+![](assets/home.webp)
+![](assets/player.webp)
+![](assets/vods.webp)
+![](assets/clips.webp)
+![](assets/search.webp)
+![](assets/stats.webp)
+![](assets/chat.webp)
+![](assets/admin.webp)
+
+</details>
+
 ## 🐳 Deploy
 
 -   Copy the `SAMPLE.env` to `.env` and fill in the strings
