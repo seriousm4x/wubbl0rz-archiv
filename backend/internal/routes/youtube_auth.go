@@ -145,7 +145,7 @@ func YoutubeHandleCallback(c echo.Context) error {
 		return apis.NewApiError(http.StatusInternalServerError, "unable to save record", nil)
 	}
 
-	return c.Redirect(http.StatusPermanentRedirect, fmt.Sprintf("%s/admin", os.Getenv("PUBLIC_FRONTEND_URL")))
+	return c.Redirect(http.StatusFound, fmt.Sprintf("%s/admin", os.Getenv("PUBLIC_FRONTEND_URL")))
 }
 
 // StateStorage is a simple in-memory storage for state parameters and code verifiers
