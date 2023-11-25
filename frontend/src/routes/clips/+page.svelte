@@ -10,7 +10,8 @@
 	$: og = {
 		...DefaultOpenGraph,
 		title: 'Alle Clips',
-		updated_time: parseISO(data.items?.[0]?.date).toISOString()
+		updated_time:
+			data.items.length > 0 ? parseISO(data.items[0].date).toISOString() : new Date().toISOString()
 	};
 </script>
 

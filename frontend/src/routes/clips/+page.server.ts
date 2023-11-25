@@ -1,5 +1,4 @@
 import { createInstance } from '$lib/stores/pocketbase.js';
-import { error } from '@sveltejs/kit';
 import type { ListResult, RecordModel } from 'pocketbase';
 
 export async function load({ url }) {
@@ -21,9 +20,5 @@ export async function load({ url }) {
 			return e;
 		});
 
-	if (allClips.items.length > 0) {
-		return structuredClone(allClips);
-	}
-
-	throw error(404, 'Not found');
+	return structuredClone(allClips);
 }
