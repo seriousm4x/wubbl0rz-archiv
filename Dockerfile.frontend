@@ -1,18 +1,17 @@
-FROM oven/bun:alpine as build
+FROM node:alpine as build
 WORKDIR /app
 COPY ./frontend/. .
 COPY .env .
-RUN apk update &&\
-    apk add git &&\
-    bun install &&\
+RUN npm i -g pnpm && \
+    pnpm i &&\
     source .env &&\
     if [[ -n "$PUBLIC_FRONTEND_URL" && "$PRIVATE_ALLOW_SEARCH_INDEXING" == "true" ]]; then echo -e "User-agent: *\nDisallow: /login\nDisallow: /admin\nDisallow: /logout\n\nSitemap: ${PUBLIC_FRONTEND_URL}/sitemap.xml" > static/robots.txt; else echo -e "User-agent: *\nDisallow: /" > static/robots.txt; fi && \
-    bun run build
+    pnpm run build
 
-FROM oven/bun:alpine
-USER bun:bun
+FROM node:alpine
+USER node:node
 WORKDIR /app
-COPY --from=build --chown=bun:bun /app/build ./build
-COPY --from=build --chown=bun:bun /app/node_modules ./node_modules
-COPY --from=build --chown=bun:bun /app/package.json .
-CMD ["bun", "-b", "run", "build"]
+COPY --from=build --chown=node:node /app/build ./build
+COPY --from=build --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/package.json .
+CMD ["node","build"]
