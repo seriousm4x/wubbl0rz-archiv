@@ -6,8 +6,9 @@
 	import { formatRelative, parseISO } from 'date-fns';
 	import de from 'date-fns/locale/de/index.js';
 	import type { RecordModel } from 'pocketbase';
+	import type { PageData } from './$types';
 
-	export let data;
+	export let data: PageData;
 
 	$: og = {
 		...DefaultOpenGraph,
@@ -48,7 +49,7 @@
 				Pocket<span class="font-bold">Base</span>
 			</span>
 		</h1>
-		<div class="stats stats-vertical w-full bg-base-200 shadow lg:stats-horizontal">
+		<div class="stats stats-vertical w-full bg-base-200 shadow xl:stats-horizontal">
 			<div class="stat">
 				<div class="stat-figure text-primary">
 					<Icon icon="solar:videocamera-record-bold-duotone" class="text-5xl" />
@@ -74,7 +75,7 @@
 				<div class="stat-value text-red-500">{data.stats.count_clips.toLocaleString('de-DE')}</div>
 				<div class="stat-desc">
 					30 Tage Trend:
-					{#if data.stats.trens_clips === 0}
+					{#if data.stats.trend_clips === 0}
 						{data.stats.trend_clips} Clips
 					{:else if data.stats.trend_clips > 0}
 						+{data.stats.trend_clips} Clip{data.stats.trend_clips === 1 ? '' : 's'}
@@ -117,7 +118,7 @@
 				meili<span class="font-light">search</span>
 			</span>
 		</h1>
-		<div class="stats stats-vertical w-full bg-base-200 shadow lg:stats-horizontal">
+		<div class="stats stats-vertical w-full bg-base-200 shadow xl:stats-horizontal">
 			<div class="stat">
 				<div class="stat-figure text-emerald-500">
 					<Icon icon="solar:subtitles-bold-duotone" class="text-5xl" />

@@ -1,24 +1,31 @@
 import { PRIVATE_MEILI_ADMIN_KEY } from '$env/static/private';
 import { PUBLIC_API_URL, PUBLIC_MEILI_URL } from '$env/static/public';
 import { createInstance } from '$lib/stores/pocketbase.js';
+import type { Stats } from 'meilisearch';
 import type { RecordModel } from 'pocketbase';
 
-export async function load({ fetch }) {
+// cant use sveltekits { fetch } function because of this bun issue:
+// https://github.com/oven-sh/bun/issues/4718
+export async function load() {
 	const pb = createInstance();
 	let emotes = [] as RecordModel[];
-	let stats = {};
-	let meili = {
-		indexes: {
-			transcripts: {
-				numberOfDocuments: 0
-			},
-			vods: {
-				numberOfDocuments: 0
+	let stats = {
+		last_update: '',
+		count_vods: 0,
+		trend_vods: 0,
+		count_clips: 0,
+		trend_clips: 0,
+		count_hours: 0,
+		trend_hours: 0,
+		count_size: 0,
+		chatters: [
+			{
+				name: '',
+				msg_count: 0
 			}
-		},
-		lastUpdate: Date.now(),
-		databaseSize: 0
+		]
 	};
+	let meili = {} as Stats;
 
 	await Promise.all([
 		// pocketbase stats
@@ -51,10 +58,10 @@ export async function load({ fetch }) {
 			.getFullList({
 				requestKey: 'all_emotes'
 			})
-			.then((data) => {
+			.then((data: RecordModel[]) => {
 				emotes = data;
 			})
-			.catch((e) => {
+			.catch((e: Error) => {
 				return e;
 			})
 	]);
