@@ -4,9 +4,7 @@ import { createInstance } from '$lib/stores/pocketbase.js';
 import type { Stats } from 'meilisearch';
 import type { RecordModel } from 'pocketbase';
 
-// cant use sveltekits { fetch } function because of this bun issue:
-// https://github.com/oven-sh/bun/issues/4718
-export async function load() {
+export async function load({ fetch }) {
 	const pb = createInstance();
 	let emotes = [] as RecordModel[];
 	let stats = {
