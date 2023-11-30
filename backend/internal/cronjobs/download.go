@@ -256,6 +256,7 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 				return clips_downloaded
 			}
 		} else if err != nil {
+			logger.Error.Println(err)
 			return clips_downloaded
 		}
 
@@ -270,6 +271,7 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 				return clips_downloaded
 			}
 		} else if err != nil {
+			logger.Error.Println(err)
 			return clips_downloaded
 		}
 
