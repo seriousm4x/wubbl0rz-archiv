@@ -337,6 +337,10 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 			}
 			continue
 		}
+		newClip.Set("duration", m.Duration)
+		newClip.Set("resolution", m.Resolution)
+		newClip.Set("fps", m.Fps)
+		newClip.Set("size", m.Size)
 
 		// create clip in database
 		if err := app.Dao().SaveRecord(newClip); err != nil {
@@ -344,7 +348,7 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 			return clips_downloaded
 		}
 
-		// create thumbnails ...
+		// create thumbnails
 		if err := assets.CreatePreviewThumbnailsSprites(app, []string{newClip.Id}); err != nil {
 			if err := os.RemoveAll(segmentsPath); err != nil {
 				logger.Error.Println(err)
