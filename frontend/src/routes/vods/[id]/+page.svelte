@@ -11,7 +11,6 @@
 	import { format, formatDistance, parseISO } from 'date-fns';
 	import de from 'date-fns/locale/de/index.js';
 	import type { RecordModel } from 'pocketbase';
-	import { onMount } from 'svelte';
 	import type { MediaPlayerElement } from 'vidstack/elements.js';
 
 	export let data;
@@ -33,12 +32,6 @@
 
 	$: percentile = (vodPosition * 100) / vodsCount;
 	$: percentileRounded = percentile < 1 ? percentile.toFixed(2) : Math.round(percentile);
-
-	onMount(() => {
-		if ($page.url.searchParams.has('t')) {
-			player.currentTime = parseInt($page.url.searchParams.get('t') || '0');
-		}
-	});
 
 	function copyLink(withTimestamp: boolean) {
 		const url = new URL($page.url.origin + $page.url.pathname);

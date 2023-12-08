@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { PUBLIC_API_URL } from '$env/static/public';
+	import { watchHistory, type WatchHistory } from '$lib/stores/localstorage';
 	import Hls from 'hls.js';
 	import type { RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 	import type { HLSProvider, MediaProviderChangeEvent, MediaTimeUpdateEvent } from 'vidstack';
 	import type { MediaPlayerElement } from 'vidstack/elements';
-	import { watchHistory, type WatchHistory } from '$lib/stores/localstorage';
 
 	export let video: RecordModel = {} as RecordModel;
 	export let player: MediaPlayerElement;
@@ -28,6 +29,14 @@
 
 	function onCanPlay() {
 		thumbnails = `${PUBLIC_API_URL}/${type}/${video.filename}-sprites/${video.filename}.vtt`;
+
+		// set player time to url param
+		if ($page.url.searchParams.has('t')) {
+			player.currentTime = parseInt($page.url.searchParams.get('t') || '0');
+			return;
+		}
+
+		// set player time to localstorage history
 		if (type in $watchHistory) {
 			const lsTime = $watchHistory[type as keyof WatchHistory][video.id];
 			if (lsTime !== undefined) {
