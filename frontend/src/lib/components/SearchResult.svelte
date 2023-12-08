@@ -15,7 +15,7 @@
 <div class="card w-full overflow-hidden rounded-xl bg-base-200 transition hover:shadow-lg">
 	<VideoThumbnail {video} isVod={true} {offset} />
 	<div class="card-body gap-1 p-4">
-		<a href="/{searchIn}/{video.id}{offset > 0 ? `?t=${offset}` : ''}">
+		<a href="/vods/{video.id}{offset > 0 ? `?t=${offset}` : ''}">
 			{#if searchIn === 'vods'}
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				<h2 class="text-md matched-string font-bold">{@html hit?._formatted?.title}</h2>
