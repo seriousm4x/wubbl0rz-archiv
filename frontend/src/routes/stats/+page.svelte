@@ -63,7 +63,7 @@
 					{:else if data.stats.trend_vods > 0}
 						+{data.stats.trend_vods} Vod{data.stats.trend_vods === 1 ? '' : 's'}
 					{:else}
-						-{data.stats.trend_vods} Vod{data.stats.trend_vods === -1 ? '' : 's'}
+						{data.stats.trend_vods} Vod{data.stats.trend_vods === -1 ? '' : 's'}
 					{/if}
 				</div>
 			</div>
@@ -80,7 +80,7 @@
 					{:else if data.stats.trend_clips > 0}
 						+{data.stats.trend_clips} Clip{data.stats.trend_clips === 1 ? '' : 's'}
 					{:else}
-						-{data.stats.trend_clips} Clip{data.stats.trend_clips === 1 ? '' : 's'}
+						{data.stats.trend_clips} Clip{data.stats.trend_clips === 1 ? '' : 's'}
 					{/if}
 				</div>
 			</div>
@@ -97,9 +97,9 @@
 					{#if data.stats.trend_hours === 0}
 						{data.stats.trend_hours} Stunden
 					{:else if data.stats.trend_hours > 0}
-						+ {data.stats.trend_hours} Stunde{data.stats.trend_hours === 1 ? '' : 'n'}
+						+{data.stats.trend_hours} Stunde{data.stats.trend_hours === 1 ? '' : 'n'}
 					{:else}
-						- {data.stats.trend_hours} Stunde{data.stats.trend_hours === 1 ? '' : 'n'}
+						{data.stats.trend_hours} Stunde{data.stats.trend_hours === 1 ? '' : 'n'}
 					{/if}
 				</div>
 			</div>
