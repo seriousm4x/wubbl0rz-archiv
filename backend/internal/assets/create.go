@@ -121,19 +121,16 @@ func CreateThumbnail(app *pocketbase.PocketBase, ids []string) error {
 			// create thumb from m3u8
 			m3u8 := filepath.Join(ArchiveDir, mediaType, fmt.Sprintf("%s%s", record.GetString("filename"), "-segments"), record.GetString("filename")+".m3u8")
 			duration := record.GetInt("duration")
-			var timecode_framegrab string
 			if duration <= 10 {
-				timecode_framegrab = "0"
+				cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", m3u8, "-filter_complex", "[0:v]split=3[frame1][frame2][frame3];[frame1]scale=512:-2[outputSm];[frame2]scale=768:-2[outputMd];[frame3]scale=1536:-2[outputLg]", "-map", "[outputSm]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputSm, "-map", "[outputMd]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputMd, "-map", "[outputLg]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputLg)
 			} else {
-				timecode_framegrab = fmt.Sprintf("%d", int(duration/2))
+				timecode_framegrab := fmt.Sprintf("%d", int(duration/2))
+				cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", m3u8, "-filter_complex", "[0:v]split=3[frame1][frame2][frame3];[frame1]scale=512:-2[outputSm];[frame2]scale=768:-2[outputMd];[frame3]scale=1536:-2[outputLg]", "-map", "[outputSm]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputSm, "-map", "[outputMd]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputMd, "-map", "[outputLg]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputLg)
 			}
-			cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", m3u8,
-				"-filter_complex", "[0:v]split=3[frame1][frame2][frame3];[frame1]scale=512:-2[outputSm];[frame2]scale=768:-2[outputMd];[frame3]scale=1536:-2[outputLg]", "-map", "[outputSm]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputSm, "-map", "[outputMd]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputMd, "-map", "[outputLg]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputLg)
 		} else {
 			// create thumb from custom image
 			input := path.Join(app.DataDir(), "storage", record.Collection().Id, record.Id, customThumbnail)
-			cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", input,
-				"-filter_complex", "[0:v]split=3[frame1][frame2][frame3];[frame1]scale=512:-2[outputSm];[frame2]scale=768:-2[outputMd];[frame3]scale=1536:-2[outputLg]", "-map", "[outputSm]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputSm, "-map", "[outputMd]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputMd, "-map", "[outputLg]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputLg)
+			cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", input, "-filter_complex", "[0:v]split=3[frame1][frame2][frame3];[frame1]scale=512:-2[outputSm];[frame2]scale=768:-2[outputMd];[frame3]scale=1536:-2[outputLg]", "-map", "[outputSm]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputSm, "-map", "[outputMd]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputMd, "-map", "[outputLg]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputLg)
 		}
 
 		var stderr bytes.Buffer
