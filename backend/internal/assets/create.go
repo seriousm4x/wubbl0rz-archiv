@@ -123,7 +123,7 @@ func CreateThumbnail(app *pocketbase.PocketBase, ids []string) error {
 			duration := record.GetInt("duration")
 			var timecode_framegrab string
 			if duration <= 10 {
-				timecode_framegrab = "6"
+				timecode_framegrab = "0"
 			} else {
 				timecode_framegrab = fmt.Sprintf("%d", int(duration/2))
 			}
