@@ -1,7 +1,7 @@
 <script lang="ts">
 	import VideoThumbnail from '$lib/components/VideoThumbnail.svelte';
 	import { format, formatDistance, parseISO } from 'date-fns';
-	import de from 'date-fns/locale/de/index.js';
+	import { de } from 'date-fns/locale';
 	import type { RecordModel } from 'pocketbase';
 
 	export let video: RecordModel = {} as RecordModel;

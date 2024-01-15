@@ -123,8 +123,8 @@
 						class="collapse {vod.youtube_upload === 'done'
 							? 'bg-green-500/30'
 							: vod.youtube_upload === 'pending'
-							  ? 'bg-amber-300/40'
-							  : 'bg-base-200'}"
+								? 'bg-amber-300/40'
+								: 'bg-base-200'}"
 					>
 						<input type="checkbox" />
 						<div class="collapse-title">

@@ -1,8 +1,7 @@
-import { error } from '@sveltejs/kit';
-import add from 'date-fns/add/index.js';
-import format from 'date-fns/format/index.js';
-import type { ListResult, RecordModel } from 'pocketbase';
 import { createInstance } from '$lib/stores/pocketbase';
+import { error } from '@sveltejs/kit';
+import { add, format } from 'date-fns';
+import type { ListResult, RecordModel } from 'pocketbase';
 
 export async function load() {
 	const pb = createInstance();

@@ -2,7 +2,7 @@
 	import VideoThumbnail from '$lib/components/VideoThumbnail.svelte';
 	import { toHHMMSS } from '$lib/functions';
 	import { formatDistance, fromUnixTime } from 'date-fns';
-	import de from 'date-fns/locale/de/index.js';
+	import { de } from 'date-fns/locale';
 	import type { Hit } from 'meilisearch';
 	import type { RecordModel } from 'pocketbase';
 

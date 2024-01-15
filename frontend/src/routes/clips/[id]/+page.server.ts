@@ -1,9 +1,7 @@
 import { createInstance } from '$lib/stores/pocketbase.js';
-import add from 'date-fns/add/index.js';
-import format from 'date-fns/format/index.js';
-import parseISO from 'date-fns/parseISO/index.js';
-import type { ListResult, RecordModel } from 'pocketbase';
 import { error } from '@sveltejs/kit';
+import { add, format, parseISO } from 'date-fns';
+import type { ListResult, RecordModel } from 'pocketbase';
 
 export async function load({ params }) {
 	const pb = createInstance();

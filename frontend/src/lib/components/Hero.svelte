@@ -2,7 +2,7 @@
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import Icon from '@iconify/svelte';
 	import { formatDistance, parseISO } from 'date-fns';
-	import de from 'date-fns/locale/de/index.js';
+	import { de } from 'date-fns/locale';
 	import type { RecordModel } from 'pocketbase';
 	import { fade } from 'svelte/transition';
 

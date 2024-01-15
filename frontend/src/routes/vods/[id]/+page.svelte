@@ -9,9 +9,9 @@
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
 	import Icon from '@iconify/svelte';
 	import { format, formatDistance, parseISO } from 'date-fns';
-	import de from 'date-fns/locale/de/index.js';
+	import { de } from 'date-fns/locale';
 	import type { RecordModel } from 'pocketbase';
-	import type { MediaPlayerElement } from 'vidstack/elements.js';
+	import type { MediaPlayerElement } from 'vidstack/elements';
 
 	export let data;
 

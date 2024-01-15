@@ -17,7 +17,7 @@ const defaultWatchHistory = {
 
 const lsWatchHistory = browser
 	? (JSON.parse(localStorage.watched || JSON.stringify(defaultWatchHistory)) as WatchHistory) ||
-	  defaultWatchHistory
+		defaultWatchHistory
 	: defaultWatchHistory;
 export const watchHistory = writable(lsWatchHistory);
 
