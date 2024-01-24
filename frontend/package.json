@@ -15,7 +15,7 @@
 	"devDependencies": {
 		"@iconify/svelte": "^3.1.6",
 		"@sveltejs/adapter-node": "^3.0.0",
-		"@sveltejs/kit": "^2.3.2",
+		"@sveltejs/kit": "^2.4.3",
 		"@typescript-eslint/eslint-plugin": "^6.18.1",
 		"@typescript-eslint/parser": "^6.18.1",
 		"autoprefixer": "^10.4.16",
