@@ -15,25 +15,25 @@
 	"devDependencies": {
 		"@iconify/svelte": "^3.1.6",
 		"@sveltejs/adapter-node": "^4.0.1",
-		"@sveltejs/kit": "^2.5.4",
-		"@typescript-eslint/eslint-plugin": "^7.2.0",
-		"@typescript-eslint/parser": "^7.2.0",
-		"autoprefixer": "^10.4.18",
-		"daisyui": "^4.7.3",
+		"@sveltejs/kit": "^2.5.6",
+		"@typescript-eslint/eslint-plugin": "^7.7.0",
+		"@typescript-eslint/parser": "^7.7.0",
+		"autoprefixer": "^10.4.19",
+		"daisyui": "^4.10.2",
 		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-svelte": "^2.35.1",
+		"eslint-plugin-svelte": "^2.37.0",
 		"husky": "^9.0.11",
-		"postcss": "^8.4.35",
+		"postcss": "^8.4.38",
 		"prettier": "^3.2.5",
-		"prettier-plugin-svelte": "^3.2.2",
-		"prettier-plugin-tailwindcss": "^0.5.12",
-		"svelte": "^4.2.12",
-		"svelte-check": "^3.6.7",
-		"tailwindcss": "^3.4.1",
+		"prettier-plugin-svelte": "^3.2.3",
+		"prettier-plugin-tailwindcss": "^0.5.14",
+		"svelte": "^4.2.15",
+		"svelte-check": "^3.6.9",
+		"tailwindcss": "^3.4.3",
 		"tslib": "^2.6.2",
-		"typescript": "^5.4.2",
-		"vite": "^5.1.6"
+		"typescript": "^5.4.5",
+		"vite": "^5.2.9"
 	},
 	"type": "module",
 	"lint-staged": {
@@ -41,11 +41,11 @@
 		"*.{js,css,md,svelte,scss}": "prettier --write --cache --cache-strategy content ."
 	},
 	"dependencies": {
-		"@sveltejs/vite-plugin-svelte": "^3.0.2",
-		"date-fns": "^3.5.0",
-		"hls.js": "^1.5.7",
+		"@sveltejs/vite-plugin-svelte": "^3.1.0",
+		"date-fns": "^3.6.0",
+		"hls.js": "^1.5.8",
 		"meilisearch": "^0.37.0",
 		"pocketbase": "^0.21.1",
-		"vidstack": "^1.10.9"
+		"vidstack": "^1.11.17"
 	}
 }
