@@ -14,7 +14,7 @@ export async function load({ params }) {
 		pb
 			.collection('vod')
 			.getOne(params.id, {
-				expand: 'clip(vod)',
+				expand: 'clip_via_vod',
 				requestKey: 'single_vod'
 			})
 			.then((data) => {

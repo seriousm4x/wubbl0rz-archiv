@@ -122,7 +122,7 @@ var (
 				}
 				return
 			}
-			clips := len(vods[0].ExpandedAll("clip(vod)"))
+			clips := len(vods[0].ExpandedAll("clip_via_vod"))
 			embeds := []*discordgo.MessageEmbed{{
 				Title: vods[0].GetString("title"),
 				URL:   fmt.Sprintf("%s/vods/%s", frontendUrl, vods[0].Id),

@@ -155,7 +155,7 @@
 			</div>
 		</div>
 		{#if vod['expand']}
-			{#if vod['expand']['clip(vod)'] && vod['expand']['clip(vod)'].length > 0}
+			{#if vod['expand']['clip_via_vod'] && vod['expand']['clip_via_vod'].length > 0}
 				<h2 class="text-3xl font-bold">
 					<span
 						class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
@@ -163,7 +163,7 @@
 					>
 				</h2>
 				<div class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-					{#each vod['expand']['clip(vod)'] as video}
+					{#each vod['expand']['clip_via_vod'] as video}
 						<Card {video} />
 					{/each}
 				</div>
