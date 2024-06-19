@@ -15,25 +15,25 @@
 	"devDependencies": {
 		"@iconify/svelte": "^3.1.6",
 		"@sveltejs/adapter-node": "^4.0.1",
-		"@sveltejs/kit": "^2.5.10",
-		"@typescript-eslint/eslint-plugin": "^7.12.0",
-		"@typescript-eslint/parser": "^7.12.0",
+		"@sveltejs/kit": "^2.5.17",
+		"@typescript-eslint/eslint-plugin": "^7.13.1",
+		"@typescript-eslint/parser": "^7.13.1",
 		"autoprefixer": "^10.4.19",
-		"daisyui": "^4.11.1",
+		"daisyui": "^4.12.2",
 		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-svelte": "^2.39.0",
+		"eslint-plugin-svelte": "^2.40.0",
 		"husky": "^9.0.11",
 		"postcss": "^8.4.38",
-		"prettier": "^3.3.0",
-		"prettier-plugin-svelte": "^3.2.3",
+		"prettier": "^3.3.2",
+		"prettier-plugin-svelte": "^3.2.4",
 		"prettier-plugin-tailwindcss": "^0.5.14",
-		"svelte": "^4.2.17",
-		"svelte-check": "^3.8.0",
-		"tailwindcss": "^3.4.3",
+		"svelte": "^4.2.18",
+		"svelte-check": "^3.8.1",
+		"tailwindcss": "^3.4.4",
 		"tslib": "^2.6.3",
 		"typescript": "^5.4.5",
-		"vite": "^5.2.12"
+		"vite": "^5.3.1"
 	},
 	"type": "module",
 	"lint-staged": {
@@ -46,6 +46,6 @@
 		"hls.js": "^1.5.11",
 		"meilisearch": "^0.37.0",
 		"pocketbase": "^0.21.3",
-		"vidstack": "^1.11.21"
+		"vidstack": "^1.11.22"
 	}
 }
