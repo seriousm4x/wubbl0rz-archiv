@@ -1,4 +1,4 @@
-FROM golang:latest as base
+FROM golang:latest AS base
 ARG DEBIAN_FRONTEND=noninteractive
 WORKDIR /build
 COPY ./backend/. .
