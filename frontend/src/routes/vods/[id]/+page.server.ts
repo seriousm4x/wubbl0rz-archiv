@@ -26,7 +26,6 @@ export async function load({ params }) {
 		pb
 			.collection('vod')
 			.getList(1, 1, {
-				filter: 'viewcount > 0',
 				requestKey: 'vod_count'
 			})
 			.then((data) => {

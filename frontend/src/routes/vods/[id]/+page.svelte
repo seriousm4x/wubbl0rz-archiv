@@ -108,7 +108,7 @@
 					{/if}
 				</div>
 				<div class="stat-desc">
-					von {vodsCount} Vods (Views &gt; 0)
+					von {vodsCount} Vods
 				</div>
 			</div>
 			<div class="stat">
