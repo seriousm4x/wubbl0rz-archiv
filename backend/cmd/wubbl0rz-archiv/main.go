@@ -108,6 +108,10 @@ func main() {
 			return routes.Stats(app, c)
 		})
 
+		// route for youtube login callback
+		e.Router.GET("/wubbl0rz/youtube/callback",
+			routes.YoutubeHandleCallback)
+
 		return nil
 	})
 
@@ -127,10 +131,6 @@ func main() {
 		e.Router.GET("/wubbl0rz/youtube/login",
 			routes.YoutubeHandleLogin,
 			apis.RequireRecordAuth("users"))
-
-		// route for youtube login callback
-		e.Router.GET("/wubbl0rz/youtube/callback",
-			routes.YoutubeHandleCallback)
 
 		// route for vod upload to youtube
 		e.Router.GET("/wubbl0rz/youtube/upload/:id",
