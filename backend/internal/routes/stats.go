@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v5"
+	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
 	"golang.org/x/sync/errgroup"
 )
@@ -58,7 +59,7 @@ func Stats(app *pocketbase.PocketBase, c echo.Context) error {
 		}
 		stats.LastUpdate = collection.Updated.Time().UTC()
 
-		vods, err := app.Dao().FindRecordsByExpr("vod")
+		vods, err := app.Dao().FindRecordsByExpr("vod", dbx.HashExp{"publish": true})
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]any{
 				"message": "failed to get vods",
