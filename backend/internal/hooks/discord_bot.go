@@ -67,7 +67,6 @@ type StatsResponse struct {
 
 var (
 	pb             *pocketbase.PocketBase
-	s              *discordgo.Session
 	token          = os.Getenv("DISCORD_BOT_TOKEN")
 	frontendUrl    = os.Getenv("PUBLIC_FRONTEND_URL")
 	apiUrl         = os.Getenv("PUBLIC_API_URL")
@@ -185,10 +184,7 @@ var (
 				logger.Error.Println(err)
 				return
 			}
-			client := meilisearch.NewClient(meilisearch.ClientConfig{
-				Host:   meiliUrl,
-				APIKey: meiliSearchKey,
-			})
+			client := meilisearch.New(meiliUrl, meilisearch.WithAPIKey(meiliSearchKey))
 			searchRes, err := client.Index("transcripts").Search(searchStr, &meilisearch.SearchRequest{
 				HitsPerPage:           5,
 				AttributesToHighlight: []string{"text"},
