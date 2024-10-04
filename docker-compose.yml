@@ -14,7 +14,7 @@ services:
       - /mnt/archiv/pb_data:/app/pb_data
   meili:
     container_name: archiv-meili
-    image: getmeili/meilisearch:v1.6.0
+    image: getmeili/meilisearch:v1.10.2
     env_file: .env
     ports:
       - 127.0.0.1:7700:7700
