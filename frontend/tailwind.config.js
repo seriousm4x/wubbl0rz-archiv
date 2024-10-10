@@ -1,3 +1,4 @@
+import daisyui from 'daisyui';
 import themes from 'daisyui/src/theming/themes';
 
 /** @type {import('tailwindcss').Config} */
@@ -6,7 +7,7 @@ export default {
 	theme: {
 		extend: {}
 	},
-	plugins: [require('daisyui')],
+	plugins: [daisyui],
 	daisyui: {
 		themes: [
 			{

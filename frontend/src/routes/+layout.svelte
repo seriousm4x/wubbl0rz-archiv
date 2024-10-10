@@ -4,9 +4,9 @@
 	import Navbar from '$lib/components/Navbar.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import { pb } from '$lib/stores/pocketbase';
+	import { currentUser } from '$lib/stores/user';
 	import { onMount } from 'svelte';
 	import '../app.css';
-	import { currentUser } from '$lib/stores/user';
 
 	onMount(async () => {
 		// load cookie from localstorage
@@ -17,7 +17,9 @@
 
 		// set cookie as auth
 		$pb.authStore.loadFromCookie('pb_auth=' + pbCookie);
-		$pb.authStore.isValid && (await $pb.collection('users').authRefresh({ autoCancel: false }));
+		if ($pb.authStore.isValid) {
+			await $pb.collection('users').authRefresh({ autoCancel: false });
+		}
 
 		// update localstorage and user store on auth change
 		$pb.authStore.onChange((_, model) => {

@@ -1,5 +1,5 @@
-import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
+import { writable } from 'svelte/store';
 
 export type WatchHistory = {
 	vods: {
@@ -23,5 +23,7 @@ export const watchHistory = writable(lsWatchHistory);
 
 // update localstorage on change
 watchHistory.subscribe((value) => {
-	browser ? (localStorage.watched = JSON.stringify(value)) : '';
+	if (browser) {
+		localStorage.watched = JSON.stringify(value);
+	}
 });
