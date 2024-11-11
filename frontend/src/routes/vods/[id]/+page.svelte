@@ -54,7 +54,7 @@
 		<h1 class="text-4xl font-bold">
 			{vod.title}
 		</h1>
-		<div class="stats stats-vertical w-full bg-base-200 shadow lg:stats-horizontal">
+		<div class="stats stats-vertical bg-base-200 lg:stats-horizontal w-full shadow">
 			<div class="stat">
 				<div class="stat-title text-lg">Gestreamt am</div>
 				<div class="stat-value text-2xl">
@@ -140,7 +140,7 @@
 					<ul
 						id="btn-share"
 						tabindex="-1"
-						class="menu dropdown-content z-[1] rounded-box bg-base-200 p-2 shadow"
+						class="menu dropdown-content rounded-box bg-base-200 z-[1] p-2 shadow"
 					>
 						<li>
 							<button on:click={() => copyLink(false)}>Link kopieren</button>

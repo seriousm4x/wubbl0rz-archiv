@@ -36,7 +36,7 @@
 			>Livechat</span
 		>
 	</h1>
-	<p class="mb-8 text-sm text-base-content/80">Neue Nachrichten werden automatisch geladen...</p>
+	<p class="text-base-content/80 mb-8 text-sm">Neue Nachrichten werden automatisch geladen...</p>
 	<h2 class="text-xl">Zu behaltende Nachrichten</h2>
 	<div class="flex flex-row flex-wrap gap-4">
 		<input
@@ -89,10 +89,10 @@
 						>
 							<a
 								href={`#${message.tags['reply-parent-msg-id']}`}
-								class="flex w-fit flex-row items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-xs font-bold text-base-content/80 dark:bg-base-200"
+								class="text-base-content/80 dark:bg-base-200 flex w-fit flex-row items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-xs font-bold"
 							>
 								<div>
-									<Icon icon="solar:chat-square-arrow-bold-duotone" class="text-lg text-primary" />
+									<Icon icon="solar:chat-square-arrow-bold-duotone" class="text-primary text-lg" />
 								</div>
 								{message.tags['reply-parent-display-name']}: {message.tags['reply-parent-msg-body']}
 							</a>

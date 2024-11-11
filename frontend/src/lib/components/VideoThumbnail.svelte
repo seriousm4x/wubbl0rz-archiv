@@ -73,12 +73,12 @@
 				height="430"
 			/>
 		</picture>
-		<div class="absolute bottom-0 right-0 mx-2 my-3 rounded-md bg-base-300 px-1 font-bold">
+		<div class="bg-base-300 absolute bottom-0 right-0 mx-2 my-3 rounded-md px-1 font-bold">
 			{toHHMMSS(video.duration, false)}
 		</div>
 		{#if type in $watchHistory && video.id in $watchHistory[type]}
 			<progress
-				class="progress progress-primary absolute bottom-0 w-full rounded-none bg-base-100"
+				class="progress progress-primary bg-base-100 absolute bottom-0 w-full rounded-none"
 				value={$watchHistory[type][video.id]}
 				max={video.duration}
 			></progress>

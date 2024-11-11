@@ -112,18 +112,18 @@
 		<form on:submit|preventDefault={() => search()}>
 			<div class="flex flex-col flex-wrap justify-end gap-2 md:flex-row">
 				<input
-					class="input w-full rounded-full border-base-content/20 bg-base-300/50 text-base-content/50 drop-shadow-md transition duration-200 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content md:max-w-lg"
+					class="input border-base-content/20 bg-base-300/50 text-base-content/50 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content w-full rounded-full drop-shadow-md transition duration-200 md:max-w-lg"
 					{placeholder}
 					bind:value={searchValue}
 				/>
 				<div class="join rounded-full">
 					<span
-						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
+						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
 					>
 						Sortieren
 					</span>
 					<select
-						class="join-item select rounded-e-full border-base-200/70 bg-base-200"
+						class="join-item select border-base-200/70 bg-base-200 rounded-e-full"
 						aria-label="Sortieren"
 						bind:value={selectedSort}
 					>
@@ -154,7 +154,7 @@
 				</div>
 				<div class="join rounded-full">
 					<span
-						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
+						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
 					>
 						Von
 					</span>
@@ -166,7 +166,7 @@
 				</div>
 				<div class="join rounded-full">
 					<span
-						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
+						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
 					>
 						Bis
 					</span>

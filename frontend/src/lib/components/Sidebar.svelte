@@ -55,9 +55,9 @@
 	<div class="drawer-side z-50 shadow-xl">
 		<label for="menu-drawer" aria-label="close sidebar" class="drawer-overlay" />
 		<ul
-			class="menu min-h-full w-20 justify-items-center gap-2 bg-base-200/80 text-base-content backdrop-blur-md md:bg-base-200/40 md:backdrop-blur-none xl:w-28"
+			class="menu bg-base-200/80 text-base-content md:bg-base-200/40 min-h-full w-20 justify-items-center gap-2 backdrop-blur-md md:backdrop-blur-none xl:w-28"
 		>
-			<li class="group mask mask-squircle relative md:my-4">
+			<li class="mask mask-squircle group relative md:my-4">
 				<a
 					href={sidebarHome.href}
 					class="group flex flex-col justify-center gap-1 p-2 text-center hover:bg-transparent"
@@ -76,9 +76,9 @@
 					<span class="text-xs font-bold uppercase transition">{sidebarHome.title}</span>
 				</a>
 			</li>
-			<li class="menu-title md:mb-4"><hr class="rounded border-base-content opacity-25" /></li>
+			<li class="menu-title md:mb-4"><hr class="border-base-content rounded opacity-25" /></li>
 			{#each sidebarItems as item}
-				<li class="group mask mask-squircle relative">
+				<li class="mask mask-squircle group relative">
 					<a
 						href={item.href}
 						class="group flex flex-col justify-center gap-0 p-2 text-center hover:bg-transparent"

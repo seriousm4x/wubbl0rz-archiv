@@ -49,7 +49,7 @@
 				Pocket<span class="font-bold">Base</span>
 			</span>
 		</h1>
-		<div class="stats stats-vertical w-full bg-base-200 shadow xl:stats-horizontal">
+		<div class="stats stats-vertical bg-base-200 xl:stats-horizontal w-full shadow">
 			<div class="stat">
 				<div class="stat-figure text-primary">
 					<Icon icon="solar:videocamera-record-bold-duotone" class="text-5xl" />
@@ -118,7 +118,7 @@
 				meili<span class="font-light">search</span>
 			</span>
 		</h1>
-		<div class="stats stats-vertical w-full bg-base-200 shadow xl:stats-horizontal">
+		<div class="stats stats-vertical bg-base-200 xl:stats-horizontal w-full shadow">
 			<div class="stat">
 				<div class="stat-figure text-emerald-500">
 					<Icon icon="solar:subtitles-bold-duotone" class="text-5xl" />
@@ -163,7 +163,7 @@
 			>
 		</h1>
 		<div class="overflow-x-auto">
-			<table class="table table-sm">
+			<table class="table-sm table">
 				<!-- head -->
 				<thead>
 					<tr>
