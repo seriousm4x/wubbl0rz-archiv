@@ -6,16 +6,16 @@
 	import type { RecordModel } from 'pocketbase';
 	import { fade } from 'svelte/transition';
 
-	export let vod: RecordModel;
-	let hover = false;
+	let { vod }: { vod: RecordModel } = $props();
+	let hover = $state(false);
 </script>
 
 <div class="flex items-center justify-center">
 	<div
-		class="hero border-base-100/20 relative aspect-video max-h-[45vh] min-h-[20rem] max-w-[90rem] place-items-center justify-items-end overflow-hidden rounded-xl border-2 shadow-md transition duration-200 hover:shadow-2xl"
+		class="hero relative aspect-video max-h-[45vh] min-h-[20rem] max-w-[90rem] place-items-center justify-items-end overflow-hidden rounded-xl border-2 border-base-100/20 shadow-md transition duration-200 hover:shadow-2xl"
 		role="none"
-		on:mouseenter={() => (hover = true)}
-		on:mouseleave={() => (hover = false)}
+		onmouseenter={() => (hover = true)}
+		onmouseleave={() => (hover = false)}
 	>
 		<a href="/vods/{vod.id}" class="h-full w-full">
 			{#if hover}
@@ -45,7 +45,7 @@
 			></div>
 		</a>
 		<div class="hero-content p-0">
-			<div class="card bg-base-100/80 me-4 w-fit max-w-xl shadow-xl backdrop-blur-sm xl:me-16">
+			<div class="card me-4 w-fit max-w-xl bg-base-100/80 shadow-xl backdrop-blur-sm xl:me-16">
 				<div class="card-body p-5">
 					<h1 class="card-title text-2xl font-extrabold xl:text-4xl">
 						<span class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent"

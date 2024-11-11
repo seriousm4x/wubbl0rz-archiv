@@ -53,18 +53,18 @@
 		<slot />
 	</div>
 	<div class="drawer-side z-50 shadow-xl">
-		<label for="menu-drawer" aria-label="close sidebar" class="drawer-overlay" />
+		<label for="menu-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
 		<ul
-			class="menu bg-base-200/80 text-base-content md:bg-base-200/40 min-h-full w-20 justify-items-center gap-2 backdrop-blur-md md:backdrop-blur-none xl:w-28"
+			class="menu min-h-full w-20 justify-items-center gap-2 bg-base-200/80 text-base-content backdrop-blur-md md:bg-base-200/40 md:backdrop-blur-none xl:w-28"
 		>
-			<li class="mask mask-squircle group relative md:my-4">
+			<li class="group mask mask-squircle relative md:my-4">
 				<a
 					href={sidebarHome.href}
 					class="group flex flex-col justify-center gap-1 p-2 text-center hover:bg-transparent"
 				>
 					<div
 						class="absolute -inset-0.5 bg-gradient-to-r opacity-0 transition duration-200 group-hover:opacity-[.2] group-hover:duration-200 {sidebarHome.bgColor}"
-					/>
+					></div>
 					<img
 						src={sidebarHome.icon}
 						alt="{sidebarHome.title} Icon"
@@ -76,16 +76,16 @@
 					<span class="text-xs font-bold uppercase transition">{sidebarHome.title}</span>
 				</a>
 			</li>
-			<li class="menu-title md:mb-4"><hr class="border-base-content rounded opacity-25" /></li>
+			<li class="menu-title md:mb-4"><hr class="rounded border-base-content opacity-25" /></li>
 			{#each sidebarItems as item}
-				<li class="mask mask-squircle group relative">
+				<li class="group mask mask-squircle relative">
 					<a
 						href={item.href}
 						class="group flex flex-col justify-center gap-0 p-2 text-center hover:bg-transparent"
 					>
 						<div
 							class="absolute -inset-0.5 bg-gradient-to-r opacity-0 transition duration-200 group-hover:opacity-[.2] group-hover:duration-200 {item.bgColor}"
-						/>
+						></div>
 						<Icon
 							icon={item.icon}
 							class="text-5xl duration-200 group-hover:-rotate-6 group-hover:scale-110 {$page.url.pathname.startsWith(

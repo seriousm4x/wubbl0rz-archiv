@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { PUBLIC_API_URL } from '$env/static/public';
-	import Button from '$lib/components/Button.svelte';
 	import Card from '$lib/components/Card.svelte';
 	import Player from '$lib/components/Player.svelte';
 	import SEO from '$lib/components/SEO.svelte';
@@ -14,25 +13,23 @@
 	import { onMount } from 'svelte';
 	import type { MediaPlayerElement } from 'vidstack/elements';
 
-	export let data;
+	let { data } = $props();
 
-	let player: MediaPlayerElement;
-	let currentTime: number;
+	let player: MediaPlayerElement = $state({} as MediaPlayerElement);
+	let currentTime: number = $state(0);
 
-	$: og = {
+	let og = $state({
 		...DefaultOpenGraph,
 		title: data.clip?.title,
 		image: `${PUBLIC_API_URL}/clips/${data.clip.filename}-lg.webp`,
 		updated_time: parseISO(data.clip?.date).toISOString()
-	};
-
-	$: clip = data.clip as RecordModel;
-	$: clipsCount = data.clipsCount;
-	$: clipPosition = data.clipPosition;
-	$: recommendations = data.recommendations;
-
-	$: percentile = (clipPosition * 100) / clipsCount;
-	$: percentileRounded = percentile < 1 ? percentile.toFixed(2) : Math.round(percentile);
+	});
+	let clip = $state(data.clip as RecordModel);
+	let clipsCount = $state(data.clipsCount);
+	let clipPosition = $state(data.clipPosition);
+	let recommendations = $state(data.recommendations);
+	let percentile = $state((clipPosition * 100) / clipsCount);
+	let percentileRounded = $derived(percentile < 1 ? percentile.toFixed(2) : Math.round(percentile));
 
 	onMount(() => {
 		if ($page.url.searchParams.has('t')) {
@@ -54,14 +51,14 @@
 <div
 	class="absolute left-0 top-0 -z-10 aspect-video h-full w-full bg-cover bg-center opacity-10 blur-2xl"
 	style="background-image: url('{PUBLIC_API_URL}/clips/{clip.filename}-lg.webp');"
-/>
+></div>
 <div class="mx-auto flex max-w-[120rem] flex-col gap-8 xl:flex-row">
 	<div class="flex flex-col gap-4 xl:basis-4/5">
 		<Player bind:player bind:currentTime video={clip} />
 		<h1 class="text-4xl font-bold">
 			{clip.title}
 		</h1>
-		<div class="stats stats-vertical bg-base-200 lg:stats-horizontal w-full shadow">
+		<div class="stats stats-vertical w-full bg-base-200 shadow lg:stats-horizontal">
 			<div class="stat">
 				<div class="stat-title text-lg">Geclippt am</div>
 				<div class="stat-value text-2xl">
@@ -140,10 +137,14 @@
 			<div
 				title="Beim Download kann die genaue Dateigröße nicht vorhergesagt werden, weil das Video nicht als Ganzes existiert und die Videosegmente im Hintergrund zusammengesetzt werden, was nur eine grobe Schätzung ermöglicht."
 			>
-				<Button href="{PUBLIC_API_URL}/download/clips/{clip.id}" color="">
+				<a
+					href="{PUBLIC_API_URL}/download/clips/{clip.id}"
+					class="btn rounded-xl bg-gradient-to-r shadow transition duration-200 hover:shadow-lg"
+					aria-label="link"
+				>
 					<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download
 					(~ {formatBytes(clip.size)})
-				</Button>
+				</a>
 			</div>
 			<div>
 				<div class="dropdown dropdown-left md:dropdown-bottom">
@@ -157,13 +158,13 @@
 					<ul
 						id="btn-share"
 						tabindex="-1"
-						class="menu dropdown-content rounded-box bg-base-200 z-[1] p-2 shadow"
+						class="menu dropdown-content z-[1] rounded-box bg-base-200 p-2 shadow"
 					>
 						<li>
-							<button on:click={() => copyLink(false)}>Link kopieren</button>
+							<button onclick={() => copyLink(false)}>Link kopieren</button>
 						</li>
 						<li>
-							<button class="whitespace-nowrap" on:click={() => copyLink(true)}
+							<button class="whitespace-nowrap" onclick={() => copyLink(true)}
 								>Link bei {toHHMMSS(currentTime, false)} kopieren</button
 							>
 						</li>

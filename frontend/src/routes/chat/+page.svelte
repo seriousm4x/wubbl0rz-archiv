@@ -10,13 +10,13 @@
 	import type { ListResult, RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 
-	export let data: ListResult<RecordModel>;
-	let sliderValue = 200;
+	let { data }: { data: ListResult<RecordModel> } = $props();
+	let sliderValue = $state(200);
 
-	$: og = {
+	let og = $state({
 		...DefaultOpenGraph,
 		title: 'Livechat'
-	};
+	});
 
 	onMount(async () => {
 		$pb.collection('chatmessage').subscribe('*', function (e) {
@@ -36,7 +36,7 @@
 			>Livechat</span
 		>
 	</h1>
-	<p class="text-base-content/80 mb-8 text-sm">Neue Nachrichten werden automatisch geladen...</p>
+	<p class="mb-8 text-sm text-base-content/80">Neue Nachrichten werden automatisch geladen...</p>
 	<h2 class="text-xl">Zu behaltende Nachrichten</h2>
 	<div class="flex flex-row flex-wrap gap-4">
 		<input
@@ -46,7 +46,7 @@
 			max="500"
 			step="100"
 			bind:value={sliderValue}
-			on:change={() => (data.items = data.items.slice(0, sliderValue))}
+			onchange={() => (data.items = data.items.slice(0, sliderValue))}
 		/>
 		<div class="flex w-full justify-between px-2 text-xs">
 			<span>100</span>
@@ -89,10 +89,10 @@
 						>
 							<a
 								href={`#${message.tags['reply-parent-msg-id']}`}
-								class="text-base-content/80 dark:bg-base-200 flex w-fit flex-row items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-xs font-bold"
+								class="flex w-fit flex-row items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-xs font-bold text-base-content/80 dark:bg-base-200"
 							>
 								<div>
-									<Icon icon="solar:chat-square-arrow-bold-duotone" class="text-primary text-lg" />
+									<Icon icon="solar:chat-square-arrow-bold-duotone" class="text-lg text-primary" />
 								</div>
 								{message.tags['reply-parent-display-name']}: {message.tags['reply-parent-msg-body']}
 							</a>

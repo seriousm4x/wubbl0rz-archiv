@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { PUBLIC_API_URL } from '$env/static/public';
@@ -8,15 +7,17 @@
 	import Icon from '@iconify/svelte';
 	import type { ListResult, RecordModel } from 'pocketbase';
 
-	export let data: ListResult<RecordModel>;
-	export let title: string;
-	export let placeholder: string;
+	let {
+		data,
+		title,
+		placeholder
+	}: { data: ListResult<RecordModel>; title: string; placeholder: string } = $props();
 
 	const type = data.items[0]?.collectionName === 'vod' ? 'vods' : 'clips';
 
 	const origin = $page.url.origin;
 	const pathname = $page.url.pathname;
-	let showFilter = false;
+	let showFilter = $state(false);
 
 	// parse sort from url
 	let paramSort = $page.url.searchParams.get('sort') || '';
@@ -26,8 +27,15 @@
 	};
 
 	// parse page from url
-	let currentPage = parseInt($page.url.searchParams.get('page') || `${data.page}`);
-	$: if (browser) search(currentPage);
+	let currentPage = $state(parseInt($page.url.searchParams.get('page') || `${data.page}`));
+	let oldPage = parseInt($page.url.searchParams.get('page') || `${data.page}`);
+	$effect(() => {
+		// hack to fix search function to trigger in searchValue change
+		if (oldPage !== currentPage) {
+			oldPage = currentPage;
+			search(oldPage);
+		}
+	});
 
 	// available sorts
 	let sorts: sort[] = [
@@ -48,16 +56,19 @@
 			text: 'Dateigröße'
 		}
 	];
-	let ordering: '' | '-' = '-';
+	let ordering: '' | '-' = $state('-');
 
 	// form elements
-	let searchValue: string;
-	let selectedSort =
-		sorts.find((sort) => {
-			return sort.value === paramSort;
-		}) || sorts[0];
-	let dateFrom: string;
-	let dateTo: string;
+	let searchValue: string = $state('');
+	let selectedSort: sort = $state({} as sort);
+	$effect(() => {
+		selectedSort =
+			sorts.find((sort) => {
+				return sort.value === paramSort;
+			}) || sorts[0];
+	});
+	let dateFrom: string = $state('');
+	let dateTo: string = $state('');
 
 	function reset() {
 		searchValue = '';
@@ -102,28 +113,33 @@
 		<div>
 			<button
 				class="btn btn-sm flex-nowrap rounded-full"
-				on:click={() => (showFilter = !showFilter)}
+				onclick={() => (showFilter = !showFilter)}
 			>
 				<Icon icon="solar:filter-bold-duotone" class="text-lg text-violet-500" /> Filter
 			</button>
 		</div>
 	</div>
 	{#if showFilter}
-		<form on:submit|preventDefault={() => search()}>
+		<form
+			onsubmit={(e) => {
+				e.preventDefault();
+				search();
+			}}
+		>
 			<div class="flex flex-col flex-wrap justify-end gap-2 md:flex-row">
 				<input
-					class="input border-base-content/20 bg-base-300/50 text-base-content/50 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content w-full rounded-full drop-shadow-md transition duration-200 md:max-w-lg"
+					class="input w-full rounded-full border-base-content/20 bg-base-300/50 text-base-content/50 drop-shadow-md transition duration-200 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content md:max-w-lg"
 					{placeholder}
 					bind:value={searchValue}
 				/>
 				<div class="join rounded-full">
 					<span
-						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
+						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
 					>
 						Sortieren
 					</span>
 					<select
-						class="join-item select border-base-200/70 bg-base-200 rounded-e-full"
+						class="join-item select rounded-e-full border-base-200/70 bg-base-200"
 						aria-label="Sortieren"
 						bind:value={selectedSort}
 					>
@@ -154,7 +170,7 @@
 				</div>
 				<div class="join rounded-full">
 					<span
-						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
+						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
 					>
 						Von
 					</span>
@@ -166,7 +182,7 @@
 				</div>
 				<div class="join rounded-full">
 					<span
-						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
+						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
 					>
 						Bis
 					</span>
@@ -178,7 +194,7 @@
 				</div>
 				<div class="flex gap-2">
 					<button class="btn btn-primary w-fit rounded-full" type="submit">Suchen</button>
-					<button class="btn btn-error w-fit rounded-full" type="button" on:click={reset}
+					<button class="btn btn-error w-fit rounded-full" type="button" onclick={reset}
 						>Reset</button
 					>
 				</div>

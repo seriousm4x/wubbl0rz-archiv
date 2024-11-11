@@ -27,7 +27,7 @@
 		"prettier": "^3.3.3",
 		"prettier-plugin-svelte": "^3.2.8",
 		"prettier-plugin-tailwindcss": "^0.6.8",
-		"svelte": "^4.2.19",
+		"svelte": "^5.1.15",
 		"svelte-check": "^4.0.7",
 		"tailwindcss": "^3.4.14",
 		"tslib": "^2.8.1",
@@ -41,10 +41,10 @@
 		"*.{js,css,md,svelte,scss}": "prettier --write --cache --cache-strategy content ."
 	},
 	"dependencies": {
-		"@sveltejs/vite-plugin-svelte": "^3.1.2",
+		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"date-fns": "^4.1.0",
 		"hls.js": "^1.5.17",
-		"meilisearch": "^0.44.1",
+		"meilisearch": "^0.45.0",
 		"pocketbase": "^0.21.5",
 		"vidstack": "^1.12.12"
 	}

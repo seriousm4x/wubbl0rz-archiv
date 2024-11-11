@@ -5,14 +5,14 @@
 	import { parseISO } from 'date-fns';
 	import type { ListResult, RecordModel } from 'pocketbase';
 
-	export let data: ListResult<RecordModel>;
+	let { data }: { data: ListResult<RecordModel> } = $props();
 
-	$: og = {
+	let og = $state({
 		...DefaultOpenGraph,
 		title: 'Alle Clips',
 		updated_time:
 			data.items.length > 0 ? parseISO(data.items[0].date).toISOString() : new Date().toISOString()
-	};
+	});
 </script>
 
 <SEO bind:og />

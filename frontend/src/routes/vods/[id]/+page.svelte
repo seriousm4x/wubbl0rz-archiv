@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { PUBLIC_API_URL } from '$env/static/public';
-	import Button from '$lib/components/Button.svelte';
 	import Card from '$lib/components/Card.svelte';
 	import Player from '$lib/components/Player.svelte';
 	import SEO from '$lib/components/SEO.svelte';
@@ -13,25 +12,24 @@
 	import type { RecordModel } from 'pocketbase';
 	import type { MediaPlayerElement } from 'vidstack/elements';
 
-	export let data;
+	let { data } = $props();
 
-	$: og = {
+	let og = $state({
 		...DefaultOpenGraph,
 		title: data.vod?.title,
 		image: `${PUBLIC_API_URL}/vods/${data.vod?.filename}-lg.webp`,
 		updated_time: parseISO(data.vod?.date).toISOString()
-	};
+	});
 
-	let player: MediaPlayerElement;
-	let currentTime: number;
+	let player: MediaPlayerElement = $state({} as MediaPlayerElement);
+	let currentTime: number = $state(0);
 
-	$: vod = data.vod as RecordModel;
-	$: vodsCount = data.vodsCount;
-	$: vodPosition = data.vodPosition;
-	$: recommendations = data.recommendations;
-
-	$: percentile = (vodPosition * 100) / vodsCount;
-	$: percentileRounded = percentile < 1 ? percentile.toFixed(2) : Math.round(percentile);
+	let vod = $state(data.vod as RecordModel);
+	let vodsCount = $state(data.vodsCount);
+	let vodPosition = $state(data.vodPosition);
+	let recommendations = $state(data.recommendations);
+	let percentile = $state((vodPosition * 100) / vodsCount);
+	let percentileRounded = $derived(percentile < 1 ? percentile.toFixed(2) : Math.round(percentile));
 
 	function copyLink(withTimestamp: boolean) {
 		const url = new URL($page.url.origin + $page.url.pathname);
@@ -47,14 +45,14 @@
 <div
 	class="absolute left-0 top-0 -z-10 aspect-video h-full w-full bg-cover bg-center opacity-10 blur-2xl"
 	style="background-image: url('{PUBLIC_API_URL}/vods/{vod.filename}-lg.webp');"
-/>
+></div>
 <div class="mx-auto flex max-w-[120rem] flex-col gap-8 xl:flex-row">
 	<div class="flex flex-col gap-4 xl:basis-4/5">
 		<Player bind:player bind:currentTime video={vod} />
 		<h1 class="text-4xl font-bold">
 			{vod.title}
 		</h1>
-		<div class="stats stats-vertical bg-base-200 lg:stats-horizontal w-full shadow">
+		<div class="stats stats-vertical w-full bg-base-200 shadow lg:stats-horizontal">
 			<div class="stat">
 				<div class="stat-title text-lg">Gestreamt am</div>
 				<div class="stat-value text-2xl">
@@ -122,10 +120,14 @@
 				<div
 					title="Beim Download kann die genaue Dateigröße nicht vorhergesagt werden, weil das Video nicht als Ganzes existiert und die Videosegmente im Hintergrund zusammengesetzt werden, was nur eine grobe Schätzung ermöglicht."
 				>
-					<Button href="{PUBLIC_API_URL}/download/vods/{vod.id}" color="">
+					<a
+						href="{PUBLIC_API_URL}/download/vods/{vod.id}"
+						class="btn rounded-xl bg-gradient-to-r shadow transition duration-200 hover:shadow-lg"
+						aria-label="link"
+					>
 						<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download
 						(~ {formatBytes(vod.size)})
-					</Button>
+					</a>
 				</div>
 			</div>
 			<div class="md:ms-auto">
@@ -140,13 +142,13 @@
 					<ul
 						id="btn-share"
 						tabindex="-1"
-						class="menu dropdown-content rounded-box bg-base-200 z-[1] p-2 shadow"
+						class="menu dropdown-content z-[1] rounded-box bg-base-200 p-2 shadow"
 					>
 						<li>
-							<button on:click={() => copyLink(false)}>Link kopieren</button>
+							<button onclick={() => copyLink(false)}>Link kopieren</button>
 						</li>
 						<li>
-							<button class="whitespace-nowrap" on:click={() => copyLink(true)}
+							<button class="whitespace-nowrap" onclick={() => copyLink(true)}
 								>Link bei {toHHMMSS(currentTime, false)} kopieren</button
 							>
 						</li>

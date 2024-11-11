@@ -20,7 +20,12 @@
 </script>
 
 <div class="container mx-auto flex flex-col items-center justify-center gap-4">
-	<form on:submit|preventDefault={login}>
+	<form
+		onsubmit={(e) => {
+			e.preventDefault();
+			login();
+		}}
+	>
 		<div class="form-control">
 			<label class="label" for="username">
 				<span class="label-text">Username</span>

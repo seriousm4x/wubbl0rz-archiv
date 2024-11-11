@@ -8,9 +8,11 @@
 	import type { HLSProvider, MediaProviderChangeEvent, MediaTimeUpdateEvent } from 'vidstack';
 	import type { MediaPlayerElement } from 'vidstack/elements';
 
-	export let video: RecordModel = {} as RecordModel;
-	export let player: MediaPlayerElement;
-	export let currentTime = 0;
+	let {
+		video = {} as RecordModel,
+		player = $bindable(),
+		currentTime = $bindable()
+	}: { video: RecordModel; player: MediaPlayerElement; currentTime: number } = $props();
 
 	onMount(async () => {
 		await import('vidstack/player/styles/default/theme.css');
@@ -24,8 +26,8 @@
 		}
 	});
 
-	let thumbnails: string;
-	$: type = video.collectionName === 'vod' ? 'vods' : 'clips';
+	let thumbnails: string = $state('');
+	let type = video.collectionName === 'vod' ? 'vods' : 'clips';
 
 	function onCanPlay() {
 		thumbnails = `${PUBLIC_API_URL}/${type}/${video.filename}-sprites/${video.filename}.vtt`;
@@ -65,12 +67,13 @@
 		src="{PUBLIC_API_URL}/{type}/{video.filename}-segments/{video.filename}.m3u8"
 		crossorigin
 		bind:this={player}
-		on:can-play={onCanPlay}
-		on:provider-change={onProviderChange}
-		on:time-update={onTimeUpdate}
+		oncan-play={onCanPlay}
+		onprovider-change={onProviderChange}
+		ontime-update={onTimeUpdate}
 	>
 		<media-provider>
-			<media-poster class="vds-poster" src="{PUBLIC_API_URL}/{type}/{video.filename}-lg.webp" />
+			<media-poster class="vds-poster" src="{PUBLIC_API_URL}/{type}/{video.filename}-lg.webp"
+			></media-poster>
 			{#if type === 'vods'}
 				<track
 					label="Deutsch"
@@ -80,8 +83,8 @@
 				/>
 			{/if}
 		</media-provider>
-		<media-audio-layout />
-		<media-video-layout {thumbnails} />
-		<media-buffering-indicator />
+		<media-audio-layout></media-audio-layout>
+		<media-video-layout {thumbnails}></media-video-layout>
+		<media-buffering-indicator></media-buffering-indicator>
 	</media-player>
 </div>

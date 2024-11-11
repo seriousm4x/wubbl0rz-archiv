@@ -6,13 +6,16 @@
 	import type { Hit } from 'meilisearch';
 	import type { RecordModel } from 'pocketbase';
 
-	export let hit: Hit = {} as Hit;
-	export let searchIn: 'transcripts' | 'vods' = 'transcripts';
+	let {
+		hit = {} as Hit,
+		searchIn = 'transcripts'
+	}: { hit: Hit; searchIn: 'transcripts' | 'vods' } = $props();
+
 	const video = hit as RecordModel;
 	const offset = searchIn === 'transcripts' ? hit.start : 0;
 </script>
 
-<div class="card bg-base-200 w-full overflow-hidden rounded-xl transition hover:shadow-lg">
+<div class="card w-full overflow-hidden rounded-xl bg-base-200 transition hover:shadow-lg">
 	<VideoThumbnail {video} isVod={true} {offset} />
 	<div class="card-body gap-1 p-4">
 		<a href="/vods/{video.id}{offset > 0 ? `?t=${offset}` : ''}">
@@ -33,7 +36,7 @@
 		</p>
 		{#if searchIn === 'transcripts'}
 			<a
-				class="matched-string bg-base-300 h-full rounded-lg p-2 font-mono text-sm font-medium hover:shadow-md"
+				class="matched-string h-full rounded-lg bg-base-300 p-2 font-mono text-sm font-medium hover:shadow-md"
 				href="/vods/{hit.id}{offset > 0 ? `?t=${offset}` : ''}"
 			>
 				<span class="underline">{toHHMMSS(hit.start, false)}</span>:

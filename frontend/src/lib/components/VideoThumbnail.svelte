@@ -5,19 +5,21 @@
 	import type { RecordModel } from 'pocketbase';
 	import { fade } from 'svelte/transition';
 
-	export let video: RecordModel = {} as RecordModel;
-	export let offset = 0;
-	export let isVod = false;
+	let {
+		video = {} as RecordModel,
+		offset = 0,
+		isVod = false
+	}: { video: RecordModel; offset: number; isVod?: boolean } = $props();
 
 	const type = isVod || video.collectionName === 'vod' ? 'vods' : 'clips';
-	let hover = false;
+	let hover = $state(false);
 </script>
 
 <a
 	href="/{type}/{video.id}{offset > 0 ? `?t=${offset}` : ''}"
 	class="aspect-video overflow-hidden"
-	on:mouseenter={() => (hover = true)}
-	on:mouseleave={() => (hover = false)}
+	onmouseenter={() => (hover = true)}
+	onmouseleave={() => (hover = false)}
 >
 	{#if hover}
 		<video
@@ -73,12 +75,12 @@
 				height="430"
 			/>
 		</picture>
-		<div class="bg-base-300 absolute bottom-0 right-0 mx-2 my-3 rounded-md px-1 font-bold">
+		<div class="absolute bottom-0 right-0 mx-2 my-3 rounded-md bg-base-300 px-1 font-bold">
 			{toHHMMSS(video.duration, false)}
 		</div>
 		{#if type in $watchHistory && video.id in $watchHistory[type]}
 			<progress
-				class="progress progress-primary bg-base-100 absolute bottom-0 w-full rounded-none"
+				class="progress progress-primary absolute bottom-0 w-full rounded-none bg-base-100"
 				value={$watchHistory[type][video.id]}
 				max={video.duration}
 			></progress>

@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import type { OpenGraph } from '$lib/types/opengraph';
 
-	export let og: OpenGraph;
+	let { og = $bindable() }: { og: OpenGraph } = $props();
 </script>
 
 <svelte:head>

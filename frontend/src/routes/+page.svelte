@@ -5,16 +5,18 @@
 	import SEO from '$lib/components/SEO.svelte';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
 	import { parseISO } from 'date-fns';
+	import type { PageData } from './$types.js';
 
-	export let data;
-	let innerWidth: number;
+	let { data }: { data: PageData } = $props();
 
-	$: og = {
+	let innerWidth = $state(0);
+
+	let og = $state({
 		...DefaultOpenGraph,
 		updated_time: parseISO(data.new?.items?.[0]?.date).toISOString()
-	};
+	});
 
-	$: showHero = innerWidth > 767;
+	let showHero = $derived(innerWidth > 767);
 </script>
 
 <svelte:window bind:innerWidth />

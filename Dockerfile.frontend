@@ -1,4 +1,4 @@
-FROM node:alpine AS build
+FROM node:lts-alpine AS build
 WORKDIR /app
 COPY ./frontend/. .
 COPY .env .
@@ -8,7 +8,7 @@ RUN npm i &&\
     npm run build -- --mode production &&\
     npm i --omit=dev --ignore-scripts
 
-FROM node:alpine
+FROM node:lts-alpine
 USER node:node
 WORKDIR /app
 COPY --from=build --chown=node:node /app/build ./build

@@ -12,12 +12,16 @@
 	import type { ListResult, RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 
-	let vods: ListResult<RecordModel>;
-	let currentPage = parseInt($page.url.searchParams.get('page') || '1');
-	let verified = {};
+	let vods: ListResult<RecordModel> = $state({} as ListResult<RecordModel>);
+	let currentPage = $state(parseInt($page.url.searchParams.get('page') || '1'));
+	let verified = $state({});
 
-	$: getVods(currentPage);
-	$: if (browser) goto(`/admin?page=${currentPage}`);
+	$effect(() => {
+		getVods(currentPage);
+	});
+	$effect(() => {
+		if (browser) goto(`/admin?page=${currentPage}`);
+	});
 
 	onMount(async () => {
 		if (!$pb.authStore.isValid) goto('/login');
@@ -108,10 +112,15 @@
 			</div>
 		{:then}
 			<div class="ms-auto flex flex-row flex-wrap gap-2">
-				<button class="btn btn-outline btn-error" on:click={youtubeRevoke}
+				<button class="btn btn-outline btn-error" onclick={youtubeRevoke}
 					><Icon icon="solar:trash-bin-2-bold-duotone" class="text-3xl" /> YouTube Token Löschen</button
 				>
-				<form on:submit|preventDefault={logout}>
+				<form
+					onsubmit={(e) => {
+						e.preventDefault();
+						logout();
+					}}
+				>
 					<button class="btn btn-outline btn-error"
 						><Icon icon="solar:logout-3-bold-duotone" class="text-3xl" /> Log out</button
 					>
@@ -157,11 +166,11 @@
 						<div class="collapse-content bg-base-300/40">
 							<dir class="flex flex-col gap-2 p-0">
 								{#if vod.youtube_upload === ''}
-									<button class="btn btn-outline btn-success" on:click={() => upload(vod.id)}
+									<button class="btn btn-outline btn-success" onclick={() => upload(vod.id)}
 										>Export zu YouTube</button
 									>
 								{:else if vod.youtube_upload === 'done'}
-									<button class="btn btn-outline btn-success" on:click={() => upload(vod.id)}
+									<button class="btn btn-outline btn-success" onclick={() => upload(vod.id)}
 										>Bereits hochgeladen. Du kannst den Stream aber erneut hochladen</button
 									>
 								{:else}
@@ -183,12 +192,17 @@
 						rechts um dich mit deinem YouTube Account einzuloggen und den Token zu aktualisieren.
 					</div>
 				</div>
-				<button class="btn rounded-full" on:click={youtubeLogin}>
+				<button class="btn rounded-full" onclick={youtubeLogin}>
 					<Icon icon="solar:login-3-bold-duotone" class="text-2xl" /> Login
 				</button>
 			</div>
 			<div class="ms-auto flex flex-row flex-wrap gap-2">
-				<form on:submit|preventDefault={logout}>
+				<form
+					onsubmit={(e) => {
+						e.preventDefault();
+						logout();
+					}}
+				>
 					<button class="btn btn-outline btn-error"
 						><Icon icon="solar:logout-3-bold-duotone" class="text-3xl" /> Log out</button
 					>
