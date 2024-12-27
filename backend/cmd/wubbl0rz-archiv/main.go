@@ -98,7 +98,7 @@ func main() {
 	// public routes
 	app.OnServe().BindFunc(func(se *core.ServeEvent) error {
 		// serves static files from the provided public dir (if exists)
-		se.Router.GET("/*", apis.Static(os.DirFS(assets.ArchiveDir), false))
+		se.Router.GET("/{path...}", apis.Static(os.DirFS(assets.ArchiveDir), false))
 
 		// route for downloading vods and clips
 		se.Router.GET("/download/:type/:id", func(e *core.RequestEvent) error {
