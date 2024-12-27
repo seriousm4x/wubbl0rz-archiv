@@ -110,7 +110,7 @@ var (
 				logger.Error.Println(err)
 				return
 			}
-			vods, err := pb.Dao().FindRecordsByFilter("vod", "id != ''", "-date", 1, 0)
+			vods, err := pb.FindRecordsByFilter("vod", "id != ''", "-date", 1, 0)
 			if err != nil || len(vods) == 0 {
 				contentMsg = ":x: Keine Ergebnisse"
 				_, err := s.InteractionResponseEdit(i.Interaction, &discordgo.WebhookEdit{

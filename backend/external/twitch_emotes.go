@@ -10,7 +10,7 @@ import (
 
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/models"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -28,7 +28,7 @@ type twitchEmoteResponse struct {
 
 // Update all twitch emotes
 func TwitchUpdateEmotes(app *pocketbase.PocketBase) error {
-	settings, err := app.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return err
@@ -70,7 +70,7 @@ func TwitchUpdateEmotes(app *pocketbase.PocketBase) error {
 		return err
 	}
 
-	collection, err := app.Dao().FindCollectionByNameOrId("emote")
+	collection, err := app.FindCollectionByNameOrId("emote")
 	if err != nil {
 		logger.Error.Println(err)
 		return err
@@ -84,12 +84,12 @@ func TwitchUpdateEmotes(app *pocketbase.PocketBase) error {
 			image = respEmote.Images.Url4x
 		}
 
-		emote, err := app.Dao().FindFirstRecordByFilter("emote",
+		emote, err := app.FindFirstRecordByFilter("emote",
 			"name={:name} && provider='twitch'",
 			dbx.Params{"name": respEmote.Name},
 		)
 		if err == sql.ErrNoRows {
-			emote = models.NewRecord(collection)
+			emote = core.NewRecord(collection)
 			emote.Set("name", respEmote.Name)
 			emote.Set("url", image)
 			emote.Set("provider", "twitch")
@@ -100,7 +100,7 @@ func TwitchUpdateEmotes(app *pocketbase.PocketBase) error {
 			emote.Set("outdated", false)
 		}
 
-		if err := app.Dao().SaveRecord(emote); err != nil {
+		if err := app.Save(emote); err != nil {
 			logger.Error.Println(err)
 			return err
 		}

@@ -13,9 +13,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -32,8 +32,8 @@ func YoutubeRegisterHandler(app *pocketbase.PocketBase) {
 	stateStorage = NewStateStorage()
 }
 
-func YoutubeHandleVerify(c echo.Context) error {
-	settings, err := App.Dao().FindFirstRecordByFilter("settings", "id != ''")
+func YoutubeHandleVerify(e *core.RequestEvent) error {
+	settings, err := App.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return apis.NewApiError(http.StatusInternalServerError, "failed to get settings", nil)
@@ -51,18 +51,18 @@ func YoutubeHandleVerify(c echo.Context) error {
 		return apis.NewApiError(http.StatusInternalServerError, "failed to unmarshal bearer token", nil)
 	}
 
-	return c.NoContent(http.StatusOK)
+	return e.NoContent(http.StatusOK)
 }
 
-func YoutubeHandleRevoke(c echo.Context) error {
-	settings, err := App.Dao().FindFirstRecordByFilter("settings", "id != ''")
+func YoutubeHandleRevoke(e *core.RequestEvent) error {
+	settings, err := App.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return apis.NewApiError(http.StatusInternalServerError, "failed to get settings", nil)
 	}
 
 	settings.Set("yt_bearer_token", "")
-	if err := App.Dao().SaveRecord(settings); err != nil {
+	if err := App.Save(settings); err != nil {
 		logger.Error.Println(err)
 		return apis.NewApiError(http.StatusInternalServerError, "failed to delete yt_bearer_token", nil)
 	}
@@ -70,11 +70,11 @@ func YoutubeHandleRevoke(c echo.Context) error {
 	// clear state storage
 	stateStorage = NewStateStorage()
 
-	return c.NoContent(http.StatusOK)
+	return e.NoContent(http.StatusOK)
 }
 
-func YoutubeHandleLogin(c echo.Context) error {
-	settings, err := App.Dao().FindFirstRecordByFilter("settings", "id != ''")
+func YoutubeHandleLogin(e *core.RequestEvent) error {
+	settings, err := App.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return apis.NewApiError(http.StatusInternalServerError, "failed to get settings", nil)
@@ -113,11 +113,11 @@ func YoutubeHandleLogin(c echo.Context) error {
 	// Store the state and code verifier for later verification
 	stateStorage.Store(state, codeVerifier)
 
-	return c.String(http.StatusOK, authURL)
+	return e.String(http.StatusOK, authURL)
 }
 
-func YoutubeHandleCallback(c echo.Context) error {
-	state := c.FormValue("state")
+func YoutubeHandleCallback(e *core.RequestEvent) error {
+	state := e.Request.FormValue("state")
 	codeVerifier, err := stateStorage.GetCodeVerifier(state)
 	if err != nil {
 		return apis.NewApiError(http.StatusInternalServerError, "failed to get code verifier", nil)
@@ -128,24 +128,24 @@ func YoutubeHandleCallback(c echo.Context) error {
 		return apis.NewUnauthorizedError("invalid state parameter", nil)
 	}
 
-	code := c.FormValue("code")
+	code := e.Request.FormValue("code")
 
 	token, err := googleOAuthConfig.Exchange(context.Background(), code, oauth2.SetAuthURLParam("code_verifier", codeVerifier))
 	if err != nil {
 		return apis.NewApiError(http.StatusInternalServerError, "failed to exchange token", nil)
 	}
 
-	settings, err := App.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	settings, err := App.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		return apis.NewApiError(http.StatusInternalServerError, "failed to find settings record", nil)
 	}
 
 	settings.Set("yt_bearer_token", token)
-	if err := App.Dao().SaveRecord(settings); err != nil {
+	if err := App.Save(settings); err != nil {
 		return apis.NewApiError(http.StatusInternalServerError, "unable to save record", nil)
 	}
 
-	return c.Redirect(http.StatusFound, fmt.Sprintf("%s/admin", os.Getenv("PUBLIC_FRONTEND_URL")))
+	return e.Redirect(http.StatusFound, fmt.Sprintf("%s/admin", os.Getenv("PUBLIC_FRONTEND_URL")))
 }
 
 // StateStorage is a simple in-memory storage for state parameters and code verifiers

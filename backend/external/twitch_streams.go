@@ -26,7 +26,7 @@ type TwitchStreamResponse struct {
 
 // Request helix stream from twitch.
 func TwitchGetHelixStreams(app *pocketbase.PocketBase, streams *TwitchStreamResponse) error {
-	settings, err := app.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return err

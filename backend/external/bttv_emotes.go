@@ -8,7 +8,7 @@ import (
 
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/models"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -20,7 +20,7 @@ type bttvEmoteResponse struct {
 }
 
 func BttvUpdateEmotes(app *pocketbase.PocketBase) error {
-	settings, err := app.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return err
@@ -45,19 +45,19 @@ func BttvUpdateEmotes(app *pocketbase.PocketBase) error {
 	var responseJson bttvEmoteResponse
 	json.NewDecoder(resp.Body).Decode(&responseJson)
 
-	collection, err := app.Dao().FindCollectionByNameOrId("emote")
+	collection, err := app.FindCollectionByNameOrId("emote")
 	if err != nil {
 		logger.Error.Println(err)
 		return err
 	}
 
 	for _, respEmote := range responseJson.SharedEmotes {
-		emote, err := app.Dao().FindFirstRecordByFilter("emote",
+		emote, err := app.FindFirstRecordByFilter("emote",
 			"name={:name} && provider='bttv'",
 			dbx.Params{"name": respEmote.Code},
 		)
 		if err == sql.ErrNoRows {
-			emote = models.NewRecord(collection)
+			emote = core.NewRecord(collection)
 			emote.Set("name", respEmote.Code)
 			emote.Set("url", fmt.Sprintf("https://cdn.betterttv.net/emote/%s/3x", respEmote.ID))
 			emote.Set("provider", "bttv")
@@ -68,7 +68,7 @@ func BttvUpdateEmotes(app *pocketbase.PocketBase) error {
 			emote.Set("outdated", false)
 		}
 
-		if err := app.Dao().SaveRecord(emote); err != nil {
+		if err := app.Save(emote); err != nil {
 			logger.Error.Println(err)
 			return err
 		}

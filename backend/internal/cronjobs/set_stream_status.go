@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/models"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/external"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
@@ -19,15 +19,15 @@ func SetStreamStatus(app *pocketbase.PocketBase) error {
 	}
 	isLive := len(streams.Data) > 0
 
-	publicInfos, err := app.Dao().FindFirstRecordByFilter("public_infos", "id != ''")
+	publicInfos, err := app.FindFirstRecordByFilter("public_infos", "id != ''")
 	if err == sql.ErrNoRows {
-		collection, err := app.Dao().FindCollectionByNameOrId("public_infos")
+		collection, err := app.FindCollectionByNameOrId("public_infos")
 		if err != nil {
 			logger.Error.Println(err)
 			return err
 		}
-		publicInfos = models.NewRecord(collection)
-		if err := app.Dao().SaveRecord(publicInfos); err != nil {
+		publicInfos = core.NewRecord(collection)
+		if err := app.Save(publicInfos); err != nil {
 			logger.Error.Println(err)
 			return err
 		}
@@ -42,7 +42,7 @@ func SetStreamStatus(app *pocketbase.PocketBase) error {
 
 	if isLive != publicInfos.GetBool("is_live") {
 		publicInfos.Set("is_live", isLive)
-		if err := app.Dao().SaveRecord(publicInfos); err != nil {
+		if err := app.Save(publicInfos); err != nil {
 			logger.Error.Println(err)
 			return err
 		}

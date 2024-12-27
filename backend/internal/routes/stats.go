@@ -6,14 +6,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/core"
 	"golang.org/x/sync/errgroup"
 )
 
 // Route to gather archive statistics
-func Stats(app *pocketbase.PocketBase, c echo.Context) error {
+func Stats(app *pocketbase.PocketBase, e *core.RequestEvent) error {
 	type chatter struct {
 		Name     string `json:"name"`
 		MsgCount int    `json:"msg_count"`
@@ -51,17 +51,17 @@ func Stats(app *pocketbase.PocketBase, c echo.Context) error {
 
 	// process vods
 	errs.Go(func() error {
-		collection, err := app.Dao().FindCollectionByNameOrId("vod")
+		collection, err := app.FindCollectionByNameOrId("vod")
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]any{
+			return e.JSON(http.StatusInternalServerError, map[string]any{
 				"message": "failed to get vods",
 			})
 		}
 		stats.LastUpdate = collection.Updated.Time().UTC()
 
-		vods, err := app.Dao().FindRecordsByExpr("vod", dbx.HashExp{"publish": true})
+		vods, err := app.FindAllRecords("vod", dbx.HashExp{"publish": true})
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]any{
+			return e.JSON(http.StatusInternalServerError, map[string]any{
 				"message": "failed to get vods",
 			})
 		}
@@ -92,9 +92,9 @@ func Stats(app *pocketbase.PocketBase, c echo.Context) error {
 
 	// process clips
 	errs.Go(func() error {
-		clips, err := app.Dao().FindRecordsByExpr("clip")
+		clips, err := app.FindAllRecords("clip")
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]any{
+			return e.JSON(http.StatusInternalServerError, map[string]any{
 				"message": "failed to get clips",
 			})
 		}
@@ -117,9 +117,9 @@ func Stats(app *pocketbase.PocketBase, c echo.Context) error {
 	// process chatmessages
 
 	errs.Go(func() error {
-		err := app.Dao().DB().NewQuery("select chatmessage.user_name as name, count(chatmessage.id) as msg_count from chatmessage where chatmessage.user_name not in ('nightbot', 'moobot', 'streamlabs', 'streamelements', 'wizebot', 'deepbot', 'coebot', 'phantombot', 'stay_hydrated_bot') group by chatmessage.user_name order by msg_count desc limit 8").All(&stats.Chatters)
+		err := app.DB().NewQuery("select chatmessage.user_name as name, count(chatmessage.id) as msg_count from chatmessage where chatmessage.user_name not in ('nightbot', 'moobot', 'streamlabs', 'streamelements', 'wizebot', 'deepbot', 'coebot', 'phantombot', 'stay_hydrated_bot') group by chatmessage.user_name order by msg_count desc limit 8").All(&stats.Chatters)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]any{
+			return e.JSON(http.StatusInternalServerError, map[string]any{
 				"message": "failed to get chatmessages",
 			})
 		}
@@ -127,8 +127,8 @@ func Stats(app *pocketbase.PocketBase, c echo.Context) error {
 	})
 
 	if err := errs.Wait(); err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
+		return e.String(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, stats)
+	return e.JSON(http.StatusOK, stats)
 }

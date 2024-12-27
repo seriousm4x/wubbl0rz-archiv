@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/models"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -23,8 +23,8 @@ type TwitchHelixGameResponse struct {
 }
 
 // Request helix games from twitch.
-func TwitchGetHelixGames(app *pocketbase.PocketBase, games []*models.Record) ([]TwitchHelixGame, error) {
-	settings, err := app.Dao().FindFirstRecordByFilter("settings", "id != ''")
+func TwitchGetHelixGames(app *pocketbase.PocketBase, games []*core.Record) ([]TwitchHelixGame, error) {
+	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return nil, err
@@ -35,7 +35,7 @@ func TwitchGetHelixGames(app *pocketbase.PocketBase, games []*models.Record) ([]
 	}
 
 	// twitch allows 100 games per request. so we split them in slices of 100 each and request them
-	var divided [][]*models.Record
+	var divided [][]*core.Record
 	chunkSize := 100
 	for i := 0; i < len(games); i += chunkSize {
 		end := i + chunkSize

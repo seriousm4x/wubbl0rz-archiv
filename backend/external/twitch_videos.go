@@ -28,7 +28,7 @@ type TwitchHelixVideoResponse struct {
 
 // Request helix videos from twitch.
 func TwitchGetHelixVideos(app *pocketbase.PocketBase, vods *[]TwitchHelixVideo) error {
-	settings, err := app.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return err

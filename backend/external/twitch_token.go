@@ -19,13 +19,14 @@ type twitchBearerResponse struct {
 
 // Refresh the twitch bearer token if it expires in less than 24 hours.
 func TwitchUpdateBearer(app *pocketbase.PocketBase) error {
-	settings, err := app.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return err
 	}
 
-	if !settings.GetTime("ttv_bearer_expire").IsZero() && settings.GetTime("ttv_bearer_expire").Before(time.Now().Add(24*time.Hour)) {
+	if !settings.GetDateTime("ttv_bearer_expire").Time().IsZero() &&
+		settings.GetDateTime("ttv_bearer_expire").Time().Before(time.Now().Add(24*time.Hour)) {
 		return nil
 	}
 
@@ -65,7 +66,7 @@ func TwitchUpdateBearer(app *pocketbase.PocketBase) error {
 	settings.Set("ttv_bearer_token", respDecoded.AccessToken)
 	settings.Set("ttv_bearer_expire", time.Now().Add(time.Duration(respDecoded.ExpiresIn)*time.Second))
 
-	if err := app.Dao().SaveRecord(settings); err != nil {
+	if err := app.Save(settings); err != nil {
 		logger.Error.Println(err)
 		return err
 	}

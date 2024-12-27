@@ -6,11 +6,9 @@ import (
 	"strings"
 
 	_ "github.com/joho/godotenv/autoload"
-	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/models"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/assets"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/hooks"
@@ -25,6 +23,8 @@ func main() {
 		// probably ran with go run
 		if runtime.GOOS == "windows" {
 			assets.ArchiveDir = "Z:\\Archiv\\media"
+		} else if runtime.GOOS == "darwin" {
+			assets.ArchiveDir = "/Volumes/nas/Archiv/media"
 		} else {
 			assets.ArchiveDir = "/mnt/nas/Archiv/media"
 		}
@@ -32,8 +32,10 @@ func main() {
 		// probably ran with go build
 		if runtime.GOOS == "windows" {
 			assets.ArchiveDir = "Z:\\Archiv\\media"
+		} else if runtime.GOOS == "darwin" {
+			assets.ArchiveDir = "/Volumes/nas/Archiv/media"
 		} else {
-			assets.ArchiveDir = "/var/www/media/"
+			assets.ArchiveDir = "/var/www/media"
 		}
 	}
 
@@ -94,76 +96,71 @@ func main() {
 	})
 
 	// public routes
-	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+	app.OnServe().BindFunc(func(se *core.ServeEvent) error {
 		// serves static files from the provided public dir (if exists)
-		e.Router.GET("/*", apis.StaticDirectoryHandler(os.DirFS(assets.ArchiveDir), false))
+		se.Router.GET("/*", apis.Static(os.DirFS(assets.ArchiveDir), false))
 
 		// route for downloading vods and clips
-		e.Router.GET("/download/:type/:id", func(c echo.Context) error {
-			return routes.Download(app, c)
+		se.Router.GET("/download/:type/:id", func(e *core.RequestEvent) error {
+			return routes.Download(app, e)
 		})
 
 		// route for statistics
-		e.Router.GET("/stats", func(c echo.Context) error {
-			return routes.Stats(app, c)
+		se.Router.GET("/stats", func(e *core.RequestEvent) error {
+			return routes.Stats(app, e)
 		})
 
 		// route for youtube login callback
-		e.Router.GET("/wubbl0rz/youtube/callback",
+		se.Router.GET("/wubbl0rz/youtube/callback",
 			routes.YoutubeHandleCallback)
 
-		return nil
+		return se.Next()
 	})
 
 	// auth routes
-	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+	app.OnServe().BindFunc(func(se *core.ServeEvent) error {
 		// route to verify if youtube bearer token is ok
-		e.Router.GET("/wubbl0rz/youtube/verify",
-			routes.YoutubeHandleVerify,
-			apis.RequireRecordAuth("users"))
+		se.Router.GET("/wubbl0rz/youtube/verify",
+			routes.YoutubeHandleVerify).Bind(apis.RequireAuth("users"))
 
 		// route for youtube to revoke bearer token
-		e.Router.GET("/wubbl0rz/youtube/revoke",
-			routes.YoutubeHandleRevoke,
-			apis.RequireRecordAuth("users"))
+		se.Router.GET("/wubbl0rz/youtube/revoke",
+			routes.YoutubeHandleRevoke).Bind(apis.RequireAuth("users"))
 
 		// route for youtube login
-		e.Router.GET("/wubbl0rz/youtube/login",
-			routes.YoutubeHandleLogin,
-			apis.RequireRecordAuth("users"))
+		se.Router.GET("/wubbl0rz/youtube/login",
+			routes.YoutubeHandleLogin).Bind(apis.RequireAuth("users"))
 
 		// route for vod upload to youtube
-		e.Router.GET("/wubbl0rz/youtube/upload/:id",
-			routes.YoutubeUpload,
-			apis.RequireRecordAuth("users"))
+		se.Router.GET("/wubbl0rz/youtube/upload/:id",
+			routes.YoutubeUpload).Bind(apis.RequireAuth("users"))
 
 		// route for triggering twitch downloads
-		e.Router.GET("/wubbl0rz/trigger/downloads",
-			routes.TriggerTwitchDownloads,
-			apis.RequireAdminAuth())
+		se.Router.GET("/wubbl0rz/trigger/downloads",
+			routes.TriggerTwitchDownloads).Bind(apis.RequireAuth("_superusers"))
 
 		routes.YoutubeRegisterHandler(app)
 
-		return nil
+		return se.Next()
 	})
 
 	// init backend once on start
-	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+	app.OnServe().BindFunc(func(se *core.ServeEvent) error {
 		go func() {
 			if err := hooks.InitBackend(app); err != nil {
 				logger.Fatal.Fatalln(err)
 			}
 		}()
-		return nil
+		return se.Next()
 	})
 
 	// regenerate thumbnail if custom thumb has changed
-	app.OnModelAfterUpdate("vod", "clip").Add(func(e *core.ModelEvent) error {
-		oldRecord := e.Model.(*models.Record).OriginalCopy()
+	app.OnRecordAfterUpdateSuccess("vod", "clip").BindFunc(func(e *core.RecordEvent) error {
+		oldRecord := e.Record.Original()
 		oldCustomThumb := oldRecord.GetString("custom_thumbnail")
-		newCustomThumb := e.Model.(*models.Record).GetString("custom_thumbnail")
+		newCustomThumb := e.Record.GetString("custom_thumbnail")
 		if oldCustomThumb != newCustomThumb {
-			if err := assets.CreateThumbnail(app, []string{e.Model.GetId()}); err != nil {
+			if err := assets.CreateThumbnail(app, []string{e.Record.Id}); err != nil {
 				return err
 			}
 		}

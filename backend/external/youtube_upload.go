@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/models"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/assets"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 	"golang.org/x/oauth2"
@@ -19,9 +19,9 @@ import (
 	"google.golang.org/api/youtube/v3"
 )
 
-func setVodState(app *pocketbase.PocketBase, vod *models.Record, state string) error {
+func setVodState(app *pocketbase.PocketBase, vod *core.Record, state string) error {
 	vod.Set("youtube_upload", state)
-	if err := app.Dao().SaveRecord(vod); err != nil {
+	if err := app.Save(vod); err != nil {
 		logger.Error.Println(err)
 		return err
 	}
@@ -31,7 +31,7 @@ func setVodState(app *pocketbase.PocketBase, vod *models.Record, state string) e
 func getClient(app *pocketbase.PocketBase, scope string) (*http.Client, error) {
 	ctx := context.Background()
 
-	settings, err := app.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return nil, err
@@ -69,7 +69,7 @@ func getClient(app *pocketbase.PocketBase, scope string) (*http.Client, error) {
 func YoutubeUpload(app *pocketbase.PocketBase, id string) error {
 	logger.Debug.Println("[external] youtube upload started for id", id)
 
-	vod, err := app.Dao().FindRecordById("vod", id)
+	vod, err := app.FindRecordById("vod", id)
 	if err != nil {
 		logger.Error.Println(err)
 		return err

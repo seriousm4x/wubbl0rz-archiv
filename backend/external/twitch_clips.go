@@ -38,7 +38,7 @@ func weeksBack(date time.Time, weeks int) time.Time {
 
 // Request helix clips from twitch.
 func TwitchGetHelixClips(app *pocketbase.PocketBase, clips *[]TwitchHelixClip) error {
-	settings, err := app.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return err

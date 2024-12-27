@@ -38,7 +38,7 @@ func InitBackend(app *pocketbase.PocketBase) error {
 
 	// run all cronjobs once
 	cronjobs.SetStreamStatus(app)
-	publicSettings, err := app.Dao().FindFirstRecordByFilter("public_infos", "id != ''")
+	publicSettings, err := app.FindFirstRecordByFilter("public_infos", "id != ''")
 	if err != nil {
 		return err
 	}

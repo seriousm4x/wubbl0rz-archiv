@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/models"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/external"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/assets"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
@@ -84,7 +84,7 @@ func DownloadVods(app *pocketbase.PocketBase) int {
 		return vods_downloaded
 	}
 
-	collection, err := app.Dao().FindCollectionByNameOrId("vod")
+	collection, err := app.FindCollectionByNameOrId("vod")
 	if err != nil {
 		logger.Error.Println(err)
 		return vods_downloaded
@@ -107,11 +107,11 @@ func DownloadVods(app *pocketbase.PocketBase) int {
 		m.Filename = "v" + vod.ID
 
 		// check if vod already in db and update
-		record, err := app.Dao().FindFirstRecordByData("vod", "filename", m.Filename)
+		record, err := app.FindFirstRecordByData("vod", "filename", m.Filename)
 		if err == nil {
 			record.Set("title", vod.Title)
 			record.Set("viewcount", vod.ViewCount)
-			if err := app.Dao().SaveRecord(record); err != nil {
+			if err := app.Save(record); err != nil {
 				logger.Error.Println(err)
 				return vods_downloaded
 			}
@@ -122,7 +122,7 @@ func DownloadVods(app *pocketbase.PocketBase) int {
 		}
 
 		// create new vod
-		newVod := models.NewRecord(collection)
+		newVod := core.NewRecord(collection)
 		newVod.Set("title", vod.Title)
 		newVod.Set("date", vod.CreatedAt)
 		newVod.Set("viewcount", vod.ViewCount)
@@ -167,7 +167,7 @@ func DownloadVods(app *pocketbase.PocketBase) int {
 		newVod.Set("size", m.Size)
 
 		// create vod in database
-		if err := app.Dao().SaveRecord(newVod); err != nil {
+		if err := app.Save(newVod); err != nil {
 			logger.Error.Println(err)
 			if err := os.RemoveAll(segmentsPath); err != nil {
 				logger.Error.Println(err)
@@ -187,13 +187,13 @@ func DownloadVods(app *pocketbase.PocketBase) int {
 	}
 
 	// set timestamp
-	publicInfos, err := app.Dao().FindFirstRecordByFilter("public_infos", "id != ''")
+	publicInfos, err := app.FindFirstRecordByFilter("public_infos", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return vods_downloaded
 	}
 	publicInfos.Set("last_vod_sync", time.Now())
-	if err := app.Dao().SaveRecord(publicInfos); err != nil {
+	if err := app.Save(publicInfos); err != nil {
 		logger.Error.Println(err)
 		return vods_downloaded
 	}
@@ -213,17 +213,17 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 		return clips_downloaded
 	}
 
-	clipCollection, err := app.Dao().FindCollectionByNameOrId("clip")
+	clipCollection, err := app.FindCollectionByNameOrId("clip")
 	if err != nil {
 		logger.Error.Println(err)
 		return clips_downloaded
 	}
-	gameCollection, err := app.Dao().FindCollectionByNameOrId("game")
+	gameCollection, err := app.FindCollectionByNameOrId("game")
 	if err != nil {
 		logger.Error.Println(err)
 		return clips_downloaded
 	}
-	creatorCollection, err := app.Dao().FindCollectionByNameOrId("creator")
+	creatorCollection, err := app.FindCollectionByNameOrId("creator")
 	if err != nil {
 		logger.Error.Println(err)
 		return clips_downloaded
@@ -247,11 +247,11 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 		m.Filename = clip.ID
 
 		// update game
-		game, err := app.Dao().FindFirstRecordByData("game", "ttv_id", clip.GameID)
+		game, err := app.FindFirstRecordByData("game", "ttv_id", clip.GameID)
 		if err == sql.ErrNoRows {
-			game = models.NewRecord(gameCollection)
+			game = core.NewRecord(gameCollection)
 			game.Set("ttv_id", clip.GameID)
-			if err := app.Dao().SaveRecord(game); err != nil {
+			if err := app.Save(game); err != nil {
 				logger.Error.Println(err)
 				return clips_downloaded
 			}
@@ -261,12 +261,12 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 		}
 
 		// get or create creator
-		creator, err := app.Dao().FindFirstRecordByData("creator", "ttv_id", clip.CreatorID)
+		creator, err := app.FindFirstRecordByData("creator", "ttv_id", clip.CreatorID)
 		if err == sql.ErrNoRows {
-			creator = models.NewRecord(creatorCollection)
+			creator = core.NewRecord(creatorCollection)
 			creator.Set("ttv_id", clip.CreatorID)
 			creator.Set("name", clip.CreatorName)
-			if err := app.Dao().SaveRecord(creator); err != nil {
+			if err := app.Save(creator); err != nil {
 				logger.Error.Println(err)
 				return clips_downloaded
 			}
@@ -276,11 +276,11 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 		}
 
 		// check if clip already in db and update
-		record, err := app.Dao().FindFirstRecordByData("clip", "filename", clip.ID)
+		record, err := app.FindFirstRecordByData("clip", "filename", clip.ID)
 		if err == nil {
 			record.Set("title", clip.Title)
 			record.Set("viewcount", clip.ViewCount)
-			if err := app.Dao().SaveRecord(record); err != nil {
+			if err := app.Save(record); err != nil {
 				logger.Error.Println(err)
 				return clips_downloaded
 			}
@@ -288,9 +288,9 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 		}
 
 		// define new clip
-		newClip := models.NewRecord(clipCollection)
+		newClip := core.NewRecord(clipCollection)
 		if clip.VideoID != "" {
-			relatedVod, err := app.Dao().FindFirstRecordByData("vod", "filename", "v"+clip.VideoID)
+			relatedVod, err := app.FindFirstRecordByData("vod", "filename", "v"+clip.VideoID)
 			if err == nil {
 				newClip.Set("vod", relatedVod.Id)
 			} else if err != sql.ErrNoRows {
@@ -343,7 +343,7 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 		newClip.Set("size", m.Size)
 
 		// create clip in database
-		if err := app.Dao().SaveRecord(newClip); err != nil {
+		if err := app.Save(newClip); err != nil {
 			logger.Error.Println(err)
 			return clips_downloaded
 		}
@@ -368,7 +368,7 @@ func DownloadGames(app *pocketbase.PocketBase) {
 	logger.Debug.Println("[cronjob] game download started")
 
 	// get all games from db
-	games, err := app.Dao().FindRecordsByExpr("game")
+	games, err := app.FindAllRecords("game")
 	if err != nil {
 		logger.Error.Println(err)
 		return
@@ -421,7 +421,7 @@ func DownloadGames(app *pocketbase.PocketBase) {
 			return
 		}
 
-		record, err := app.Dao().FindFirstRecordByData("game", "ttv_id", game.ID)
+		record, err := app.FindFirstRecordByData("game", "ttv_id", game.ID)
 		if err != nil {
 			logger.Error.Println(err)
 			return
@@ -430,7 +430,7 @@ func DownloadGames(app *pocketbase.PocketBase) {
 		record.Set("name", game.Name)
 		record.Set("box_art_url", box_art_url)
 
-		if err := app.Dao().SaveRecord(record); err != nil {
+		if err := app.Save(record); err != nil {
 			logger.Error.Println(err)
 			return
 

@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/models"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -28,16 +28,16 @@ func ImportEnv(app *pocketbase.PocketBase) error {
 		return err
 	}
 
-	var settings *models.Record
+	var settings *core.Record
 
-	settings, err := app.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err == sql.ErrNoRows {
-		collection, err := app.Dao().FindCollectionByNameOrId("settings")
+		collection, err := app.FindCollectionByNameOrId("settings")
 		if err != nil {
 			logger.Error.Println(err)
 			return err
 		}
-		settings = models.NewRecord(collection)
+		settings = core.NewRecord(collection)
 	} else if err != nil {
 		logger.Error.Println(err)
 		return err
@@ -46,7 +46,7 @@ func ImportEnv(app *pocketbase.PocketBase) error {
 	settings.Set("ttv_client_id", ttvClientId)
 	settings.Set("ttv_client_secret", ttvClientSecret)
 
-	if err := app.Dao().SaveRecord(settings); err != nil {
+	if err := app.Save(settings); err != nil {
 		logger.Error.Println(err)
 		return err
 	}

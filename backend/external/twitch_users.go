@@ -22,7 +22,7 @@ type TwitchHelixUserResponse struct {
 
 // Request helix user from twitch.
 func TwitchGetHelixUser(app *pocketbase.PocketBase, user *TwitchHelixUserResponse) error {
-	settings, err := app.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return err
@@ -68,7 +68,7 @@ func TwitchGetHelixUser(app *pocketbase.PocketBase, user *TwitchHelixUserRespons
 
 // Update the settings broadcaster_id field
 func TwitchUpdateBroadcasterId(app *pocketbase.PocketBase) error {
-	settings, err := app.Dao().FindFirstRecordByFilter("settings", "id != ''")
+	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
 		return err
@@ -85,7 +85,7 @@ func TwitchUpdateBroadcasterId(app *pocketbase.PocketBase) error {
 
 	settings.Set("broadcaster_id", helixUser.Data[0].ID)
 
-	if err := app.Dao().SaveRecord(settings); err != nil {
+	if err := app.Save(settings); err != nil {
 		logger.Error.Println(err)
 		return err
 	}

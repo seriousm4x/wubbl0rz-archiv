@@ -7,41 +7,41 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/assets"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
 // Route to download vods and clips
-func Download(app *pocketbase.PocketBase, c echo.Context) error {
-	media_type := c.PathParam("type")
-	id := c.PathParam("id")
+func Download(app *pocketbase.PocketBase, e *core.RequestEvent) error {
+	media_type := e.Request.PathValue("type")
+	id := e.Request.PathValue("id")
 
 	var title string
 	var filename string
 
 	switch {
 	case media_type == "vods":
-		vod, err := app.Dao().FindRecordById("vod", id)
+		vod, err := app.FindRecordById("vod", id)
 		if err != nil {
-			return c.JSON(http.StatusNotFound, map[string]any{
+			return e.JSON(http.StatusNotFound, map[string]any{
 				"message": fmt.Sprintf("No vod with id '%s' found.", id),
 			})
 		}
 		title = vod.GetString("title")
 		filename = vod.GetString("filename")
 	case media_type == "clips":
-		clip, err := app.Dao().FindRecordById("clip", id)
+		clip, err := app.FindRecordById("clip", id)
 		if err != nil {
-			return c.JSON(http.StatusNotFound, map[string]any{
+			return e.JSON(http.StatusNotFound, map[string]any{
 				"message": fmt.Sprintf("No clip with id '%s' found.", id),
 			})
 		}
 		title = clip.GetString("title")
 		filename = clip.GetString("filename")
 	default:
-		return c.JSON(http.StatusBadRequest, map[string]any{
+		return e.JSON(http.StatusBadRequest, map[string]any{
 			"message": fmt.Sprintf("'%s' is not a valid media type. Only 'vods' and 'clips' are valid.", media_type),
 		})
 	}
@@ -57,7 +57,7 @@ func Download(app *pocketbase.PocketBase, c echo.Context) error {
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		logger.Error.Println(err)
-		return c.JSON(http.StatusInternalServerError, map[string]any{
+		return e.JSON(http.StatusInternalServerError, map[string]any{
 			"message": "failed to prepare process",
 		})
 	}
@@ -65,16 +65,15 @@ func Download(app *pocketbase.PocketBase, c echo.Context) error {
 
 	if err = cmd.Start(); err != nil {
 		logger.Error.Println(err)
-		return c.JSON(http.StatusInternalServerError, map[string]any{
+		return e.JSON(http.StatusInternalServerError, map[string]any{
 			"message": "failed to execute process",
 		})
 	}
 
 	buf := make([]byte, 1024*1024*10) // 10 MB
 	for {
-		c.Response().Header().Set(echo.HeaderContentType, "video/mp4")
-		c.Response().Header().Add(echo.HeaderContentDisposition,
-			fmt.Sprintf("attachment; filename=%s.mp4", filepath.Clean(title)))
+		e.Response.Header().Set("Content-Type", "video/mp4")
+		e.Response.Header().Add("Content-Disposition", fmt.Sprintf("attachment; filename=%s.mp4", filepath.Clean(title)))
 
 		n, err := stdout.Read(buf)
 		if err == io.EOF {
@@ -83,12 +82,12 @@ func Download(app *pocketbase.PocketBase, c echo.Context) error {
 
 		if n > 0 {
 			chunk := buf[:n]
-			if _, err := c.Response().Writer.Write(chunk); err != nil {
+			if _, err := e.Response.Write(chunk); err != nil {
 				// client disconnected or other error. kill ffmpeg
 				cmd.Process.Kill()
 				break
 			}
-			c.Response().Flush()
+			e.Flush()
 		}
 	}
 

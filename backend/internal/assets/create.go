@@ -12,7 +12,7 @@ import (
 	"sync"
 
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/models"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -36,12 +36,12 @@ func secondsToWebVTTTimecode(seconds int) string {
 }
 
 // Taskes an id and returns the vod/clip record
-func findVodOrClip(app *pocketbase.PocketBase, id string) (*models.Record, error) {
-	var record *models.Record
+func findVodOrClip(app *pocketbase.PocketBase, id string) (*core.Record, error) {
+	var record *core.Record
 	var err error
-	record, err = app.Dao().FindRecordById("vod", id)
+	record, err = app.FindRecordById("vod", id)
 	if err != nil {
-		record, err = app.Dao().FindRecordById("clip", id)
+		record, err = app.FindRecordById("clip", id)
 		if err != nil {
 			logger.Error.Printf("Record for id %s not found: %v", id, err)
 			return record, err
@@ -160,7 +160,7 @@ func CreateSprites(app *pocketbase.PocketBase, ids []string) error {
 		m3u8 := filepath.Join(ArchiveDir, mediaType, fmt.Sprintf("%s%s", record.GetString("filename"), "-segments"), record.GetString("filename")+".m3u8")
 
 		outDir := filepath.Join(ArchiveDir, mediaType, record.GetString("filename")+"-sprites")
-		if err := os.MkdirAll(outDir, 700); err != nil {
+		if err := os.MkdirAll(outDir, 0700); err != nil {
 			logger.Error.Println(err)
 			return err
 		}
@@ -273,7 +273,7 @@ func CreatePreviewThumbnailsSprites(app *pocketbase.PocketBase, ids []string) er
 // Recreates assets for the entire archive forcefully. (Takes long time)
 func CreateAllAssets(app *pocketbase.PocketBase) error {
 	// vods
-	allVods, err := app.Dao().FindRecordsByExpr("vod")
+	allVods, err := app.FindAllRecords("vod")
 	if err != nil {
 		logger.Error.Println(err)
 		return err
@@ -289,7 +289,7 @@ func CreateAllAssets(app *pocketbase.PocketBase) error {
 	}
 
 	// clips
-	allClips, err := app.Dao().FindRecordsByExpr("clip")
+	allClips, err := app.FindAllRecords("clip")
 	if err != nil {
 		logger.Error.Println(err)
 		return err
