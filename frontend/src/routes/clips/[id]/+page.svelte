@@ -24,11 +24,11 @@
 		image: `${PUBLIC_API_URL}/clips/${data.clip.filename}-lg.webp`,
 		updated_time: parseISO(data.clip?.date).toISOString()
 	});
-	let clip = $state(data.clip as RecordModel);
-	let clipsCount = $state(data.clipsCount);
-	let clipPosition = $state(data.clipPosition);
-	let recommendations = $state(data.recommendations);
-	let percentile = $state((clipPosition * 100) / clipsCount);
+	let clip = $derived(data.clip as RecordModel);
+	let clipsCount = $derived(data.clipsCount);
+	let clipPosition = $derived(data.clipPosition);
+	let recommendations = $derived(data.recommendations);
+	let percentile = $derived((clipPosition * 100) / clipsCount);
 	let percentileRounded = $derived(percentile < 1 ? percentile.toFixed(2) : Math.round(percentile));
 
 	onMount(() => {

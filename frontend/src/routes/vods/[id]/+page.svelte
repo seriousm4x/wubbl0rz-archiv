@@ -24,11 +24,11 @@
 	let player: MediaPlayerElement = $state({} as MediaPlayerElement);
 	let currentTime: number = $state(0);
 
-	let vod = $state(data.vod as RecordModel);
-	let vodsCount = $state(data.vodsCount);
-	let vodPosition = $state(data.vodPosition);
-	let recommendations = $state(data.recommendations);
-	let percentile = $state((vodPosition * 100) / vodsCount);
+	let vod = $derived(data.vod as RecordModel);
+	let vodsCount = $derived(data.vodsCount);
+	let vodPosition = $derived(data.vodPosition);
+	let recommendations = $derived(data.recommendations);
+	let percentile = $derived((vodPosition * 100) / vodsCount);
 	let percentileRounded = $derived(percentile < 1 ? percentile.toFixed(2) : Math.round(percentile));
 
 	function copyLink(withTimestamp: boolean) {
