@@ -101,7 +101,7 @@ func main() {
 		se.Router.GET("/{path...}", apis.Static(os.DirFS(assets.ArchiveDir), false))
 
 		// route for downloading vods and clips
-		se.Router.GET("/download/:type/:id", func(e *core.RequestEvent) error {
+		se.Router.GET("/download/{type}/{id}", func(e *core.RequestEvent) error {
 			return routes.Download(app, e)
 		})
 
@@ -132,7 +132,7 @@ func main() {
 			routes.YoutubeHandleLogin).Bind(apis.RequireAuth("users"))
 
 		// route for vod upload to youtube
-		se.Router.GET("/wubbl0rz/youtube/upload/:id",
+		se.Router.GET("/wubbl0rz/youtube/upload/{id}",
 			routes.YoutubeUpload).Bind(apis.RequireAuth("users"))
 
 		// route for triggering twitch downloads
