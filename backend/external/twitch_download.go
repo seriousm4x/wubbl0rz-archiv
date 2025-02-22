@@ -12,7 +12,7 @@ import (
 )
 
 // Builds the download URL for vods/clips.
-// This is a go implementation of streamlink's way build the m3u8.
+// This is a go implementation of streamlink's way to build the m3u8.
 // https://github.com/streamlink/streamlink/blob/master/src/streamlink/plugins/twitch.py
 func BuildDownloadURL(id string, isVod bool) (string, error) {
 	var postBodyString string

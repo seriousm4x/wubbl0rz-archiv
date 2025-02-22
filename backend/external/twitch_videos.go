@@ -38,7 +38,6 @@ func TwitchGetHelixVideos(app *pocketbase.PocketBase, vods *[]TwitchHelixVideo) 
 		return err
 	}
 
-	var videoResponse TwitchHelixVideoResponse
 	url := fmt.Sprintf("https://api.twitch.tv/helix/videos?user_id=%s&type=archive&first=100",
 		settings.GetString("broadcaster_id"))
 
@@ -68,6 +67,7 @@ func TwitchGetHelixVideos(app *pocketbase.PocketBase, vods *[]TwitchHelixVideo) 
 			return err
 		}
 
+		var videoResponse TwitchHelixVideoResponse
 		if err := json.NewDecoder(resp.Body).Decode(&videoResponse); err != nil {
 			logger.Error.Println(err)
 			return err

@@ -53,7 +53,6 @@ func TwitchGetHelixClips(app *pocketbase.PocketBase, clips *[]TwitchHelixClip) e
 	// through that week, then specify the next time range, iterate through that week, and so on until channel creation
 	// date is reached. jeff hates this trick.
 	var helixUser TwitchHelixUserResponse
-	var clipResponse TwitchHelixClipResponse
 
 	if err := TwitchGetHelixUser(app, &helixUser); err != nil {
 		return err
@@ -85,11 +84,12 @@ func TwitchGetHelixClips(app *pocketbase.PocketBase, clips *[]TwitchHelixClip) e
 
 		if resp.StatusCode != http.StatusOK {
 			err := fmt.Errorf("status code was %d", resp.StatusCode)
-			logger.Error.Printf(err.Error())
+			logger.Error.Println(err)
 			logger.Error.Printf("%+v", resp)
 			return err
 		}
 
+		var clipResponse TwitchHelixClipResponse
 		if err := json.NewDecoder(resp.Body).Decode(&clipResponse); err != nil {
 			logger.Error.Println(err)
 			return err
@@ -103,10 +103,12 @@ func TwitchGetHelixClips(app *pocketbase.PocketBase, clips *[]TwitchHelixClip) e
 			weeks += 1
 			newWeek := weeksBack(now, weeks)
 			if newWeek.Before(helixUser.Data[0].CreatedAt) {
+				logger.Debug.Println("[cronjob] clip download channel creation date reached")
 				break
 			}
+			logger.Debug.Printf("[cronjob] clip download current week: %s\n", weeksBack(now, weeks).UTC().Format(time.RFC3339))
 			url = fmt.Sprintf("https://api.twitch.tv/helix/clips?broadcaster_id=%s&first=100&started_at=%s",
-				settings.GetString("broadcaster_id"), weeksBack(now, weeks).UTC().Format(time.RFC3339))
+				settings.GetString("broadcaster_id"), newWeek.UTC().Format(time.RFC3339))
 		}
 	}
 
