@@ -76,9 +76,7 @@ func InitBackend(app *pocketbase.PocketBase) error {
 func deleteEmptyGameRecords(app *pocketbase.PocketBase) error {
 	// delete empty games
 	allEmptyGames, err := app.FindAllRecords("game", dbx.HashExp{
-		"name":        "",
-		"box_art_url": "",
-		"ttv_id":      "",
+		"name": "",
 	})
 	if err != nil {
 		logger.Error.Println(err)
