@@ -1,9 +1,6 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	_ "net/http/pprof"
 	"os"
 	"runtime"
 	"strings"
@@ -22,10 +19,6 @@ import (
 )
 
 func main() {
-	go func() {
-		log.Println(http.ListenAndServe("0.0.0.0:6060", nil))
-	}()
-
 	if strings.HasPrefix(os.Args[0], os.TempDir()) {
 		// probably ran with go run
 		if runtime.GOOS == "windows" {
