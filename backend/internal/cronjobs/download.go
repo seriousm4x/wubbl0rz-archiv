@@ -432,8 +432,7 @@ func DownloadGames(app *pocketbase.PocketBase) {
 
 		if err := app.Save(record); err != nil {
 			logger.Error.Println(err)
-			return
-
+			continue
 		}
 	}
 }
