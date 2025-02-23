@@ -4,10 +4,12 @@ import (
 	"os"
 	"time"
 
+	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/tools/cron"
 	"github.com/seriousm4x/wubbl0rz-archiv/external"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/cronjobs"
+	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
 func InitBackend(app *pocketbase.PocketBase) error {
@@ -64,5 +66,29 @@ func InitBackend(app *pocketbase.PocketBase) error {
 	})
 	scheduler.Start()
 
+	if err := deleteEmptyGameRecords(app); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func deleteEmptyGameRecords(app *pocketbase.PocketBase) error {
+	// delete empty games
+	allEmptyGames, err := app.FindAllRecords("game", dbx.HashExp{
+		"name":        "",
+		"box_art_url": "",
+		"ttv_id":      "",
+	})
+	if err != nil {
+		logger.Error.Println(err)
+		return err
+	}
+	for _, game := range allEmptyGames {
+		if er := app.Delete(game); er != nil {
+			logger.Error.Println(err)
+			return err
+		}
+	}
 	return nil
 }

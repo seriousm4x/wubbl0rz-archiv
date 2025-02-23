@@ -12,8 +12,8 @@ import (
 
 // A twitch helix game
 type TwitchHelixGame struct {
-	ID        string
-	Name      string
+	ID        string `json:"id"`
+	Name      string `json:"name"`
 	BoxArtURL string `json:"box_art_url"`
 }
 
@@ -82,6 +82,8 @@ func TwitchGetHelixGames(app *pocketbase.PocketBase, games []*core.Record) ([]Tw
 			logger.Error.Printf("%+v", resp)
 			return nil, err
 		}
+
+		gameResponse = TwitchHelixGameResponse{}
 
 		if err := json.NewDecoder(resp.Body).Decode(&gameResponse); err != nil {
 			logger.Error.Println(err)

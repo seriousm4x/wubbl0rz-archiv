@@ -390,6 +390,9 @@ func DownloadGames(app *pocketbase.PocketBase) {
 
 	// save to db
 	for _, game := range requestedGames {
+		if game.Name == "" || game.ID == "" || game.BoxArtURL == "" {
+			continue
+		}
 		box_art_url := strings.Replace(game.BoxArtURL, "{width}", "100", 1)
 		box_art_url = strings.Replace(box_art_url, "{height}", "133", 1)
 
@@ -410,7 +413,7 @@ func DownloadGames(app *pocketbase.PocketBase) {
 
 		if resp.StatusCode != http.StatusOK {
 			err := fmt.Errorf("status code was %d", resp.StatusCode)
-			logger.Error.Printf(err.Error())
+			logger.Error.Println(err)
 			logger.Error.Printf("%+v", resp)
 			return
 		}
@@ -436,5 +439,4 @@ func DownloadGames(app *pocketbase.PocketBase) {
 
 		}
 	}
-	return
 }
