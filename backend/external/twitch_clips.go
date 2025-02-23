@@ -53,6 +53,7 @@ func TwitchGetHelixClips(app *pocketbase.PocketBase, clips *[]TwitchHelixClip) e
 	// through that week, then specify the next time range, iterate through that week, and so on until channel creation
 	// date is reached. jeff hates this trick.
 	var helixUser TwitchHelixUserResponse
+	var clipResponse TwitchHelixClipResponse
 
 	if err := TwitchGetHelixUser(app, &helixUser); err != nil {
 		return err
@@ -89,7 +90,8 @@ func TwitchGetHelixClips(app *pocketbase.PocketBase, clips *[]TwitchHelixClip) e
 			return err
 		}
 
-		var clipResponse TwitchHelixClipResponse
+		clipResponse = TwitchHelixClipResponse{}
+
 		if err := json.NewDecoder(resp.Body).Decode(&clipResponse); err != nil {
 			logger.Error.Println(err)
 			return err

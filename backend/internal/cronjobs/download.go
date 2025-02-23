@@ -410,7 +410,7 @@ func DownloadGames(app *pocketbase.PocketBase) {
 
 		if resp.StatusCode != http.StatusOK {
 			err := fmt.Errorf("status code was %d", resp.StatusCode)
-			logger.Error.Printf(err.Error())
+			logger.Error.Println(err)
 			logger.Error.Printf("%+v", resp)
 			return
 		}
@@ -432,9 +432,7 @@ func DownloadGames(app *pocketbase.PocketBase) {
 
 		if err := app.Save(record); err != nil {
 			logger.Error.Println(err)
-			return
-
+			continue
 		}
 	}
-	return
 }
