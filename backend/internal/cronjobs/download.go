@@ -251,6 +251,8 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 		if err == sql.ErrNoRows {
 			game = core.NewRecord(gameCollection)
 			game.Set("ttv_id", clip.GameID)
+			game.Set("name", "Unknown")
+			game.Set("box_art_url", "https://")
 			if err := app.Save(game); err != nil {
 				logger.Error.Println(err)
 				return clips_downloaded
