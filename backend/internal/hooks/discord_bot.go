@@ -202,7 +202,7 @@ var (
 				}
 				return
 			}
-			jsonResp, err := searchRes.MarshalJSON()
+			jsonResp, err := json.Marshal(searchRes)
 			if err != nil {
 				logger.Error.Println(err)
 				return
