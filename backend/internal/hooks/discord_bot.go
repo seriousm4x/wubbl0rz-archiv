@@ -17,22 +17,8 @@ import (
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
-type Vod struct {
-	UUID      string     `json:"uuid"`
-	Title     string     `json:"title"`
-	Date      time.Time  `json:"date"`
-	Filename  string     `json:"filename"`
-	Viewcount int        `json:"viewcount"`
-	Clips     []struct{} `json:"clips"`
-}
-
-type SearchResponse struct {
-	Error  bool  `json:"error"`
-	Result []Vod `json:"result"`
-}
-
 type MeiliVod struct {
-	UUID      string  `json:"uuid"`
+	ID        string  `json:"id"`
 	Title     string  `json:"title"`
 	Date      int64   `json:"date"`
 	Filename  string  `json:"filename"`
@@ -47,11 +33,6 @@ type MeiliTranscriptResponse struct {
 	Hits             []MeiliVod `json:"hits"`
 	TotalHits        int        `json:"totalHits"`
 	ProcessingTimeMs int        `json:"processingTimeMs"`
-}
-
-type UUIDResponse struct {
-	Error  bool `json:"error"`
-	Result Vod  `json:"result"`
 }
 
 type StatsResponse struct {
@@ -234,7 +215,7 @@ var (
 			}
 			results := transcriptResponse.Hits
 			for i, vod := range results {
-				content += fmt.Sprintf("\n## %s [**%s**](<%s/vods/%s?t=%.2f>)", emotes[i], vod.Title, frontendUrl, vod.UUID, vod.Start)
+				content += fmt.Sprintf("\n## %s [**%s**](<%s/vods/%s?t=%.2f>)", emotes[i], vod.Title, frontendUrl, vod.ID, vod.Start)
 				content += fmt.Sprintf("\n:book: %s", vod.Formatted.Text)
 				content += fmt.Sprintf("\n:calendar: <t:%d>\n", vod.Date)
 			}
