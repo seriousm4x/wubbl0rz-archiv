@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import Pagination from '$lib/components/Pagination.svelte';
 	import { toHHMMSS } from '$lib/functions';
@@ -13,7 +13,7 @@
 	import { onMount } from 'svelte';
 
 	let vods: ListResult<RecordModel> = $state({} as ListResult<RecordModel>);
-	let currentPage = $state(parseInt($page.url.searchParams.get('page') || '1'));
+	let currentPage = $state(parseInt(page.url.searchParams.get('page') || '1'));
 	let verified = $state({});
 
 	$effect(() => {

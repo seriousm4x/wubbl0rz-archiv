@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import Card from '$lib/components/Card.svelte';
 	import Player from '$lib/components/Player.svelte';
@@ -32,13 +32,13 @@
 	let percentileRounded = $derived(percentile < 1 ? percentile.toFixed(2) : Math.round(percentile));
 
 	onMount(() => {
-		if ($page.url.searchParams.has('t')) {
-			player.currentTime = parseInt($page.url.searchParams.get('t') || '0');
+		if (page.url.searchParams.has('t')) {
+			player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
 		}
 	});
 
 	function copyLink(withTimestamp: boolean) {
-		const url = new URL($page.url.origin + $page.url.pathname);
+		const url = new URL(page.url.origin + page.url.pathname);
 		if (withTimestamp) {
 			url.searchParams.set('t', currentTime.toFixed(0));
 		}

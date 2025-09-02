@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Icon from '@iconify/svelte';
 
 	const sidebarHome = {
@@ -68,7 +68,7 @@
 					<img
 						src={sidebarHome.icon}
 						alt="{sidebarHome.title} Icon"
-						class="mask mask-squircle h-10 w-10 contrast-[1.3] saturate-[.75] duration-200 group-hover:-rotate-6 group-hover:scale-110 {$page
+						class="mask mask-squircle h-10 w-10 contrast-[1.3] saturate-[.75] duration-200 group-hover:-rotate-6 group-hover:scale-110 {page
 							.url.pathname === sidebarHome.href
 							? ''
 							: sidebarHome.iconInactive}"
@@ -88,7 +88,7 @@
 						></div>
 						<Icon
 							icon={item.icon}
-							class="text-5xl duration-200 group-hover:-rotate-6 group-hover:scale-110 {$page.url.pathname.startsWith(
+							class="text-5xl duration-200 group-hover:-rotate-6 group-hover:scale-110 {page.url.pathname.startsWith(
 								item.href
 							)
 								? item.iconActive

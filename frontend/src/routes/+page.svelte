@@ -85,5 +85,11 @@
 >
 	{#each data.clips?.items as video}
 		<Card {video} />
+	{:else}
+		<div
+			class="card w-full rounded-xl bg-base-200 hover:shadow-lg aspect-video justify-center items-center"
+		>
+			❌ Keine Clips im letzen Monat
+		</div>
 	{/each}
 </div>

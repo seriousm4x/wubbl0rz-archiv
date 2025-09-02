@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { watchHistory, type WatchHistory } from '$lib/stores/localstorage';
 	import Hls from 'hls.js';
@@ -33,8 +33,8 @@
 		thumbnails = `${PUBLIC_API_URL}/${type}/${video.filename}-sprites/${video.filename}.vtt`;
 
 		// set player time to url param
-		if ($page.url.searchParams.has('t')) {
-			player.currentTime = parseInt($page.url.searchParams.get('t') || '0');
+		if (page.url.searchParams.has('t')) {
+			player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
 			return;
 		}
 

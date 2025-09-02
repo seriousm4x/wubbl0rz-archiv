@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import Card from '$lib/components/Card.svelte';
 	import Pagination from '$lib/components/Pagination.svelte';
@@ -15,20 +15,20 @@
 
 	const type = data.items[0]?.collectionName === 'vod' ? 'vods' : 'clips';
 
-	const origin = $page.url.origin;
-	const pathname = $page.url.pathname;
+	const origin = page.url.origin;
+	const pathname = page.url.pathname;
 	let showFilter = $state(false);
 
 	// parse sort from url
-	let paramSort = $page.url.searchParams.get('sort') || '';
+	let paramSort = page.url.searchParams.get('sort') || '';
 	type sort = {
 		value: string;
 		text: string;
 	};
 
 	// parse page from url
-	let currentPage = $state(parseInt($page.url.searchParams.get('page') || `${data.page}`));
-	let oldPage = parseInt($page.url.searchParams.get('page') || `${data.page}`);
+	let currentPage = $state(parseInt(page.url.searchParams.get('page') || `${data.page}`));
+	let oldPage = parseInt(page.url.searchParams.get('page') || `${data.page}`);
 	$effect(() => {
 		// hack to fix search function to trigger in searchValue change
 		if (oldPage !== currentPage) {

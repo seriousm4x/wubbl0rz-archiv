@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { OpenGraph } from '$lib/types/opengraph';
 
 	let { og = $bindable() }: { og: OpenGraph } = $props();
@@ -9,7 +9,7 @@
 	<meta name="description" content={og.description} />
 	<meta property="og:title" content={og.title} />
 	<meta property="og:description" content={og.description} />
-	<meta property="og:url" content={$page.url.toString()} />
+	<meta property="og:url" content={page.url.toString()} />
 	<meta property="og:updated_time" content={og.updated_time} />
 	<meta property="og:image" content={og.image} />
 	<meta property="og:image:url" content={og.image} />
