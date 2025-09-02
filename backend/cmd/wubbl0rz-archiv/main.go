@@ -21,20 +21,22 @@ import (
 func main() {
 	if strings.HasPrefix(os.Args[0], os.TempDir()) {
 		// probably ran with go run
-		if runtime.GOOS == "windows" {
+		switch runtime.GOOS {
+		case "windows":
 			assets.ArchiveDir = "Z:\\Archiv\\media"
-		} else if runtime.GOOS == "darwin" {
+		case "darwin":
 			assets.ArchiveDir = "/Volumes/nas/Archiv/media"
-		} else {
+		default:
 			assets.ArchiveDir = "/mnt/nas/Archiv/media"
 		}
 	} else {
 		// probably ran with go build
-		if runtime.GOOS == "windows" {
+		switch runtime.GOOS {
+		case "windows":
 			assets.ArchiveDir = "Z:\\Archiv\\media"
-		} else if runtime.GOOS == "darwin" {
+		case "darwin":
 			assets.ArchiveDir = "/Volumes/nas/Archiv/media"
-		} else {
+		default:
 			assets.ArchiveDir = "/var/www/media"
 		}
 	}
