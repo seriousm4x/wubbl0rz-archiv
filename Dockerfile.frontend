@@ -14,4 +14,6 @@ WORKDIR /app
 COPY --from=build --chown=node:node /app/build ./build
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/package.json .
+HEALTHCHECK --interval=10s \
+    CMD wget --no-verbose --tries=1 --spider "http://127.0.0.1:3000/healthcheck" || exit 1
 CMD ["node", "./build"]

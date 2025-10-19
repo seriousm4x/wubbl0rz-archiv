@@ -21,6 +21,12 @@ services:
       - 127.0.0.1:7700:7700
     volumes:
       - /mnt/archiv/meili_data:/meili_data
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:7700/health"]
+      interval: 10s
+      timeout: 2s
+      retries: 2
+      start_period: 10s
   frontend:
     container_name: archiv-frontend
     build:

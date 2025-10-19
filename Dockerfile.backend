@@ -11,5 +11,5 @@ USER 1000:1000
 WORKDIR /app
 COPY --from=base /build/wubbl0rz-archiv .
 HEALTHCHECK --interval=10s \
-    CMD wget --no-verbose --tries=1 --spider "http://localhost:8090/api/health" || exit 1
+    CMD curl -fs "http://localhost:8090/api/health" || exit 1
 ENTRYPOINT ["./wubbl0rz-archiv", "serve", "--http", "0.0.0.0:8090"]
