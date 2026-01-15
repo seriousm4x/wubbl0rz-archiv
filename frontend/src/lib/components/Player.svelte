@@ -2,10 +2,9 @@
 	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { watchHistory, type WatchHistory } from '$lib/stores/localstorage';
-	import Hls from 'hls.js';
 	import type { RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
-	import type { HLSProvider, MediaProviderChangeEvent, MediaTimeUpdateEvent } from 'vidstack';
+	import type { MediaTimeUpdateEventDetail } from 'vidstack';
 	import type { MediaPlayerElement } from 'vidstack/elements';
 
 	let {
@@ -24,40 +23,33 @@
 		if (!$watchHistory[type as keyof WatchHistory]) {
 			$watchHistory[type as keyof WatchHistory] = {};
 		}
+
+		if (player) {
+			thumbnails = `${PUBLIC_API_URL}/${type}/${video.filename}-sprites/${video.filename}.vtt`;
+
+			player.addEventListener('time-update', (event: Event) => {
+				const e = event as CustomEvent<MediaTimeUpdateEventDetail>;
+				currentTime = e.detail.currentTime;
+			});
+
+			// set player time to url param
+			if (page.url.searchParams.has('t')) {
+				player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
+				return;
+			}
+
+			// set player time to localstorage history
+			if (type in $watchHistory) {
+				const lsTime = $watchHistory[type as keyof WatchHistory][video.id];
+				if (lsTime !== undefined) {
+					player.currentTime = lsTime;
+				}
+			}
+		}
 	});
 
 	let thumbnails: string = $state('');
 	let type = video.collectionName === 'vod' ? 'vods' : 'clips';
-
-	function onCanPlay() {
-		thumbnails = `${PUBLIC_API_URL}/${type}/${video.filename}-sprites/${video.filename}.vtt`;
-
-		// set player time to url param
-		if (page.url.searchParams.has('t')) {
-			player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
-			return;
-		}
-
-		// set player time to localstorage history
-		if (type in $watchHistory) {
-			const lsTime = $watchHistory[type as keyof WatchHistory][video.id];
-			if (lsTime !== undefined) {
-				player.currentTime = lsTime;
-			}
-		}
-	}
-
-	function onProviderChange(event: MediaProviderChangeEvent) {
-		const provider = event.detail;
-		if (provider && provider.type === 'hls') {
-			(provider as HLSProvider).library = Hls;
-		}
-	}
-
-	function onTimeUpdate(event: MediaTimeUpdateEvent) {
-		currentTime = event.detail.currentTime;
-		$watchHistory[type as keyof WatchHistory][video.id] = currentTime;
-	}
 </script>
 
 <div class="aspect-video overflow-hidden rounded-xl">
@@ -67,9 +59,6 @@
 		src="{PUBLIC_API_URL}/{type}/{video.filename}-segments/{video.filename}.m3u8"
 		crossorigin
 		bind:this={player}
-		oncan-play={onCanPlay}
-		onprovider-change={onProviderChange}
-		ontime-update={onTimeUpdate}
 	>
 		<media-provider>
 			<media-poster class="vds-poster" src="{PUBLIC_API_URL}/{type}/{video.filename}-lg.webp"

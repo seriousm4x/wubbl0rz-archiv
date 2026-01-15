@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { toHHMMSS } from '$lib/functions';
 	import { watchHistory } from '$lib/stores/localstorage';
@@ -16,7 +17,7 @@
 </script>
 
 <a
-	href="/{type}/{video.id}{offset > 0 ? `?t=${offset}` : ''}"
+	href={resolve(`/${type}/${video.id}${offset > 0 ? `?t=${offset}` : ''}`)}
 	class="aspect-video overflow-hidden"
 	onmouseenter={() => (hover = true)}
 	onmouseleave={() => (hover = false)}
@@ -27,7 +28,7 @@
 			loop
 			autoplay
 			transition:fade={{ duration: 250 }}
-			class="absolute left-0 top-0 z-10 h-auto w-full"
+			class="absolute top-0 left-0 z-10 h-auto w-full"
 		>
 			<source
 				src="{PUBLIC_API_URL}/{type}/{video.filename}-preview.webm"
@@ -75,12 +76,12 @@
 				height="430"
 			/>
 		</picture>
-		<div class="absolute bottom-0 right-0 mx-2 my-3 rounded-md bg-base-300 px-1 font-bold">
+		<div class="bg-base-300 absolute right-0 bottom-0 mx-2 my-3 rounded-md px-1 font-bold">
 			{toHHMMSS(video.duration, false)}
 		</div>
 		{#if type in $watchHistory && video.id in $watchHistory[type]}
 			<progress
-				class="progress progress-primary absolute bottom-0 w-full rounded-none bg-base-100"
+				class="progress progress-primary bg-base-100 absolute bottom-0 w-full rounded-none"
 				value={$watchHistory[type][video.id]}
 				max={video.duration}
 			></progress>

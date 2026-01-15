@@ -32,11 +32,11 @@
 <div class="container mx-auto">
 	<h1 class="mb-4 text-4xl font-bold">
 		<span
-			class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
+			class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 			>Livechat</span
 		>
 	</h1>
-	<p class="mb-8 text-sm text-base-content/80">Neue Nachrichten werden automatisch geladen...</p>
+	<p class="text-base-content/80 mb-8 text-sm">Neue Nachrichten werden automatisch geladen...</p>
 	<h2 class="text-xl">Zu behaltende Nachrichten</h2>
 	<div class="flex flex-row flex-wrap gap-4">
 		<input
@@ -62,7 +62,7 @@
 				<span class="loading loading-spinner loading-lg"></span>
 			</div>
 		{:then [emotes, re]}
-			{#each data.items as message}
+			{#each data.items as message, index (index)}
 				<div class="chat chat-start rounded-sm transition duration-100">
 					<div class="chat-header">
 						<span
@@ -85,18 +85,18 @@
 					{#if 'tags' in message && 'reply-parent-msg-body' in message.tags}
 						<div
 							id={message.tags['id']}
-							class="chat-bubble flex scroll-mt-24 flex-col gap-1 transition duration-100 [overflow-wrap:anywhere] hover:shadow-lg"
+							class="chat-bubble flex scroll-mt-24 flex-col gap-1 wrap-anywhere transition duration-100 hover:shadow-lg"
 						>
 							<a
 								href={`#${message.tags['reply-parent-msg-id']}`}
-								class="flex w-fit flex-row items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-xs font-bold text-base-content/80 dark:bg-base-200"
+								class="text-base-content/80 dark:bg-base-200 flex w-fit flex-row items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-xs font-bold"
 							>
 								<div>
-									<Icon icon="solar:chat-square-arrow-bold-duotone" class="text-lg text-primary" />
+									<Icon icon="solar:chat-square-arrow-bold-duotone" class="text-primary text-lg" />
 								</div>
 								{message.tags['reply-parent-display-name']}: {message.tags['reply-parent-msg-body']}
 							</a>
-							<div class="flex flex-row flex-wrap items-center gap-1 [overflow-wrap:anywhere]">
+							<div class="flex flex-row flex-wrap items-center gap-1 wrap-anywhere">
 								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 								{@html replaceEmotesInString(message.message, emotes, re)}
 							</div>
@@ -104,7 +104,7 @@
 					{:else}
 						<div
 							id={message.tags['id']}
-							class="chat-bubble flex scroll-mt-24 flex-row flex-wrap items-center gap-1 text-slate-100 transition duration-100 [overflow-wrap:anywhere] hover:shadow-lg"
+							class="chat-bubble flex scroll-mt-24 flex-row flex-wrap items-center gap-1 wrap-anywhere text-slate-100 transition duration-100 hover:shadow-lg"
 						>
 							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 							{@html replaceEmotesInString(message.message, emotes, re)}
@@ -113,7 +113,7 @@
 				</div>
 			{/each}
 		{:catch}
-			{#each data.items as message}
+			{#each data.items as message, index (index)}
 				<div class="chat chat-start rounded-sm transition duration-100">
 					<div class="chat-header">
 						<span
@@ -135,7 +135,7 @@
 					</div>
 					<div
 						id={message.tags['id']}
-						class="chat-bubble flex scroll-mt-24 flex-row flex-wrap items-center gap-1 text-slate-100 transition duration-100 [overflow-wrap:anywhere] hover:shadow-lg"
+						class="chat-bubble flex scroll-mt-24 flex-row flex-wrap items-center gap-1 wrap-anywhere text-slate-100 transition duration-100 hover:shadow-lg"
 					>
 						{message.message}
 					</div>

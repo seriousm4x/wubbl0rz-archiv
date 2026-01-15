@@ -29,7 +29,7 @@
 
 <h1 class="mb-4 text-4xl font-bold md:ms-3 md:mt-10">
 	<span
-		class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
+		class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 		>Neue Streams</span
 	>
 </h1>
@@ -37,7 +37,7 @@
 	class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
 >
 	<div
-		class="absolute left-0 top-0 -z-10 aspect-video h-auto w-full bg-cover bg-center opacity-40 blur-2xl"
+		class="absolute top-0 left-0 -z-10 aspect-video h-auto w-full bg-cover bg-center opacity-40 blur-2xl"
 	>
 		<img
 			src={data.new?.items?.[0]?.filename
@@ -50,40 +50,40 @@
 		/>
 	</div>
 	{#if showHero && data.new?.items?.length > 0}
-		{#each data.new?.items?.filter((vod) => vod !== data.new?.items?.[0]) as video}
+		{#each data.new?.items?.filter((vod) => vod !== data.new?.items?.[0]) as video, index (index)}
 			<Card {video} />
 		{/each}
 	{:else}
-		{#each data.new?.items as video}
+		{#each data.new?.items as video, index (index)}
 			<Card {video} />
 		{/each}
 	{/if}
 </div>
 
-<h1 class="mb-4 ms-3 mt-10 text-4xl font-bold">
+<h1 class="ms-3 mt-10 mb-4 text-4xl font-bold">
 	<span
-		class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
+		class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 		>Beliebte Streams</span
 	>
 </h1>
 <div
 	class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
 >
-	{#each data.popular?.items as video}
+	{#each data.popular?.items as video, index (index)}
 		<Card {video} />
 	{/each}
 </div>
 
-<h1 class="mb-4 ms-3 mt-10 text-4xl font-bold">
+<h1 class="ms-3 mt-10 mb-4 text-4xl font-bold">
 	<span
-		class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
+		class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 		>Top Clips des Monats</span
 	>
 </h1>
 <div
 	class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
 >
-	{#each data.clips?.items as video}
+	{#each data.clips?.items as video, index (index)}
 		<Card {video} />
 	{:else}
 		<div

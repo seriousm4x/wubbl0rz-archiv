@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import Pagination from '$lib/components/Pagination.svelte';
@@ -20,10 +21,12 @@
 		getVods(currentPage);
 	});
 	$effect(() => {
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		if (browser) goto(`/admin?page=${currentPage}`);
 	});
 
 	onMount(async () => {
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		if (!$pb.authStore.isValid) goto('/login');
 
 		$pb.collection('vod').subscribe('*', (data) => {
@@ -80,6 +83,7 @@
 		})
 			.then((resp) => resp.text())
 			.then((url) => {
+				// eslint-disable-next-line svelte/no-navigation-without-resolve
 				goto(url);
 			});
 	}
@@ -94,14 +98,14 @@
 
 	function logout() {
 		$pb.authStore.clear();
-		goto('/login');
+		goto(resolve('/login'));
 	}
 </script>
 
 <div class="container mx-auto flex flex-col gap-4">
 	<h1 class="text-4xl font-bold">
 		<span
-			class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
+			class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 			>Admin</span
 		>
 	</h1>
@@ -127,7 +131,7 @@
 				</form>
 			</div>
 			{#if vods}
-				{#each vods.items as vod}
+				{#each vods.items as vod, index (index)}
 					<div
 						class="collapse {vod.youtube_upload === 'done'
 							? 'bg-green-500/30'
@@ -137,7 +141,7 @@
 					>
 						<input type="checkbox" />
 						<div class="collapse-title">
-							<p class="break-all text-xl font-medium">{vod.title}</p>
+							<p class="text-xl font-medium break-all">{vod.title}</p>
 							<p class="flex flex-row flex-wrap gap-1">
 								<span class="badge badge-neutral"
 									><span class="me-1 font-bold">Datum:</span>{parseISO(vod.date).toLocaleDateString(

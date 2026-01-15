@@ -60,13 +60,11 @@
 
 	// form elements
 	let searchValue: string = $state('');
-	let selectedSort: sort = $state({} as sort);
-	$effect(() => {
-		selectedSort =
-			sorts.find((sort) => {
-				return sort.value === paramSort;
-			}) || sorts[0];
-	});
+	let selectedSort: sort = $derived(
+		sorts.find((sort) => {
+			return sort.value === paramSort;
+		}) || sorts[0]
+	);
 	let dateFrom: string = $state('');
 	let dateTo: string = $state('');
 
@@ -97,6 +95,7 @@
 		url.searchParams.append('filter', filter.join(' && ') || '');
 		url.searchParams.append('sort', `${ordering}${selectedSort.value}`);
 		url.searchParams.append('page', page.toString());
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		goto(url);
 		currentPage = page;
 	}
@@ -106,7 +105,7 @@
 	<div class="flex flex-row items-center justify-between">
 		<div class="w-full text-4xl font-bold">
 			<span
-				class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
+				class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 				>{title}</span
 			>
 		</div>
@@ -128,22 +127,22 @@
 		>
 			<div class="flex flex-col flex-wrap justify-end gap-2 md:flex-row">
 				<input
-					class="input w-full rounded-full border-base-content/20 bg-base-300/50 text-base-content/50 drop-shadow-md transition duration-200 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content md:max-w-lg"
+					class="input border-base-content/20 bg-base-300/50 text-base-content/50 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content w-full rounded-full drop-shadow-md transition duration-200 md:max-w-lg"
 					{placeholder}
 					bind:value={searchValue}
 				/>
 				<div class="join rounded-full">
 					<span
-						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
+						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
 					>
 						Sortieren
 					</span>
 					<select
-						class="join-item select rounded-e-full border-base-200/70 bg-base-200"
+						class="join-item select border-base-200/70 bg-base-200 rounded-e-full"
 						aria-label="Sortieren"
 						bind:value={selectedSort}
 					>
-						{#each sorts as sort}
+						{#each sorts as sort, index (index)}
 							<option value={sort} selected={sort === selectedSort}>{sort.text}</option>
 						{/each}
 					</select>
@@ -170,7 +169,7 @@
 				</div>
 				<div class="join rounded-full">
 					<span
-						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
+						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
 					>
 						Von
 					</span>
@@ -182,7 +181,7 @@
 				</div>
 				<div class="join rounded-full">
 					<span
-						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
+						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
 					>
 						Bis
 					</span>
@@ -205,7 +204,7 @@
 		class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
 	>
 		<div
-			class="transition- absolute left-0 top-0 -z-10 aspect-video h-auto w-full bg-cover bg-center opacity-40 blur-2xl duration-200"
+			class="transition- absolute top-0 left-0 -z-10 aspect-video h-auto w-full bg-cover bg-center opacity-40 blur-2xl duration-200"
 		>
 			<img
 				src={data.items[0]?.filename
@@ -215,7 +214,7 @@
 				class="h-auto w-full"
 			/>
 		</div>
-		{#each data.items as video}
+		{#each data.items as video, index (index)}
 			<Card {video} />
 		{:else}
 			Keine Ergebnisse

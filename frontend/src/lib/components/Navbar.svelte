@@ -102,10 +102,10 @@
 		for="menu-drawer"
 		class="btn btn-ghost mask drawer-button mask-squircle flex-nowrap p-0 md:hidden"
 	>
-		<Icon icon="solar:menu-dots-square-bold-duotone" class="text-5xl text-primary" />
+		<Icon icon="solar:menu-dots-square-bold-duotone" class="text-primary text-5xl" />
 	</label>
 	<button
-		class="input w-full cursor-pointer rounded-full border-base-content/20 bg-base-300/50 text-base-content/50 drop-shadow-md transition duration-200 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content md:max-w-lg"
+		class="input border-base-content/20 bg-base-300/50 text-base-content/50 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content w-full cursor-pointer rounded-full drop-shadow-md transition duration-200 md:max-w-lg"
 		onclick={showModal}
 	>
 		<span>Suchen</span>
@@ -118,13 +118,13 @@
 	onclose={onModalClose}
 >
 	<div
-		class="modal-box flex h-full max-h-full max-w-6xl flex-col items-center border border-base-content/20 bg-base-300/90 p-0 backdrop-blur-md md:mt-20 md:h-4/5"
+		class="modal-box border-base-content/20 bg-base-300/90 flex h-full max-h-full max-w-6xl flex-col items-center border p-0 backdrop-blur-md md:mt-20 md:h-4/5"
 	>
 		<div class="flex w-full flex-col gap-4 p-6">
 			<input
 				type="text"
 				placeholder="Suchen"
-				class="input w-full rounded-full border-base-content/20 bg-base-300/50 drop-shadow-md transition duration-200 hover:border-base-content/50 hover:bg-base-300/80"
+				class="input border-base-content/20 bg-base-300/50 hover:border-base-content/50 hover:bg-base-300/80 w-full rounded-full drop-shadow-md transition duration-200"
 				bind:value={searchText}
 			/>
 			<div class="flex flex-row flex-wrap gap-4">
@@ -148,16 +148,16 @@
 				</div>
 				<div class="join rounded-full">
 					<span
-						class="join-item flex items-center justify-center border-base-200/70 bg-base-100 px-4"
+						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
 					>
 						Sortieren
 					</span>
 					<select
-						class="join-item select rounded-e-full border-base-200/70 bg-base-200"
+						class="join-item select border-base-200/70 bg-base-200 rounded-e-full"
 						aria-label="Sortieren"
 						bind:value={selectedSort}
 					>
-						{#each sorts as sort}
+						{#each sorts as sort, index (index)}
 							<option value={sort} selected={sort === selectedSort}>{sort.text}</option>
 						{/each}
 					</select>
@@ -186,7 +186,7 @@
 				</div>
 			</div>
 		</div>
-		<hr class="w-full rounded border-base-content/20" />
+		<hr class="border-base-content/20 w-full rounded" />
 		<div class="flex h-full w-full flex-col gap-4 overflow-y-scroll p-6">
 			{#if searchText}
 				{#await client.index(meiliIndex).search(searchText, searchConfig)}
@@ -201,7 +201,7 @@
 						{result.totalHits} Ergebnisse in {result.processingTimeMs}ms
 					</p>
 					<div class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-						{#each result.hits as hit}
+						{#each result.hits as hit, index (index)}
 							<SearchResult {hit} searchIn={meiliIndex} />
 						{/each}
 					</div>

@@ -1,20 +1,25 @@
-@import url(./fonts.css);
+@import url(./fonts.css) layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-body {
-	font-family:
-		'Poppins',
-		system-ui,
-		-apple-system,
-		BlinkMacSystemFont,
-		'Segoe UI',
-		Roboto,
-		Oxygen,
-		Ubuntu,
-		Cantarell,
-		'Helvetica Neue',
-		sans-serif;
+@plugin 'daisyui';
+
+@plugin 'daisyui/theme' {
+	name: 'light';
+	default: true;
+	--color-primary: #9147ff;
+	--color-primary-content: #ffffff;
+	--color-secondary: #1f1b27;
+}
+
+@plugin 'daisyui/theme' {
+	name: 'dark';
+	default: true;
+	--color-primary: #9147ff;
+	--color-primary-content: #ffffff;
+	--color-secondary: #1f1b27;
+	--color-base-100: #1f1f23;
+	--color-base-200: #18181b;
+	--color-base-300: #0e0e10;
+	--color-base-content: #e5e5e5;
 }

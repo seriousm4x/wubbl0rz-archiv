@@ -15,7 +15,7 @@
 	{#if currentPage > 1}
 		<button class="btn join-item" onclick={() => (currentPage = 1)}>Erste</button>
 	{/if}
-	{#each range(1, totalPages) as i}
+	{#each range(1, totalPages) as i, index (index)}
 		{#if i <= currentPage + 3 && i >= currentPage - 3}
 			{#if currentPage == i}
 				<button class="btn join-item btn-active" onclick={() => (currentPage = i)}>{i}</button>

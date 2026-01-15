@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import VideoThumbnail from '$lib/components/VideoThumbnail.svelte';
 	import { toHHMMSS } from '$lib/functions';
 	import { formatDistance, fromUnixTime } from 'date-fns';
@@ -15,10 +16,10 @@
 	const offset = searchIn === 'transcripts' ? hit.start : 0;
 </script>
 
-<div class="card w-full overflow-hidden rounded-xl bg-base-200 transition hover:shadow-lg">
+<div class="card bg-base-200 w-full overflow-hidden rounded-xl transition hover:shadow-lg">
 	<VideoThumbnail {video} isVod={true} {offset} />
 	<div class="card-body gap-1 p-4">
-		<a href="/vods/{video.id}{offset > 0 ? `?t=${offset}` : ''}">
+		<a href={resolve(`/vods/${video.id}${offset > 0 ? `?t=${offset}` : ''}`)}>
 			{#if searchIn === 'vods'}
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				<h2 class="text-md matched-string font-bold">{@html hit?._formatted?.title}</h2>
@@ -36,8 +37,8 @@
 		</p>
 		{#if searchIn === 'transcripts'}
 			<a
-				class="matched-string h-full rounded-lg bg-base-300 p-2 font-mono text-sm font-medium hover:shadow-md"
-				href="/vods/{hit.id}{offset > 0 ? `?t=${offset}` : ''}"
+				class="matched-string bg-base-300 h-full rounded-lg p-2 font-mono text-sm font-medium hover:shadow-md"
+				href={resolve(`/vods/${video.id}${offset > 0 ? `?t=${offset}` : ''}`)}
 			>
 				<span class="underline">{toHHMMSS(hit.start, false)}</span>:
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->

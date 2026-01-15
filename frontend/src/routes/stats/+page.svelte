@@ -49,7 +49,7 @@
 				Pocket<span class="font-bold">Base</span>
 			</span>
 		</h1>
-		<div class="stats stats-vertical w-full bg-base-200 shadow xl:stats-horizontal">
+		<div class="stats stats-vertical bg-base-200 xl:stats-horizontal w-full shadow">
 			<div class="stat">
 				<div class="stat-figure text-primary">
 					<Icon icon="solar:videocamera-record-bold-duotone" class="text-5xl" />
@@ -118,7 +118,7 @@
 				meili<span class="font-light">search</span>
 			</span>
 		</h1>
-		<div class="stats stats-vertical w-full bg-base-200 shadow xl:stats-horizontal">
+		<div class="stats stats-vertical bg-base-200 xl:stats-horizontal w-full shadow">
 			<div class="stat">
 				<div class="stat-figure text-emerald-500">
 					<Icon icon="solar:subtitles-bold-duotone" class="text-5xl" />
@@ -158,12 +158,12 @@
 		</div>
 		<h1 class="mt-8 text-4xl font-bold">
 			<span
-				class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
+				class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 				>Top Chatter</span
 			>
 		</h1>
 		<div class="overflow-x-auto">
-			<table class="table table-sm">
+			<table class="table-sm table">
 				<!-- head -->
 				<thead>
 					<tr>
@@ -172,7 +172,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each data.stats.chatters as chatter}
+					{#each data.stats.chatters as chatter, index (index)}
 						<tr class="hover">
 							<td>{chatter.name}</td>
 							<td>{chatter.msg_count.toLocaleString('de-DE')}</td>
@@ -182,7 +182,7 @@
 			</table>
 		</div>
 		<h1 class="mt-8 flex flex-row flex-wrap items-center gap-4 text-4xl font-bold drop-shadow-md">
-			<span class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent">
+			<span class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent">
 				Emotes
 			</span>
 			<span class="badge badge-primary">{data.emotes.length}</span>
@@ -192,7 +192,7 @@
 			<span class="badge badge-neutral">{sevenTv.length}</span>
 		</h1>
 		<div class="flex flex-row flex-wrap gap-2">
-			{#each sevenTv as emote}
+			{#each sevenTv as emote, index (index)}
 				<div title={emote.name}>
 					<img src={emote.url} alt={emote.name} class="h-14" loading="lazy" title={emote.name} />
 				</div>
@@ -205,7 +205,7 @@
 			<span class="badge badge-neutral">{bttv.length}</span>
 		</h1>
 		<div class="flex flex-row flex-wrap gap-2">
-			{#each bttv as emote}
+			{#each bttv as emote, index (index)}
 				<div title={emote.name}>
 					<img src={emote.url} alt={emote.name} class="h-14" loading="lazy" />
 				</div>
@@ -218,7 +218,7 @@
 			<span class="badge badge-neutral">{ffz.length}</span>
 		</h1>
 		<div class="flex flex-row flex-wrap gap-2">
-			{#each ffz as emote}
+			{#each ffz as emote, index (index)}
 				<div title={emote.name}>
 					<img src={emote.url} alt={emote.name} class="h-14" loading="lazy" />
 				</div>
@@ -231,7 +231,7 @@
 			<span class="badge badge-neutral">{twitch.length}</span>
 		</h1>
 		<div class="flex flex-row flex-wrap gap-2">
-			{#each twitch as emote}
+			{#each twitch as emote, index (index)}
 				<div title={emote.name}>
 					<img src={emote.url} alt={emote.name} class="h-14" loading="lazy" />
 				</div>

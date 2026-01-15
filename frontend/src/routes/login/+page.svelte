@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { pb } from '$lib/stores/pocketbase';
 
 	let username: string;
@@ -11,7 +12,7 @@
 			.collection('users')
 			.authWithPassword(username, password)
 			.then(() => {
-				goto('/admin');
+				goto(resolve('/admin'));
 			})
 			.catch((e) => {
 				error = e;

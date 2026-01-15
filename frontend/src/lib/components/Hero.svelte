@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import Icon from '@iconify/svelte';
 	import { formatDistance, parseISO } from 'date-fns';
@@ -12,19 +13,19 @@
 
 <div class="flex items-center justify-center">
 	<div
-		class="hero relative aspect-video max-h-[45vh] min-h-[20rem] max-w-[90rem] place-items-center justify-items-end overflow-hidden rounded-xl border-2 border-base-100/20 shadow-md transition duration-200 hover:shadow-2xl"
+		class="hero border-base-100/20 relative aspect-video max-h-[45vh] min-h-80 max-w-360 place-items-center justify-items-end overflow-hidden rounded-xl border-2 shadow-md transition duration-200 hover:shadow-2xl"
 		role="none"
 		onmouseenter={() => (hover = true)}
 		onmouseleave={() => (hover = false)}
 	>
-		<a href="/vods/{vod.id}" class="h-full w-full">
+		<a href={resolve(`/vods/${vod.id}`)} class="h-full w-full">
 			{#if hover}
 				<video
 					muted
 					loop
 					autoplay
 					transition:fade={{ duration: 250 }}
-					class="absolute left-0 top-0 z-10 h-auto w-full"
+					class="absolute top-0 left-0 z-10 h-auto w-full"
 				>
 					<source
 						src="{PUBLIC_API_URL}/vods/{vod.filename}-preview.webm"
@@ -45,10 +46,10 @@
 			></div>
 		</a>
 		<div class="hero-content p-0">
-			<div class="card me-4 w-fit max-w-xl bg-base-100/80 shadow-xl backdrop-blur-sm xl:me-16">
+			<div class="card bg-base-100/80 me-4 w-fit max-w-xl shadow-xl backdrop-blur-sm xl:me-16">
 				<div class="card-body p-5">
 					<h1 class="card-title text-2xl font-extrabold xl:text-4xl">
-						<span class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent"
+						<span class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent"
 							>Aktueller Stream</span
 						>
 					</h1>
@@ -64,7 +65,9 @@
 						})}
 					</p>
 					<div class="card-actions justify-end">
-						<a class="btn btn-primary btn-sm border-none hover:bg-purple-700" href="/vods/{vod.id}"
+						<a
+							class="btn btn-primary btn-sm border-none hover:bg-purple-700"
+							href={resolve(`/vods/${vod.id}`)}
 							>Jetzt ansehen
 							<Icon icon="solar:alt-arrow-right-bold-duotone" class="text-3xl" />
 						</a>

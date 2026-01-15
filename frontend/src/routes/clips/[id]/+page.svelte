@@ -49,16 +49,16 @@
 <SEO bind:og />
 
 <div
-	class="absolute left-0 top-0 -z-10 aspect-video h-full w-full bg-cover bg-center opacity-10 blur-2xl"
+	class="absolute top-0 left-0 -z-10 aspect-video h-full w-full bg-cover bg-center opacity-10 blur-2xl"
 	style="background-image: url('{PUBLIC_API_URL}/clips/{clip.filename}-lg.webp');"
 ></div>
-<div class="mx-auto flex max-w-[120rem] flex-col gap-8 xl:flex-row">
+<div class="mx-auto flex max-w-480 flex-col gap-8 xl:flex-row">
 	<div class="flex flex-col gap-4 xl:basis-4/5">
 		<Player bind:player bind:currentTime video={clip} />
 		<h1 class="text-4xl font-bold">
 			{clip.title}
 		</h1>
-		<div class="stats stats-vertical w-full bg-base-200 shadow lg:stats-horizontal">
+		<div class="stats stats-vertical bg-base-200 lg:stats-horizontal w-full shadow">
 			<div class="stat">
 				<div class="stat-title text-lg">Geclippt am</div>
 				<div class="stat-value text-2xl">
@@ -139,7 +139,7 @@
 			>
 				<a
 					href="{PUBLIC_API_URL}/download/clips/{clip.id}"
-					class="btn rounded-xl bg-gradient-to-r shadow transition duration-200 hover:shadow-lg"
+					class="btn rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
 					aria-label="link"
 				>
 					<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download
@@ -151,14 +151,14 @@
 					<label
 						for="btn-share"
 						tabindex="-1"
-						class="btn rounded-xl border-none bg-gradient-to-r shadow transition duration-200 hover:shadow-lg"
+						class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
 					>
 						<Icon icon="solar:share-bold-duotone" class="text-2xl text-violet-500" /> Teilen
 					</label>
 					<ul
 						id="btn-share"
 						tabindex="-1"
-						class="menu dropdown-content z-[1] rounded-box bg-base-200 p-2 shadow"
+						class="menu dropdown-content rounded-box bg-base-200 z-1 p-2 shadow"
 					>
 						<li>
 							<button onclick={() => copyLink(false)}>Link kopieren</button>
@@ -176,7 +176,7 @@
 			{#if clip['expand']['vod']}
 				<h2 class="text-3xl font-bold">
 					<span
-						class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
+						class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 						>Clip stammt aus diesem Stream</span
 					>
 				</h2>
@@ -189,12 +189,12 @@
 	<div class="hidden xl:flex xl:basis-1/5 xl:flex-col xl:gap-4">
 		<h2 class="text-3xl font-bold">
 			<span
-				class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
+				class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 				>Empfohlene Clips</span
 			>
 		</h2>
 		<div class="grid grid-flow-row-dense grid-cols-1 gap-4">
-			{#each recommendations as video}
+			{#each recommendations as video, index (index)}
 				<Card {video} />
 			{:else}
 				Keine Ergebnisse
@@ -204,12 +204,12 @@
 	<div class="flex flex-col gap-4 xl:hidden">
 		<h2 class="text-3xl font-bold">
 			<span
-				class="bg-gradient-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
+				class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
 				>Empfohlene Clips</span
 			>
 		</h2>
 		<div class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-			{#each recommendations as video}
+			{#each recommendations as video, index (index)}
 				<Card {video} />
 			{:else}
 				Keine Ergebnisse
