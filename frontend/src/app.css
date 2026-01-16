@@ -1,25 +1,11 @@
-@import url(./fonts.css) layer(base);
+@import url(./fonts.css);
 
 @import 'tailwindcss';
 
-@plugin 'daisyui';
-
-@plugin 'daisyui/theme' {
-	name: 'light';
-	default: true;
-	--color-primary: #9147ff;
-	--color-primary-content: #ffffff;
-	--color-secondary: #1f1b27;
+@theme {
+	--default-font-family: 'Poppins', var(--font-sans);
 }
 
-@plugin 'daisyui/theme' {
-	name: 'dark';
-	default: true;
-	--color-primary: #9147ff;
-	--color-primary-content: #ffffff;
-	--color-secondary: #1f1b27;
-	--color-base-100: #1f1f23;
-	--color-base-200: #18181b;
-	--color-base-300: #0e0e10;
-	--color-base-content: #e5e5e5;
+@plugin 'daisyui' {
+	themes: dark --default;
 }

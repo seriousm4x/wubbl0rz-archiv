@@ -131,14 +131,14 @@
 					{placeholder}
 					bind:value={searchValue}
 				/>
-				<div class="join rounded-full">
+				<div class="join -furoundedll">
 					<span
-						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
+						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center rounded-s-full px-4"
 					>
 						Sortieren
 					</span>
 					<select
-						class="join-item select border-base-200/70 bg-base-200 rounded-e-full"
+						class="join-item select border-base-200/70 bg-base-200"
 						aria-label="Sortieren"
 						bind:value={selectedSort}
 					>
@@ -158,7 +158,7 @@
 					</div>
 					<div title="Absteigend">
 						<input
-							class="btn join-item"
+							class="btn join-item rounded-e-full"
 							type="radio"
 							name="options"
 							aria-label="&#9660;"
@@ -167,27 +167,27 @@
 						/>
 					</div>
 				</div>
-				<div class="join rounded-full">
+				<div class="join">
 					<span
-						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
+						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center rounded-s-full px-4"
 					>
 						Von
 					</span>
 					<input
 						type="date"
-						class="input join-item border-base-200/70 bg-base-200"
+						class="input join-item border-base-200/70 bg-base-200 rounded-e-full"
 						bind:value={dateFrom}
 					/>
 				</div>
 				<div class="join rounded-full">
 					<span
-						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
+						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center rounded-s-full px-4"
 					>
 						Bis
 					</span>
 					<input
 						type="date"
-						class="input join-item border-base-200/70 bg-base-200"
+						class="input join-item border-base-200/70 bg-base-200 rounded-e-full"
 						bind:value={dateTo}
 					/>
 				</div>
