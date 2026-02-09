@@ -128,9 +128,9 @@
 				bind:value={searchText}
 			/>
 			<div class="flex flex-row flex-wrap gap-4">
-				<div class="join rounded-full">
+				<div class="join">
 					<input
-						class="btn join-item btn-sm bg-base-100 md:btn-md"
+						class="btn join-item btn-sm bg-base-100 md:btn-md rounded-s-full"
 						type="radio"
 						name="searchIn"
 						aria-label="Transcripts"
@@ -138,7 +138,7 @@
 						bind:group={meiliIndex}
 					/>
 					<input
-						class="btn join-item btn-sm bg-base-100 md:btn-md"
+						class="btn join-item btn-sm bg-base-100 md:btn-md rounded-e-full"
 						type="radio"
 						name="searchIn"
 						aria-label="Streamtitel"
@@ -146,9 +146,9 @@
 						bind:group={meiliIndex}
 					/>
 				</div>
-				<div class="join rounded-full">
+				<div class="join">
 					<span
-						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center px-4"
+						class="join-item border-base-200/70 bg-base-100 flex items-center justify-center rounded-s-full px-4"
 					>
 						Sortieren
 					</span>

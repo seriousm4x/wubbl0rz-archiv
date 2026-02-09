@@ -53,7 +53,7 @@
 		font-weight: bold;
 		border-radius: 5px;
 		padding: 0.1rem;
-		color: white;
-		background-color: rgb(139 92 246 / var(--tw-bg-opacity));
+		color: var(--color-warning-content);
+		background-color: var(--color-warning);
 	}
 </style>

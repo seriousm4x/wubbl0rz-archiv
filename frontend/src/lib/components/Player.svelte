@@ -30,6 +30,7 @@
 			player.addEventListener('time-update', (event: Event) => {
 				const e = event as CustomEvent<MediaTimeUpdateEventDetail>;
 				currentTime = e.detail.currentTime;
+				$watchHistory[type as keyof WatchHistory][video.id] = currentTime;
 			});
 
 			// set player time to url param
