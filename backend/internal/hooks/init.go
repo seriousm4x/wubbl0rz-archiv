@@ -6,7 +6,6 @@ import (
 
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/tools/cron"
 	"github.com/seriousm4x/wubbl0rz-archiv/external"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/cronjobs"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
@@ -54,7 +53,8 @@ func InitBackend(app *pocketbase.PocketBase) error {
 	}
 
 	// schedule cronjobs
-	scheduler := cron.New()
+	scheduler := app.Cron()
+	scheduler.SetTimezone(time.Now().Local().Location())
 	scheduler.MustAdd("set_stream_status", "*/1 * * * *", func() {
 		cronjobs.SetStreamStatus(app)
 	})
@@ -64,7 +64,6 @@ func InitBackend(app *pocketbase.PocketBase) error {
 	scheduler.MustAdd("twitch_downloads", "@hourly", func() {
 		cronjobs.RunTwitchDownloads(app)
 	})
-	scheduler.Start()
 
 	if err := deleteEmptyGameRecords(app); err != nil {
 		return err
