@@ -8,7 +8,6 @@ import (
 	"math"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -36,27 +35,11 @@ type FFProbe struct {
 	}
 }
 
-// Sums up all segment sizes
-func getSegmentSize(path string) (int64, error) {
-	var size int64
-	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
-		if err != nil {
-			logger.Error.Println(err)
-			return err
-		}
-		if !info.IsDir() && strings.Contains(info.Name(), ".ts") {
-			size += info.Size()
-		}
-		return err
-	})
-	return size, err
-}
-
 // Extract metadata with ffprobe
-func GetMetadata(destPath string, m *Meta) error {
+func GetMetadata(mp4 string, m *Meta) error {
 	cmd := exec.Command("ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
 		"program_stream=width,height,r_frame_rate:format=duration", "-of", "json",
-		filepath.Join(destPath, m.Filename+".m3u8"))
+		mp4)
 
 	var stdout bytes.Buffer
 	cmd.Stdout = &stdout
@@ -121,12 +104,12 @@ func GetMetadata(destPath string, m *Meta) error {
 	m.Fps = float32(fps)
 
 	// get filesize
-	size, err := getSegmentSize(destPath)
+	info, err := os.Stat(mp4)
 	if err != nil {
 		logger.Error.Println(err)
 		return err
 	}
-	m.Size = int(size)
+	m.Size = int(info.Size())
 
 	return nil
 }

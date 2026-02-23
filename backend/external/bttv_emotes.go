@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
@@ -19,7 +18,7 @@ type bttvEmoteResponse struct {
 	}
 }
 
-func BttvUpdateEmotes(app *pocketbase.PocketBase) error {
+func BttvUpdateEmotes(app core.App) error {
 	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)

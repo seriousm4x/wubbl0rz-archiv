@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
 // Import all environment variables to the database.
-func ImportEnv(app *pocketbase.PocketBase) error {
+func ImportEnv(app core.App) error {
 	logger.Debug.Println("[hooks] importing env")
 
 	ttvClientId := os.Getenv("TTV_CLIENT_ID")

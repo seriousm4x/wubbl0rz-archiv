@@ -8,7 +8,6 @@ import (
 	"strconv"
 
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
@@ -25,7 +24,7 @@ type ffzEmoteResponse struct {
 	}
 }
 
-func FfzUpdateEmotes(app *pocketbase.PocketBase) error {
+func FfzUpdateEmotes(app core.App) error {
 	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
@@ -43,7 +42,7 @@ func FfzUpdateEmotes(app *pocketbase.PocketBase) error {
 
 	if resp.StatusCode != http.StatusOK {
 		err := fmt.Errorf("status code was %d", resp.StatusCode)
-		logger.Error.Printf(err.Error())
+		logger.Error.Printf("%+v", err.Error())
 		logger.Error.Printf("%+v", resp)
 		return err
 	}

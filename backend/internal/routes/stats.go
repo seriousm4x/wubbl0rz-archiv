@@ -7,13 +7,12 @@ import (
 	"time"
 
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"golang.org/x/sync/errgroup"
 )
 
 // Route to gather archive statistics
-func Stats(app *pocketbase.PocketBase, e *core.RequestEvent) error {
+func Stats(app core.App, e *core.RequestEvent) error {
 	type chatter struct {
 		Name     string `json:"name"`
 		MsgCount int    `json:"msg_count"`

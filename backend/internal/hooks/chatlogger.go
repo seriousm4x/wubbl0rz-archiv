@@ -5,19 +5,18 @@ import (
 	"time"
 
 	"github.com/gempir/go-twitch-irc/v3"
-	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
 type Chatlogger struct {
 	Client     *twitch.Client
-	App        *pocketbase.PocketBase
+	App        core.App
 	Collection *core.Collection
 }
 
 // Creates a new chatlogger instance
-func NewChatlogger(app *pocketbase.PocketBase) (*Chatlogger, error) {
+func NewChatlogger(app core.App) (*Chatlogger, error) {
 	var err error
 	cl := &Chatlogger{}
 	cl.App = app

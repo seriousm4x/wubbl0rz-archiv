@@ -28,11 +28,11 @@
 					class="absolute top-0 left-0 z-10 h-auto w-full"
 				>
 					<source
-						src="{PUBLIC_API_URL}/vods/{vod.filename}-preview.webm"
+						src="{PUBLIC_API_URL}/vods/{vod.filename}/preview.webm"
 						type="video/webm;codecs=vp9"
 					/>
 					<source
-						src="{PUBLIC_API_URL}/vods/{vod.filename}-preview.mp4"
+						src="{PUBLIC_API_URL}/vods/{vod.filename}/preview.mp4"
 						type="video/mp4; codecs=hvc1"
 					/>
 					<track kind="captions" />
@@ -42,7 +42,7 @@
 			<div
 				class="h-full w-full bg-cover bg-center"
 				role="none"
-				style="background-image: url('{PUBLIC_API_URL}/vods/{vod.filename}-lg.webp');"
+				style="background-image: url('{PUBLIC_API_URL}/vods/{vod.filename}/thumb-lg.webp');"
 			></div>
 		</a>
 		<div class="hero-content p-0">

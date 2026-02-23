@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -18,7 +18,7 @@ type twitchBearerResponse struct {
 }
 
 // Refresh the twitch bearer token if it expires in less than 24 hours.
-func TwitchUpdateBearer(app *pocketbase.PocketBase) error {
+func TwitchUpdateBearer(app core.App) error {
 	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)

@@ -3,29 +3,7 @@
 	import Favicons from '$lib/components/Favicons.svelte';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
-	import { pb } from '$lib/stores/pocketbase';
-	import { currentUser } from '$lib/stores/user';
-	import { onMount } from 'svelte';
 	import '../app.css';
-
-	onMount(async () => {
-		// load cookie from localstorage
-		const pbCookie = localStorage.getItem('pocketbase_auth');
-		if (!pbCookie) {
-			return;
-		}
-
-		// set cookie as auth
-		$pb.authStore.loadFromCookie('pb_auth=' + pbCookie);
-		if ($pb.authStore.isValid) {
-			await $pb.collection('users').authRefresh({ autoCancel: false });
-		}
-
-		// update localstorage and user store on auth change
-		$pb.authStore.onChange((_, model) => {
-			currentUser.set(model);
-		}, true);
-	});
 </script>
 
 <Favicons />

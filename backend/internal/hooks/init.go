@@ -5,13 +5,13 @@ import (
 	"time"
 
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/external"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/cronjobs"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
-func InitBackend(app *pocketbase.PocketBase) error {
+func InitBackend(app core.App) error {
 	// import env to database
 	if err := ImportEnv(app); err != nil {
 		return err
@@ -72,7 +72,7 @@ func InitBackend(app *pocketbase.PocketBase) error {
 	return nil
 }
 
-func deleteEmptyGameRecords(app *pocketbase.PocketBase) error {
+func deleteEmptyGameRecords(app core.App) error {
 	// delete empty games
 	allEmptyGames, err := app.FindAllRecords("game", dbx.HashExp{
 		"name": "",

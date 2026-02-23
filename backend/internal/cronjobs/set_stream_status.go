@@ -4,14 +4,13 @@ import (
 	"database/sql"
 	"os"
 
-	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/external"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
 // Sets the stream status
-func SetStreamStatus(app *pocketbase.PocketBase) error {
+func SetStreamStatus(app core.App) error {
 	var streams external.TwitchStreamResponse
 	if err := external.TwitchGetHelixStreams(app, &streams); err != nil {
 		logger.Error.Println(err)

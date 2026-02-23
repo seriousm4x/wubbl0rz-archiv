@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -25,7 +25,7 @@ type TwitchStreamResponse struct {
 }
 
 // Request helix stream from twitch.
-func TwitchGetHelixStreams(app *pocketbase.PocketBase, streams *TwitchStreamResponse) error {
+func TwitchGetHelixStreams(app core.App, streams *TwitchStreamResponse) error {
 	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)

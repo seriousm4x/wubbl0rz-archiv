@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
@@ -27,7 +26,7 @@ type twitchEmoteResponse struct {
 }
 
 // Update all twitch emotes
-func TwitchUpdateEmotes(app *pocketbase.PocketBase) error {
+func TwitchUpdateEmotes(app core.App) error {
 	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)

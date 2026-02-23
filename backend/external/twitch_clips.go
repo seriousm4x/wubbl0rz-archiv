@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -37,7 +37,7 @@ func weeksBack(date time.Time, weeks int) time.Time {
 }
 
 // Request helix clips from twitch.
-func TwitchGetHelixClips(app *pocketbase.PocketBase, clips *[]TwitchHelixClip) error {
+func TwitchGetHelixClips(app core.App, clips *[]TwitchHelixClip) error {
 	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)

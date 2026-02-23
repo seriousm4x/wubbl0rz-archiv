@@ -21,7 +21,7 @@
 	let og = $state({
 		...DefaultOpenGraph,
 		title: data.clip?.title,
-		image: `${PUBLIC_API_URL}/clips/${data.clip.filename}-lg.webp`,
+		image: `${PUBLIC_API_URL}/clips/${data.clip.filename}/thumb-lg.webp`,
 		updated_time: parseISO(data.clip?.date).toISOString()
 	});
 	let clip = $derived(data.clip as RecordModel);
@@ -50,7 +50,7 @@
 
 <div
 	class="absolute top-0 left-0 -z-10 aspect-video h-full w-full bg-cover bg-center opacity-10 blur-2xl"
-	style="background-image: url('{PUBLIC_API_URL}/clips/{clip.filename}-lg.webp');"
+	style="background-image: url('{PUBLIC_API_URL}/clips/{clip.filename}/thumb-lg.webp');"
 ></div>
 <div class="mx-auto flex max-w-480 flex-col gap-8 xl:flex-row">
 	<div class="flex flex-col gap-4 xl:basis-4/5">
@@ -134,18 +134,15 @@
 			</div>
 		</div>
 		<div class="flex flex-row flex-wrap gap-4 md:justify-between">
-			<div
-				title="Beim Download kann die genaue Dateigröße nicht vorhergesagt werden, weil das Video nicht als Ganzes existiert und die Videosegmente im Hintergrund zusammengesetzt werden, was nur eine grobe Schätzung ermöglicht."
+			<a
+				href="/download/{clip.collectionName}/{clip.filename}"
+				class="btn rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
+				aria-label="download"
 			>
-				<a
-					href="{PUBLIC_API_URL}/download/clips/{clip.id}"
-					class="btn rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-					aria-label="link"
-				>
-					<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download
-					(~ {formatBytes(clip.size)})
-				</a>
-			</div>
+				<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download ({formatBytes(
+					clip.size
+				)})
+			</a>
 			<div>
 				<div class="dropdown dropdown-left md:dropdown-bottom">
 					<label

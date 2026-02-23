@@ -102,47 +102,19 @@ func main() {
 		// serves static files from the provided public dir (if exists)
 		se.Router.GET("/{path...}", apis.Static(os.DirFS(assets.ArchiveDir), false))
 
-		// route for downloading vods and clips
-		se.Router.GET("/download/{type}/{id}", func(e *core.RequestEvent) error {
-			return routes.Download(app, e)
-		})
-
 		// route for statistics
 		se.Router.GET("/stats", func(e *core.RequestEvent) error {
 			return routes.Stats(app, e)
 		})
-
-		// route for youtube login callback
-		se.Router.GET("/wubbl0rz/youtube/callback",
-			routes.YoutubeHandleCallback)
 
 		return se.Next()
 	})
 
 	// auth routes
 	app.OnServe().BindFunc(func(se *core.ServeEvent) error {
-		// route to verify if youtube bearer token is ok
-		se.Router.GET("/wubbl0rz/youtube/verify",
-			routes.YoutubeHandleVerify).Bind(apis.RequireAuth("users"))
-
-		// route for youtube to revoke bearer token
-		se.Router.GET("/wubbl0rz/youtube/revoke",
-			routes.YoutubeHandleRevoke).Bind(apis.RequireAuth("users"))
-
-		// route for youtube login
-		se.Router.GET("/wubbl0rz/youtube/login",
-			routes.YoutubeHandleLogin).Bind(apis.RequireAuth("users"))
-
-		// route for vod upload to youtube
-		se.Router.GET("/wubbl0rz/youtube/upload/{id}",
-			routes.YoutubeUpload).Bind(apis.RequireAuth("users"))
-
 		// route for triggering twitch downloads
 		se.Router.GET("/wubbl0rz/trigger/downloads",
 			routes.TriggerTwitchDownloads).Bind(apis.RequireAuth("_superusers"))
-
-		routes.YoutubeRegisterHandler(app)
-
 		return se.Next()
 	})
 

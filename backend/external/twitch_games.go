@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
@@ -23,7 +22,7 @@ type TwitchHelixGameResponse struct {
 }
 
 // Request helix games from twitch.
-func TwitchGetHelixGames(app *pocketbase.PocketBase, games []*core.Record) ([]TwitchHelixGame, error) {
+func TwitchGetHelixGames(app core.App, games []*core.Record) ([]TwitchHelixGame, error) {
 	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)

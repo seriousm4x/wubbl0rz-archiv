@@ -10,16 +10,15 @@
 
 ## 🤩 Features
 
--   👉 Automatically **downloads vods and clips**
--   👉 Automatically **creates all assets** like thumbnails, preview videos and sprite thumbnails for player hover
--   👉 **Full text search** of every spoken word powered by [whisper and meilisearch](https://github.com/seriousm4x/wubbl0rz-archiv-transcribe)
--   👉 **Filter and sorting** for vods and clips
--   👉 **Chatlogger with auto update** as new messages come in
--   👉 Set **custom thumbnails** by uploading them to the api backend
--   👉 Admin backend to **upload vods to YouTube**
--   👉 **Free to use api** using [PocketBase](https://pocketbase.io/)
--   👉 **Statistics page** to see PocketBase and meilisearch stats as well as top chatters and emotes
--   👉 **Discord bot** to automatically post stream live notifications and slash commands
+- 👉 Automatically **downloads vods and clips**
+- 👉 Automatically **creates all assets** like thumbnails, preview videos and sprite thumbnails for player hover
+- 👉 **Full text search** of every spoken word powered by [whisper and meilisearch](https://github.com/seriousm4x/wubbl0rz-archiv-transcribe)
+- 👉 **Filter and sorting** for vods and clips
+- 👉 **Chatlogger with auto update** as new messages come in
+- 👉 Set **custom thumbnails** by uploading them to the api backend
+- 👉 **Free to use api** using [PocketBase](https://pocketbase.io/)
+- 👉 **Statistics page** to see PocketBase and meilisearch stats as well as top chatters and emotes
+- 👉 **Discord bot** to automatically post stream live notifications and slash commands
 
 ## 📷 Screenshots
 
@@ -39,13 +38,13 @@
 
 ## 🐳 Deploy
 
--   Copy the `SAMPLE.env` to `.env` and fill in the strings
--   `docker-compose up`
+- Copy the `SAMPLE.env` to `.env` and fill in the strings
+- `docker-compose up`
 
 ## 🔧 Developing
 
--   Copy the `SAMPLE.env` to `.env` and fill in the strings
--   `source .env`
+- Copy the `SAMPLE.env` to `.env` and fill in the strings
+- `source .env`
 
 Frontend:
 
@@ -100,18 +99,18 @@ A custom config is required for our indexes. [Use the api](https://docs.meilisea
 
 ```json
 {
-    "displayedAttributes": ["*"],
-    "searchableAttributes": ["text"],
-    "filterableAttributes": [],
-    "sortableAttributes": ["date", "duration", "viewcount"],
-    "rankingRules": [
-        "sort",
-        "words",
-        "typo",
-        "proximity",
-        "attribute",
-        "exactness"
-    ]
+  "displayedAttributes": ["*"],
+  "searchableAttributes": ["text"],
+  "filterableAttributes": [],
+  "sortableAttributes": ["date", "duration", "viewcount"],
+  "rankingRules": [
+    "sort",
+    "words",
+    "typo",
+    "proximity",
+    "attribute",
+    "exactness"
+  ]
 }
 ```
 
@@ -119,18 +118,18 @@ A custom config is required for our indexes. [Use the api](https://docs.meilisea
 
 ```json
 {
-    "displayedAttributes": ["*"],
-    "searchableAttributes": ["title"],
-    "filterableAttributes": [],
-    "sortableAttributes": ["date", "duration", "viewcount"],
-    "rankingRules": [
-        "sort",
-        "words",
-        "typo",
-        "proximity",
-        "attribute",
-        "exactness"
-    ]
+  "displayedAttributes": ["*"],
+  "searchableAttributes": ["title"],
+  "filterableAttributes": [],
+  "sortableAttributes": ["date", "duration", "viewcount"],
+  "rankingRules": [
+    "sort",
+    "words",
+    "typo",
+    "proximity",
+    "attribute",
+    "exactness"
+  ]
 }
 ```
 
@@ -138,6 +137,6 @@ A custom config is required for our indexes. [Use the api](https://docs.meilisea
 
 ```json
 {
-    "primaryKey": "meili_id"
+  "primaryKey": "meili_id"
 }
 ```

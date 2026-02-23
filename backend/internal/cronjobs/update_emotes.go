@@ -4,13 +4,13 @@ import (
 	"time"
 
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/external"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
 // Updates all emotes in database
-func UpdateEmotes(app *pocketbase.PocketBase) error {
+func UpdateEmotes(app core.App) error {
 	logger.Debug.Println("[jobs] updating all emotes")
 
 	// set all emotes outdated

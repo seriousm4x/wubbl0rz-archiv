@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
@@ -36,7 +35,7 @@ func secondsToWebVTTTimecode(seconds int) string {
 }
 
 // Taskes an id and returns the vod/clip record
-func findVodOrClip(app *pocketbase.PocketBase, id string) (*core.Record, error) {
+func findVodOrClip(app core.App, id string) (*core.Record, error) {
 	var record *core.Record
 	var err error
 	record, err = app.FindRecordById("vod", id)
@@ -51,7 +50,7 @@ func findVodOrClip(app *pocketbase.PocketBase, id string) (*core.Record, error) 
 }
 
 // Create the video preview files for multiple ids (files for video hover)
-func CreatePreview(app *pocketbase.PocketBase, ids []string) error {
+func CreatePreview(app core.App, ids []string) error {
 	for i, id := range ids {
 		logger.Debug.Printf("[%d of %d] Recreating video preview for id \"%s\" ", i+1, len(ids), id)
 		record, err := findVodOrClip(app, id)
@@ -60,12 +59,12 @@ func CreatePreview(app *pocketbase.PocketBase, ids []string) error {
 		}
 
 		mediaType := fmt.Sprintf("%ss", record.Collection().Name)
-		m3u8 := filepath.Join(ArchiveDir, mediaType, fmt.Sprintf("%s%s", record.GetString("filename"), "-segments"), record.GetString("filename")+".m3u8")
-		duration := record.GetInt("duration")
+		mp4 := filepath.Join(ArchiveDir, mediaType, record.GetString("filename"), record.Collection().Name+".mp4")
+		outputWebm := filepath.Join(ArchiveDir, mediaType, record.GetString("filename"), "preview.webm")
+		outputMp4 := filepath.Join(ArchiveDir, mediaType, record.GetString("filename"), "preview.mp4")
 
 		var cmd *exec.Cmd
-		outputWebm := filepath.Join(ArchiveDir, mediaType, record.GetString("filename")+"-preview.webm")
-		outputMp4 := filepath.Join(ArchiveDir, mediaType, record.GetString("filename")+"-preview.mp4")
+		duration := record.GetInt("duration")
 
 		if mediaType == "vods" && duration > 60 {
 			// create video preview with 3 segments
@@ -77,11 +76,11 @@ func CreatePreview(app *pocketbase.PocketBase, ids []string) error {
 			// this takes the vod/clip as an input and defines 3 seek ranges (seekPointX + segmentLength) which will be cut together to create
 			// a better summarization of the vod
 			// outputs 2 videos: one vp9 webm and one h265 mp4
-			cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", strconv.Itoa(seekPoint1), "-t", segmentLength, "-i", m3u8, "-ss", strconv.Itoa(seekPoint2), "-t", segmentLength, "-i", m3u8, "-ss", strconv.Itoa(seekPoint3), "-t", segmentLength, "-i", m3u8, "-filter_complex", "[0:v]scale=-2:720[0v];[1:v]scale=-2:720[1v];[2:v]scale=-2:720[2v];[0v][1v][2v]concat=n=3:v=1,split=2[out1][out2]", "-map", "[out1]", "-c:v:0", "libvpx-vp9", "-crf", "38", "-b:v", "0", "-r", "25", "-an", "-y", outputWebm, "-map", "[out2]", "-c:v:1", "libx265", "-crf", "28", "-r", "25", "-an", "-y", outputMp4)
+			cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", strconv.Itoa(seekPoint1), "-t", segmentLength, "-i", mp4, "-ss", strconv.Itoa(seekPoint2), "-t", segmentLength, "-i", mp4, "-ss", strconv.Itoa(seekPoint3), "-t", segmentLength, "-i", mp4, "-filter_complex", "[0:v]scale=-2:720[0v];[1:v]scale=-2:720[1v];[2:v]scale=-2:720[2v];[0v][1v][2v]concat=n=3:v=1,split=2[out1][out2]", "-map", "[out1]", "-c:v:0", "libvpx-vp9", "-crf", "38", "-b:v", "0", "-r", "25", "-an", "-y", outputWebm, "-map", "[out2]", "-c:v:1", "libx265", "-crf", "28", "-r", "25", "-an", "-y", outputMp4)
 		} else {
 			// just take first 4 seconds as preview
 			// outputs 2 videos: one vp9 webm and one h265 mp4
-			cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-t", "4", "-i", m3u8, "-filter_complex", "[0:v]scale=-2:720[0v];[0v]split=2[out1][out2]", "-map", "[out1]", "-c:v:0", "libvpx-vp9", "-crf", "38", "-b:v", "0", "-r", "25", "-an", "-y", outputWebm, "-map", "[out2]", "-c:v:1", "libx265", "-crf", "28", "-r", "25", "-an", "-y", outputMp4)
+			cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-t", "4", "-i", mp4, "-filter_complex", "[0:v]scale=-2:720[0v];[0v]split=2[out1][out2]", "-map", "[out1]", "-c:v:0", "libvpx-vp9", "-crf", "38", "-b:v", "0", "-r", "25", "-an", "-y", outputWebm, "-map", "[out2]", "-c:v:1", "libx265", "-crf", "28", "-r", "25", "-an", "-y", outputMp4)
 		}
 
 		var stderr bytes.Buffer
@@ -98,7 +97,7 @@ func CreatePreview(app *pocketbase.PocketBase, ids []string) error {
 }
 
 // Create the video thumbnails for multiple ids
-func CreateThumbnail(app *pocketbase.PocketBase, ids []string) error {
+func CreateThumbnail(app core.App, ids []string) error {
 	for i, id := range ids {
 		logger.Debug.Printf("[%d of %d] Recreating video thumbnail for id \"%s\" ", i+1, len(ids), id)
 		record, err := findVodOrClip(app, id)
@@ -111,21 +110,21 @@ func CreateThumbnail(app *pocketbase.PocketBase, ids []string) error {
 		mediaType := fmt.Sprintf("%ss", record.Collection().Name)
 
 		// create sm, md and lg webp thumbs thumb
-		outputSm := filepath.Join(ArchiveDir, mediaType, record.GetString("filename")+"-sm.webp")
-		outputMd := filepath.Join(ArchiveDir, mediaType, record.GetString("filename")+"-md.webp")
-		outputLg := filepath.Join(ArchiveDir, mediaType, record.GetString("filename")+"-lg.webp")
+		outputSm := filepath.Join(ArchiveDir, mediaType, record.GetString("filename"), "thumb-sm.webp")
+		outputMd := filepath.Join(ArchiveDir, mediaType, record.GetString("filename"), "thumb-md.webp")
+		outputLg := filepath.Join(ArchiveDir, mediaType, record.GetString("filename"), "thumb-lg.webp")
 		compression := "0"
 		quality := "85"
 
 		if customThumbnail == "" {
-			// create thumb from m3u8
-			m3u8 := filepath.Join(ArchiveDir, mediaType, fmt.Sprintf("%s%s", record.GetString("filename"), "-segments"), record.GetString("filename")+".m3u8")
+			// create thumb from mp4
+			mp4 := filepath.Join(ArchiveDir, mediaType, record.GetString("filename"), record.Collection().Name+".mp4")
 			duration := record.GetInt("duration")
 			if duration <= 10 {
-				cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", m3u8, "-filter_complex", "[0:v]split=3[frame1][frame2][frame3];[frame1]scale=512:-2[outputSm];[frame2]scale=768:-2[outputMd];[frame3]scale=1536:-2[outputLg]", "-map", "[outputSm]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputSm, "-map", "[outputMd]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputMd, "-map", "[outputLg]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputLg)
+				cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-i", mp4, "-filter_complex", "[0:v]split=3[frame1][frame2][frame3];[frame1]scale=512:-2[outputSm];[frame2]scale=768:-2[outputMd];[frame3]scale=1536:-2[outputLg]", "-map", "[outputSm]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputSm, "-map", "[outputMd]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputMd, "-map", "[outputLg]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputLg)
 			} else {
 				timecode_framegrab := fmt.Sprintf("%d", int(duration/2))
-				cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", m3u8, "-filter_complex", "[0:v]split=3[frame1][frame2][frame3];[frame1]scale=512:-2[outputSm];[frame2]scale=768:-2[outputMd];[frame3]scale=1536:-2[outputLg]", "-map", "[outputSm]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputSm, "-map", "[outputMd]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputMd, "-map", "[outputLg]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputLg)
+				cmd = exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", timecode_framegrab, "-i", mp4, "-filter_complex", "[0:v]split=3[frame1][frame2][frame3];[frame1]scale=512:-2[outputSm];[frame2]scale=768:-2[outputMd];[frame3]scale=1536:-2[outputLg]", "-map", "[outputSm]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputSm, "-map", "[outputMd]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputMd, "-map", "[outputLg]", "-c:v", "libwebp", "-frames", "1", "-compression_level", compression, "-quality", quality, "-y", outputLg)
 			}
 		} else {
 			// create thumb from custom image
@@ -148,7 +147,7 @@ func CreateThumbnail(app *pocketbase.PocketBase, ids []string) error {
 }
 
 // Create the video sprites for multiple ids (hover over player slider)
-func CreateSprites(app *pocketbase.PocketBase, ids []string) error {
+func CreateSprites(app core.App, ids []string) error {
 	for i, id := range ids {
 		logger.Debug.Printf("[%d of %d] Recreating video sprites for id \"%s\" ", i+1, len(ids), id)
 		record, err := findVodOrClip(app, id)
@@ -157,16 +156,16 @@ func CreateSprites(app *pocketbase.PocketBase, ids []string) error {
 		}
 
 		mediaType := fmt.Sprintf("%ss", record.Collection().Name)
-		m3u8 := filepath.Join(ArchiveDir, mediaType, fmt.Sprintf("%s%s", record.GetString("filename"), "-segments"), record.GetString("filename")+".m3u8")
+		mp4 := filepath.Join(ArchiveDir, mediaType, record.GetString("filename"), record.Collection().Name+".mp4")
 
-		outDir := filepath.Join(ArchiveDir, mediaType, record.GetString("filename")+"-sprites")
+		outDir := filepath.Join(ArchiveDir, mediaType, record.GetString("filename"), "sprites")
 		if err := os.MkdirAll(outDir, 0700); err != nil {
 			logger.Error.Println(err)
 			return err
 		}
 
-		outputSprites := filepath.Join(outDir, record.GetString("filename")+"_%03d.webp")
-		cmd := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-skip_frame", "nokey", "-i", m3u8, "-vf", "fps=1/30,scale=192:-2,tile=10x10", "-c:v", "libwebp", "-compression_level", "0", "-quality", "85", "-y", outputSprites)
+		outputSprites := filepath.Join(outDir, "%03d.webp")
+		cmd := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-skip_frame", "nokey", "-i", mp4, "-vf", "fps=1/30,scale=192:-2,tile=10x10", "-c:v", "libwebp", "-compression_level", "0", "-quality", "85", "-y", outputSprites)
 
 		var stderr bytes.Buffer
 		cmd.Stderr = &stderr
@@ -178,7 +177,7 @@ func CreateSprites(app *pocketbase.PocketBase, ids []string) error {
 		}
 
 		// create vtt
-		duration := record.GetFloat("duration") // 12265.0
+		duration := record.GetFloat("duration")
 		secondsPerFrame := 30.0
 		imagesCount := math.Ceil(duration / secondsPerFrame)
 
@@ -219,8 +218,8 @@ func CreateSprites(app *pocketbase.PocketBase, ids []string) error {
 			timecodeStart := secondsToWebVTTTimecode(secondsStart)
 			timecodeEnd := secondsToWebVTTTimecode(secondsEnd)
 
-			str := fmt.Sprintf("\n%s --> %s\n%s_%s.webp#xywh=%d,%d,%d,%d\n",
-				timecodeStart, timecodeEnd, record.GetString("filename"), fmt.Sprintf("%03d", filenameCount),
+			str := fmt.Sprintf("\n%s --> %s\n%s.webp#xywh=%d,%d,%d,%d\n",
+				timecodeStart, timecodeEnd, fmt.Sprintf("%03d", filenameCount),
 				xPos, yPos, imgWidth, imgHeight)
 			webvtt += str
 
@@ -228,7 +227,7 @@ func CreateSprites(app *pocketbase.PocketBase, ids []string) error {
 			lastFilenameCount = filenameCount
 		}
 
-		outputVTT := filepath.Join(outDir, record.GetString("filename")+".vtt")
+		outputVTT := filepath.Join(outDir, "sprites.vtt")
 
 		if err := os.WriteFile(outputVTT, []byte(webvtt), 0644); err != nil {
 			logger.Error.Println(err)
@@ -239,7 +238,7 @@ func CreateSprites(app *pocketbase.PocketBase, ids []string) error {
 }
 
 // Creates video preview, thumbnails and sprites
-func CreatePreviewThumbnailsSprites(app *pocketbase.PocketBase, ids []string) error {
+func CreatePreviewThumbnailsSprites(app core.App, ids []string) error {
 	// create wait group to run jobs parallel
 	var wg sync.WaitGroup
 	wg.Add(3)
@@ -271,7 +270,7 @@ func CreatePreviewThumbnailsSprites(app *pocketbase.PocketBase, ids []string) er
 }
 
 // Recreates assets for the entire archive forcefully. (Takes long time)
-func CreateAllAssets(app *pocketbase.PocketBase) error {
+func CreateAllAssets(app core.App) error {
 	// vods
 	allVods, err := app.FindAllRecords("vod")
 	if err != nil {

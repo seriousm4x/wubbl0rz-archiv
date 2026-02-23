@@ -17,7 +17,7 @@
 	let og = $state({
 		...DefaultOpenGraph,
 		title: data.vod?.title,
-		image: `${PUBLIC_API_URL}/vods/${data.vod?.filename}-lg.webp`,
+		image: `${PUBLIC_API_URL}/vods/${data.vod?.filename}/thumb-lg.webp`,
 		updated_time: parseISO(data.vod?.date).toISOString()
 	});
 
@@ -44,7 +44,7 @@
 
 <div
 	class="absolute top-0 left-0 -z-10 aspect-video h-full w-full bg-cover bg-center opacity-10 blur-2xl"
-	style="background-image: url('{PUBLIC_API_URL}/vods/{vod.filename}-lg.webp');"
+	style="background-image: url('{PUBLIC_API_URL}/vods/{vod.filename}/thumb-lg.webp');"
 ></div>
 <div class="mx-auto flex max-w-480 flex-col gap-8 xl:flex-row">
 	<div class="flex flex-col gap-4 xl:basis-4/5">
@@ -116,20 +116,15 @@
 			</div>
 		</div>
 		<div class="flex flex-col justify-start gap-4 md:flex-row md:flex-wrap">
-			<div>
-				<div
-					title="Beim Download kann die genaue Dateigröße nicht vorhergesagt werden, weil das Video nicht als Ganzes existiert und die Videosegmente im Hintergrund zusammengesetzt werden, was nur eine grobe Schätzung ermöglicht."
-				>
-					<a
-						href="{PUBLIC_API_URL}/download/vods/{vod.id}"
-						class="btn rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-						aria-label="link"
-					>
-						<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download
-						(~ {formatBytes(vod.size)})
-					</a>
-				</div>
-			</div>
+			<a
+				href="/download/{vod.collectionName}/{vod.filename}"
+				class="btn rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
+				aria-label="download"
+			>
+				<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download ({formatBytes(
+					vod.size
+				)})
+			</a>
 			<div class="md:ms-auto">
 				<div class="dropdown md:dropdown-end">
 					<label

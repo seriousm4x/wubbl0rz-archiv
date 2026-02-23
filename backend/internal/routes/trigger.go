@@ -6,6 +6,6 @@ import (
 )
 
 func TriggerTwitchDownloads(e *core.RequestEvent) error {
-	go cronjobs.RunTwitchDownloads(App)
+	go cronjobs.RunTwitchDownloads(e.App)
 	return e.NoContent(200)
 }

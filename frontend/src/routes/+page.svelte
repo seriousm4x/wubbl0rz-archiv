@@ -41,7 +41,7 @@
 	>
 		<img
 			src={data.new?.items?.[0]?.filename
-				? `${PUBLIC_API_URL}/vods/${data.new?.items?.[0]?.filename}-lg.webp`
+				? `${PUBLIC_API_URL}/vods/${data.new?.items?.[0]?.filename}/thumb-lg.webp`
 				: ''}
 			alt={data.new?.items?.[0]?.title}
 			class="h-auto w-full"

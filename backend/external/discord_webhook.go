@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -46,7 +46,7 @@ type discordWebhook struct {
 }
 
 // Send a discord stream notification
-func DiscordSendWebhook(app *pocketbase.PocketBase, d TwitchStreamResponse) error {
+func DiscordSendWebhook(app core.App, d TwitchStreamResponse) error {
 	logger.Debug.Println("[external] send discord webhook")
 
 	var webhookData discordWebhook

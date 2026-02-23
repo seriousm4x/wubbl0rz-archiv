@@ -12,7 +12,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/external"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/assets"
@@ -22,7 +21,7 @@ import (
 var twitchDownloadsRunning = false
 
 // Download vods, clips and games from twitch
-func RunTwitchDownloads(app *pocketbase.PocketBase) {
+func RunTwitchDownloads(app core.App) {
 	if twitchDownloadsRunning {
 		return
 	}
@@ -39,26 +38,18 @@ func RunTwitchDownloads(app *pocketbase.PocketBase) {
 	twitchDownloadsRunning = false
 }
 
-// Create .ts segments and .m3u8 playlist
-func createSegmentsfromURL(input_url string, segmentsPath string, filename string, video_type string) error {
-	var cmd *exec.Cmd
-	if video_type == "vod" {
-		cmd = exec.Command("ffmpeg",
-			"-hide_banner", "-loglevel", "error", "-stats",
-			"-i", input_url, "-map", "p:0", "-c", "copy",
-			"-hls_playlist_type", "vod", "-hls_time", "10", "-hls_segment_filename",
-			filepath.Join(segmentsPath, filename+"_%04d.ts"),
-			filepath.Join(segmentsPath, filename+".m3u8"),
-		)
-	} else {
-		cmd = exec.Command("ffmpeg",
-			"-hide_banner", "-loglevel", "error", "-stats",
-			"-i", input_url, "-c", "copy",
-			"-hls_playlist_type", "vod", "-hls_time", "10", "-hls_segment_filename",
-			filepath.Join(segmentsPath, filename+"_%04d.ts"),
-			filepath.Join(segmentsPath, filename+".m3u8"),
-		)
-	}
+// Download vod or clip with ffmpeg and save as mp4
+func dumpMP4(input_url string, outfile string) error {
+	cmd := exec.Command(
+		"ffmpeg",
+		"-hide_banner",
+		"-loglevel", "error",
+		"-stats",
+		"-i", input_url,
+		"-c", "copy",
+		"-movflags", "+faststart",
+		outfile,
+	)
 
 	if err := cmd.Run(); err != nil {
 		logger.Error.Println(err)
@@ -70,7 +61,7 @@ func createSegmentsfromURL(input_url string, segmentsPath string, filename strin
 }
 
 // Download all vods
-func DownloadVods(app *pocketbase.PocketBase) int {
+func DownloadVods(app core.App) int {
 	logger.Debug.Println("[cronjob] vod download started")
 	vods_downloaded := 0
 
@@ -130,33 +121,33 @@ func DownloadVods(app *pocketbase.PocketBase) int {
 		newVod.Set("publish", true)
 
 		// create destination path
-		segmentsPath := filepath.Join(vodsPath, m.Filename+"-segments")
-		if err := os.MkdirAll(segmentsPath, 0755); err != nil && !os.IsExist(err) {
+		vodSubDir := filepath.Join(vodsPath, m.Filename)
+		if err := os.MkdirAll(vodSubDir, 0755); err != nil && !os.IsExist(err) {
 			logger.Error.Println(err)
 			return vods_downloaded
 		}
-		time.Sleep(10 * time.Second)
 
 		// get m3u8 playlist from twitch
 		m3u8Url, err := external.BuildDownloadURL(vod.ID, true)
 		if err != nil {
-			if err := os.RemoveAll(segmentsPath); err != nil {
+			if err := os.RemoveAll(vodSubDir); err != nil {
 				logger.Error.Println(err)
 			}
 			continue
 		}
 
-		// pass the m3u8 to ffmpeg to create .ts segments
-		if err := createSegmentsfromURL(m3u8Url, segmentsPath, m.Filename, "vod"); err != nil {
-			if err := os.RemoveAll(segmentsPath); err != nil {
+		// pass the m3u8 to ffmpeg to create mp4
+		outfile := filepath.Join(vodSubDir, "vod.mp4")
+		if err := dumpMP4(m3u8Url, outfile); err != nil {
+			if err := os.RemoveAll(vodSubDir); err != nil {
 				logger.Error.Println(err)
 			}
 			continue
 		}
 
-		// get metadata from m3u8
-		if err := assets.GetMetadata(segmentsPath, &m); err != nil {
-			if err := os.RemoveAll(segmentsPath); err != nil {
+		// get metadata from mp4
+		if err := assets.GetMetadata(outfile, &m); err != nil {
+			if err := os.RemoveAll(vodSubDir); err != nil {
 				logger.Error.Println(err)
 			}
 			continue
@@ -169,7 +160,7 @@ func DownloadVods(app *pocketbase.PocketBase) int {
 		// create vod in database
 		if err := app.Save(newVod); err != nil {
 			logger.Error.Println(err)
-			if err := os.RemoveAll(segmentsPath); err != nil {
+			if err := os.RemoveAll(vodSubDir); err != nil {
 				logger.Error.Println(err)
 			}
 			return vods_downloaded
@@ -177,7 +168,7 @@ func DownloadVods(app *pocketbase.PocketBase) int {
 
 		// create thumbnails
 		if err := assets.CreatePreviewThumbnailsSprites(app, []string{newVod.Id}); err != nil {
-			if err := os.RemoveAll(segmentsPath); err != nil {
+			if err := os.RemoveAll(vodSubDir); err != nil {
 				logger.Error.Println(err)
 			}
 			continue
@@ -203,7 +194,7 @@ func DownloadVods(app *pocketbase.PocketBase) int {
 }
 
 // Download all clips
-func DownloadClips(app *pocketbase.PocketBase) int {
+func DownloadClips(app core.App) int {
 	logger.Debug.Println("[cronjob] clip download started")
 	clips_downloaded := 0
 
@@ -309,8 +300,8 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 		newClip.Set("creator", creator.Id)
 
 		// create destination path
-		segmentsPath := filepath.Join(clipsPath, clip.ID+"-segments")
-		if err := os.MkdirAll(segmentsPath, 0755); err != nil && !os.IsExist(err) {
+		clipSubDir := filepath.Join(clipsPath, clip.ID)
+		if err := os.MkdirAll(clipSubDir, 0755); err != nil && !os.IsExist(err) {
 			logger.Error.Println(err)
 			return clips_downloaded
 		}
@@ -318,23 +309,24 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 		// get clip url from twitch
 		downloadURL, err := external.BuildDownloadURL(clip.ID, false)
 		if err != nil {
-			if err := os.RemoveAll(segmentsPath); err != nil {
+			if err := os.RemoveAll(clipSubDir); err != nil {
 				logger.Error.Println(err)
 			}
 			continue
 		}
 
-		// pass the clip url to ffmpeg to create .ts segments
-		if err := createSegmentsfromURL(downloadURL, segmentsPath, clip.ID, "clip"); err != nil {
-			if err := os.RemoveAll(segmentsPath); err != nil {
+		// pass the clip url to ffmpeg to create mp4
+		outfile := filepath.Join(clipSubDir, "clip.mp4")
+		if err := dumpMP4(downloadURL, outfile); err != nil {
+			if err := os.RemoveAll(clipSubDir); err != nil {
 				logger.Error.Println(err)
 			}
 			continue
 		}
 
 		// get metadata from clip url
-		if err := assets.GetMetadata(segmentsPath, &m); err != nil {
-			if err := os.RemoveAll(segmentsPath); err != nil {
+		if err := assets.GetMetadata(clipSubDir, &m); err != nil {
+			if err := os.RemoveAll(clipSubDir); err != nil {
 				logger.Error.Println(err)
 			}
 			continue
@@ -352,7 +344,7 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 
 		// create thumbnails
 		if err := assets.CreatePreviewThumbnailsSprites(app, []string{newClip.Id}); err != nil {
-			if err := os.RemoveAll(segmentsPath); err != nil {
+			if err := os.RemoveAll(clipSubDir); err != nil {
 				logger.Error.Println(err)
 			}
 			return clips_downloaded
@@ -366,7 +358,7 @@ func DownloadClips(app *pocketbase.PocketBase) int {
 }
 
 // Download all games
-func DownloadGames(app *pocketbase.PocketBase) {
+func DownloadGames(app core.App) {
 	logger.Debug.Println("[cronjob] game download started")
 
 	// get all games from db

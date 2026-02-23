@@ -25,7 +25,7 @@
 		}
 
 		if (player) {
-			thumbnails = `${PUBLIC_API_URL}/${type}/${video.filename}-sprites/${video.filename}.vtt`;
+			thumbnails = `${PUBLIC_API_URL}/${type}/${video.filename}/sprites/sprites.vtt`;
 
 			player.addEventListener('time-update', (event: Event) => {
 				const e = event as CustomEvent<MediaTimeUpdateEventDetail>;
@@ -57,17 +57,17 @@
 	<media-player
 		class="player h-full w-full"
 		title={video.title}
-		src="{PUBLIC_API_URL}/{type}/{video.filename}-segments/{video.filename}.m3u8"
+		src="{PUBLIC_API_URL}/{type}/{video.filename}/{video.collectionName}.mp4"
 		crossorigin
 		bind:this={player}
 	>
 		<media-provider>
-			<media-poster class="vds-poster" src="{PUBLIC_API_URL}/{type}/{video.filename}-lg.webp"
+			<media-poster class="vds-poster" src="{PUBLIC_API_URL}/{type}/{video.filename}/thumb-lg.webp"
 			></media-poster>
 			{#if type === 'vods'}
 				<track
 					label="Deutsch"
-					src="{PUBLIC_API_URL}/{type}/{video.filename}.vtt"
+					src="{PUBLIC_API_URL}/{type}/{video.filename}/subtitles.vtt"
 					kind="subtitles"
 					srclang="de"
 				/>

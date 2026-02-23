@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -21,7 +21,7 @@ type TwitchHelixUserResponse struct {
 }
 
 // Request helix user from twitch.
-func TwitchGetHelixUser(app *pocketbase.PocketBase, user *TwitchHelixUserResponse) error {
+func TwitchGetHelixUser(app core.App, user *TwitchHelixUserResponse) error {
 	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)
@@ -67,7 +67,7 @@ func TwitchGetHelixUser(app *pocketbase.PocketBase, user *TwitchHelixUserRespons
 }
 
 // Update the settings broadcaster_id field
-func TwitchUpdateBroadcasterId(app *pocketbase.PocketBase) error {
+func TwitchUpdateBroadcasterId(app core.App) error {
 	settings, err := app.FindFirstRecordByFilter("settings", "id != ''")
 	if err != nil {
 		logger.Error.Println(err)

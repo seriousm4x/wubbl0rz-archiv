@@ -31,11 +31,11 @@
 			class="absolute top-0 left-0 z-10 h-auto w-full"
 		>
 			<source
-				src="{PUBLIC_API_URL}/{type}/{video.filename}-preview.webm"
+				src="{PUBLIC_API_URL}/{type}/{video.filename}/preview.webm"
 				type="video/webm;codecs=vp9"
 			/>
 			<source
-				src="{PUBLIC_API_URL}/{type}/{video.filename}-preview.mp4"
+				src="{PUBLIC_API_URL}/{type}/{video.filename}/preview.mp4"
 				type="video/mp4; codecs=hvc1"
 			/>
 			<track kind="captions" />
@@ -45,7 +45,7 @@
 		<picture>
 			<source
 				type="image/webp"
-				srcset="{PUBLIC_API_URL}/{type}/{video.filename}-sm.webp"
+				srcset="{PUBLIC_API_URL}/{type}/{video.filename}/thumb-sm.webp"
 				media="(max-width: 545px)"
 				class="h-auto w-full"
 				width="512"
@@ -53,7 +53,7 @@
 			/>
 			<source
 				type="image/webp"
-				srcset="{PUBLIC_API_URL}/{type}/{video.filename}-md.webp"
+				srcset="{PUBLIC_API_URL}/{type}/{video.filename}/thumb-md.webp"
 				media="(max-width: 767px)"
 				class="h-auto w-full"
 				width="768"
@@ -61,14 +61,14 @@
 			/>
 			<source
 				type="image/webp"
-				srcset="{PUBLIC_API_URL}/{type}/{video.filename}-sm.webp"
+				srcset="{PUBLIC_API_URL}/{type}/{video.filename}/thumb-sm.webp"
 				media="(min-width: 768px)"
 				class="h-auto w-full"
 				width="512"
 				height="286"
 			/>
 			<img
-				src="{PUBLIC_API_URL}/{type}/{video.filename}-md.webp"
+				src="{PUBLIC_API_URL}/{type}/{video.filename}/thumb-md.webp"
 				class="h-auto w-full"
 				alt={video.title}
 				loading="lazy"

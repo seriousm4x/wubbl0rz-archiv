@@ -13,7 +13,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meilisearch/meilisearch-go"
-	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -47,7 +47,7 @@ type StatsResponse struct {
 }
 
 var (
-	pb             *pocketbase.PocketBase
+	pb             core.App
 	token          = os.Getenv("DISCORD_BOT_TOKEN")
 	frontendUrl    = os.Getenv("PUBLIC_FRONTEND_URL")
 	apiUrl         = os.Getenv("PUBLIC_API_URL")
@@ -296,7 +296,7 @@ var (
 	}
 )
 
-func RunDiscordBot(app *pocketbase.PocketBase) {
+func RunDiscordBot(app core.App) {
 	if token == "" {
 		logger.Info.Println("Discord token not set. Not starting bot.")
 		return
