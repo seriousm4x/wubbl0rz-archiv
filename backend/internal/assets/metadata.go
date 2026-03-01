@@ -23,12 +23,10 @@ type Meta struct {
 }
 
 type FFProbe struct {
-	Programs []struct {
-		Streams []struct {
-			Width      int
-			Height     int
-			RFrameRate string `json:"r_frame_rate"`
-		}
+	Streams []struct {
+		Width        int
+		Height       int
+		AvgFrameRate string `json:"avg_frame_rate"`
 	}
 	Format struct {
 		Duration string
@@ -38,7 +36,7 @@ type FFProbe struct {
 // Extract metadata with ffprobe
 func GetMetadata(mp4 string, m *Meta) error {
 	cmd := exec.Command("ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
-		"program_stream=width,height,r_frame_rate:format=duration", "-of", "json",
+		"stream=width,height,avg_frame_rate:format=duration", "-of", "json",
 		mp4)
 
 	var stdout bytes.Buffer
@@ -62,12 +60,7 @@ func GetMetadata(mp4 string, m *Meta) error {
 		return err
 	}
 
-	if len(ffprobe.Programs) == 0 {
-		err := errors.New("ffprobe: no entries in json key 'programs'")
-		logger.Error.Println(err)
-		logger.Error.Println(stdout.String())
-		return err
-	} else if len(ffprobe.Programs[0].Streams) == 0 {
+	if len(ffprobe.Streams) == 0 {
 		err := errors.New("ffprobe: no entries in json key 'streams'")
 		logger.Error.Println(err)
 		logger.Error.Println(stdout.String())
@@ -75,11 +68,11 @@ func GetMetadata(mp4 string, m *Meta) error {
 	}
 
 	// width, height
-	width := ffprobe.Programs[0].Streams[0].Width
-	height := ffprobe.Programs[0].Streams[0].Height
+	width := ffprobe.Streams[0].Width
+	height := ffprobe.Streams[0].Height
 
 	// fps
-	fpsFraction := strings.Split(ffprobe.Programs[0].Streams[0].RFrameRate, "/")
+	fpsFraction := strings.Split(ffprobe.Streams[0].AvgFrameRate, "/")
 	fpsNumerator, err := strconv.ParseFloat(fpsFraction[0], 64)
 	if err != nil {
 		logger.Error.Println(err)
