@@ -46,7 +46,7 @@ func SetStreamStatus(app core.App) error {
 			return err
 		}
 		if isLive {
-			logger.Debug.Println("[jobs] stream live")
+			logger.Debug.Println("[cronjob] stream live")
 			if os.Getenv("DISCORD_WEBHOOK") != "" {
 				if err := external.DiscordSendWebhook(app, streams); err != nil {
 					logger.Error.Println(err)

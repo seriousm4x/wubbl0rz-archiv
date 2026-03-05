@@ -64,6 +64,9 @@ func InitBackend(app core.App) error {
 	scheduler.MustAdd("twitch_downloads", "@hourly", func() {
 		cronjobs.RunTwitchDownloads(app)
 	})
+	scheduler.MustAdd("database_vacuum", "@monthly", func() {
+		cronjobs.RunVaccum(app)
+	})
 
 	if err := deleteEmptyGameRecords(app); err != nil {
 		return err

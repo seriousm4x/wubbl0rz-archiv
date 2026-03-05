@@ -11,7 +11,7 @@ import (
 
 // Updates all emotes in database
 func UpdateEmotes(app core.App) error {
-	logger.Debug.Println("[jobs] updating all emotes")
+	logger.Debug.Println("[cronjob] updating all emotes")
 
 	// set all emotes outdated
 	emotes, err := app.FindAllRecords("emote")
