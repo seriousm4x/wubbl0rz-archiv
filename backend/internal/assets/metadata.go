@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
 
@@ -67,7 +68,14 @@ func GetMetadata(mp4 string, m *Meta) error {
 		return err
 	}
 
-	// width, height
+	// duration
+	duration, err := strconv.ParseFloat(ffprobe.Format.Duration, 64)
+	if err != nil {
+		logger.Error.Println(err)
+		return err
+	}
+
+	// resolution
 	width := ffprobe.Streams[0].Width
 	height := ffprobe.Streams[0].Height
 
@@ -85,8 +93,8 @@ func GetMetadata(mp4 string, m *Meta) error {
 	}
 	fps := fpsNumerator / fpsDenominator
 
-	// duration
-	duration, err := strconv.ParseFloat(ffprobe.Format.Duration, 64)
+	// size
+	info, err := os.Stat(mp4)
 	if err != nil {
 		logger.Error.Println(err)
 		return err
@@ -95,14 +103,74 @@ func GetMetadata(mp4 string, m *Meta) error {
 	m.Duration = int(math.Round(duration))
 	m.Resolution = fmt.Sprintf("%dx%d", width, height)
 	m.Fps = uint16(math.Round(fps))
-
-	// get filesize
-	info, err := os.Stat(mp4)
-	if err != nil {
-		logger.Error.Println(err)
-		return err
-	}
 	m.Size = int(info.Size())
 
 	return nil
+}
+
+func RefreshMetadata(app core.App) {
+	allVods, err := app.FindAllRecords("vod")
+	if err != nil {
+		logger.Error.Println(err)
+		return
+	}
+
+	i := 0
+	for _, record := range allVods {
+		i += 1
+		filename := record.GetString("filename")
+		mp4Path := fmt.Sprintf("%s/vods/%s/vod.mp4", ArchiveDir, filename)
+
+		logger.Debug.Printf("refreshing metadata for vods (%d/%d): %s", i, len(allVods), filename)
+
+		var m Meta
+		err := GetMetadata(mp4Path, &m)
+		if err != nil {
+			logger.Error.Printf("failed to get vod metadata for %s: %v\n", filename, err)
+			continue
+		}
+
+		record.Set("duration", m.Duration)
+		record.Set("resolution", m.Resolution)
+		record.Set("fps", m.Fps)
+		record.Set("size", m.Size)
+
+		if err := app.Save(record); err != nil {
+			logger.Error.Printf("failed to save vod record %s: %v\n", filename, err)
+			continue
+		}
+	}
+
+	allClips, err := app.FindAllRecords("clip")
+	if err != nil {
+		logger.Error.Println(err)
+		return
+	}
+
+	i = 0
+	for _, record := range allClips {
+		i += 1
+		filename := record.GetString("filename")
+		mp4Path := fmt.Sprintf("%s/clips/%s/clip.mp4", ArchiveDir, filename)
+
+		logger.Debug.Printf("refreshing metadata for clips (%d/%d): %s", i, len(allClips), filename)
+
+		var m Meta
+		err := GetMetadata(mp4Path, &m)
+		if err != nil {
+			logger.Error.Printf("failed to get clip metadata for %s: %v\n", filename, err)
+			continue
+		}
+
+		record.Set("duration", m.Duration)
+		record.Set("resolution", m.Resolution)
+		record.Set("fps", m.Fps)
+		record.Set("size", m.Size)
+
+		if err := app.Save(record); err != nil {
+			logger.Error.Printf("failed to save clip record %s: %v\n", filename, err)
+			continue
+		}
+	}
+
 }
