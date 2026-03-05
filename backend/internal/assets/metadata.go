@@ -18,7 +18,7 @@ type Meta struct {
 	Filename   string
 	Duration   int
 	Resolution string
-	Fps        float32
+	Fps        uint16
 	Size       int
 }
 
@@ -94,7 +94,7 @@ func GetMetadata(mp4 string, m *Meta) error {
 
 	m.Duration = int(math.Round(duration))
 	m.Resolution = fmt.Sprintf("%dx%d", width, height)
-	m.Fps = float32(fps)
+	m.Fps = uint16(math.Round(fps))
 
 	// get filesize
 	info, err := os.Stat(mp4)

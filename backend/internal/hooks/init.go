@@ -47,10 +47,10 @@ func InitBackend(app core.App) error {
 	if lastEmoteSync.IsZero() || lastEmoteSync.Time().Add(1*time.Hour).Before(time.Now()) {
 		go cronjobs.UpdateEmotes(app)
 	}
-	lastVodSync := publicSettings.GetDateTime("last_vod_sync")
-	if lastVodSync.IsZero() || lastVodSync.Time().Add(1*time.Hour).Before(time.Now()) {
-		go cronjobs.RunTwitchDownloads(app)
-	}
+	// lastVodSync := publicSettings.GetDateTime("last_vod_sync")
+	// if lastVodSync.IsZero() || lastVodSync.Time().Add(1*time.Hour).Before(time.Now()) {
+	// 	go cronjobs.RunTwitchDownloads(app)
+	// }
 
 	// schedule cronjobs
 	scheduler := app.Cron()
