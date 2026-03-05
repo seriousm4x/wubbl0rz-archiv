@@ -120,6 +120,15 @@
 		</h1>
 		<div class="stats stats-vertical bg-base-200 xl:stats-horizontal w-full shadow">
 			<div class="stat">
+				<div class="stat-figure text-yellow-500">
+					<Icon icon="solar:text-bold-duotone" class="text-5xl" />
+				</div>
+				<div class="stat-title">Streamtitel</div>
+				<div class="stat-value text-yellow-500">
+					{data.meili.title.toLocaleString('de-DE')}
+				</div>
+			</div>
+			<div class="stat">
 				<div class="stat-figure text-emerald-500">
 					<Icon icon="solar:subtitles-bold-duotone" class="text-5xl" />
 				</div>
@@ -128,15 +137,6 @@
 					{data.meili.transcripts.toLocaleString('de-DE')}
 				</div>
 				<div class="stat-desc">Einzelne Textzeilen</div>
-			</div>
-			<div class="stat">
-				<div class="stat-figure text-yellow-500">
-					<Icon icon="solar:text-bold-duotone" class="text-5xl" />
-				</div>
-				<div class="stat-title">Streamtitel</div>
-				<div class="stat-value text-yellow-500">
-					{data.meili.title.toLocaleString('de-DE')}
-				</div>
 			</div>
 			<div class="stat">
 				<div class="stat-figure text-red-400">
