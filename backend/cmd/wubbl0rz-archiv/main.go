@@ -95,7 +95,7 @@ func main() {
 	app.RootCmd.AddCommand(&cobra.Command{
 		Use:   "refreshMetadata",
 		Short: "Refresh metadata for vods and clips",
-		Long:  "Refresh duration, resolution, fps and size for vods and clips.",
+		Long:  "Refresh duration, resolution, fps and size in database for vods and clips.",
 		Run: func(cmd *cobra.Command, args []string) {
 			assets.RefreshMetadata(app)
 		},
