@@ -49,6 +49,10 @@
 		}
 	});
 
+	$effect(() => {
+		player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
+	});
+
 	let thumbnails: string = $state('');
 	let type = video.collectionName === 'vod' ? 'vods' : 'clips';
 </script>
