@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strconv"
+	"sort"
 
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
@@ -24,15 +24,16 @@ func BuildDownloadURL(id string, isVod bool) (string, error) {
 			"extensions": {
 				"persistedQuery": {
 					"version": 1,
-					"sha256Hash": "0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712"
+					"sha256Hash": "ed230aa1e33e07eebb8928504583da78a5173989fadfb1ac94be06a04f3cdbe9"
 				}
 			},
 			"variables": {
-				"isLive": true,
+				"isLive": false,
 				"login": "",
 				"isVod": true,
 				"vodID": "%s",
-				"playerType": "embed"
+				"playerType": "embed",
+				"platform":   "site"
 			}
 		}`, id)
 	} else {
@@ -42,11 +43,12 @@ func BuildDownloadURL(id string, isVod bool) (string, error) {
 				"extensions": {
 					"persistedQuery": {
 						"version": 1,
-						"sha256Hash": "36b89d2507fce29e5ca551df756d27c1cfe079e2609642b4390aa4c35796eb11"
+						"sha256Hash": "993d9a5131f15a37bd16f32342c44ed1e0b1a9b968c6afdb662d2cddd595f6c5"
 					}
 				},
 				"variables": {
-					"slug": "%s"
+					"slug": "%s",
+					"platform": "web"
 				}
 			}`, id)
 	}
@@ -101,11 +103,17 @@ func BuildDownloadURL(id string, isVod bool) (string, error) {
 			logger.Error.Println(err)
 			return "", err
 		}
+		params := url.Values{}
+		params.Set("nauthsig", playbackResponse.Data.VideoPlaybackAccessToken.Signature)
+		params.Set("nauth", playbackResponse.Data.VideoPlaybackAccessToken.Value)
+		params.Set("allow_source", "true")
+		params.Set("allow_audio_only", "true")
+		params.Set("playlist_include_framerate", "true")
+
 		return fmt.Sprintf(
-			"https://usher.ttvnw.net/vod/%s.m3u8?Client-ID=kimne78kx3ncx6brgo4mv6wki5h1ko&token=%s&sig=%s&allow_source=true&allow_audio_only=true",
+			"https://usher.ttvnw.net/vod/v2/%s.m3u8?%s",
 			id,
-			playbackResponse.Data.VideoPlaybackAccessToken.Value,
-			playbackResponse.Data.VideoPlaybackAccessToken.Signature,
+			params.Encode(),
 		), nil
 	}
 
@@ -130,33 +138,15 @@ func BuildDownloadURL(id string, isVod bool) (string, error) {
 		return "", err
 	}
 
-	bestQuality := struct {
-		Resolution int
-		URL        string
-	}{
-		Resolution: 0,
-		URL:        "",
-	}
+	qualities := playbackResponse.Data.Clip.VideoQualities
+	sort.Slice(qualities, func(i, j int) bool {
+		return qualities[i].Quality > qualities[j].Quality
+	})
 
-	for _, quality := range playbackResponse.Data.Clip.VideoQualities {
-		res, err := strconv.Atoi(quality.Quality)
-		if err != nil {
-			continue
-		}
-		if bestQuality.Resolution == 0 {
-			bestQuality.Resolution = res
-			bestQuality.URL = quality.SourceURL
-			continue
-		}
-		if res > bestQuality.Resolution {
-			bestQuality.Resolution = res
-			bestQuality.URL = quality.SourceURL
-			continue
-		}
-	}
+	best := qualities[0]
 
 	return fmt.Sprintf("%s?token=%s&sig=%s",
-		bestQuality.URL,
+		best.SourceURL,
 		url.QueryEscape(playbackResponse.Data.Clip.PlaybackAccessToken.Value),
 		playbackResponse.Data.Clip.PlaybackAccessToken.Signature,
 	), nil
