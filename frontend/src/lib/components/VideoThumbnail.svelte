@@ -2,8 +2,8 @@
 	import { resolve } from '$app/paths';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { toHHMMSS } from '$lib/functions';
-	import { watchHistory } from '$lib/stores/localstorage';
 	import type { RecordModel } from 'pocketbase';
+	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	let {
@@ -14,6 +14,15 @@
 
 	const type = isVod || video.collectionName === 'vod' ? 'vods' : 'clips';
 	let hover = $state(false);
+	let progress = $state(0);
+
+	onMount(() => {
+		const filename = isVod || video.collectionName === 'vod' ? 'vod.mp4' : 'clip.mp4';
+		const localStorageItem = localStorage.getItem(
+			`${PUBLIC_API_URL}/${type}/${video.filename}/${filename}:0:0`
+		);
+		progress = localStorageItem ? parseFloat(localStorageItem) : 0;
+	});
 </script>
 
 <a
@@ -79,10 +88,10 @@
 		<div class="bg-base-300 absolute right-0 bottom-0 mx-2 my-3 rounded-md px-1 font-bold">
 			{toHHMMSS(video.duration, false)}
 		</div>
-		{#if type in $watchHistory && video.id in $watchHistory[type]}
+		{#if progress > 0}
 			<progress
 				class="progress progress-primary bg-base-100 absolute bottom-0 w-full rounded-none"
-				value={$watchHistory[type][video.id]}
+				value={progress}
 				max={video.duration}
 			></progress>
 		{/if}

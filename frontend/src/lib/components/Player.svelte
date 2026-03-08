@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
-	import { watchHistory, type WatchHistory } from '$lib/stores/localstorage';
 	import type { RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 	import type { MediaTimeUpdateEventDetail } from 'vidstack';
+	import { LocalMediaStorage } from 'vidstack';
 	import type { MediaPlayerElement } from 'vidstack/elements';
 
 	let {
@@ -13,6 +13,16 @@
 		currentTime = $bindable()
 	}: { video: RecordModel; player: MediaPlayerElement; currentTime: number } = $props();
 
+	class CustomLocalMediaStorage extends LocalMediaStorage {
+		getTime(): Promise<number | null> {
+			const t = parseInt(page.url.searchParams.get('t') || '0');
+			if (t) {
+				return Promise.resolve(t);
+			}
+			return Promise.resolve(currentTime);
+		}
+	}
+
 	onMount(async () => {
 		await import('vidstack/player/styles/default/theme.css');
 		await import('vidstack/player/styles/default/layouts/video.css');
@@ -20,37 +30,21 @@
 		await import('vidstack/player/layouts');
 		await import('vidstack/player/ui');
 
-		if (!$watchHistory[type as keyof WatchHistory]) {
-			$watchHistory[type as keyof WatchHistory] = {};
-		}
-
 		if (player) {
+			player.storage = new CustomLocalMediaStorage();
 			thumbnails = `${PUBLIC_API_URL}/${type}/${video.filename}/sprites/sprites.vtt`;
 
 			player.addEventListener('time-update', (event: Event) => {
 				const e = event as CustomEvent<MediaTimeUpdateEventDetail>;
 				currentTime = e.detail.currentTime;
-				$watchHistory[type as keyof WatchHistory][video.id] = currentTime;
 			});
-
-			// set player time to url param
-			if (page.url.searchParams.has('t')) {
-				player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
-				return;
-			}
-
-			// set player time to localstorage history
-			if (type in $watchHistory) {
-				const lsTime = $watchHistory[type as keyof WatchHistory][video.id];
-				if (lsTime !== undefined) {
-					player.currentTime = lsTime;
-				}
-			}
 		}
 	});
 
 	$effect(() => {
-		player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
+		if (player) {
+			player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
+		}
 	});
 
 	let thumbnails: string = $state('');
