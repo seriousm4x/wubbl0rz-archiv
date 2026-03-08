@@ -4,7 +4,7 @@
 	import Card from '$lib/components/Card.svelte';
 	import Player from '$lib/components/Player.svelte';
 	import SEO from '$lib/components/SEO.svelte';
-	import { formatBytes, toHHMMSS } from '$lib/functions';
+	import { toHHMMSS } from '$lib/functions';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
 	import Icon from '@iconify/svelte';
 	import { format, formatDistance, parseISO } from 'date-fns';
@@ -115,40 +115,29 @@
 				<div class="stat-desc">{vod.fps} FPS</div>
 			</div>
 		</div>
-		<div class="flex flex-col justify-start gap-4 md:flex-row md:flex-wrap">
-			<a
-				href="/download/{vod.collectionName}/{vod.filename}"
-				class="btn rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-				aria-label="download"
-			>
-				<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download ({formatBytes(
-					vod.size
-				)})
-			</a>
-			<div class="md:ms-auto">
-				<div class="dropdown md:dropdown-end">
-					<label
-						for="btn-share"
-						tabindex="-1"
-						class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-					>
-						<Icon icon="solar:share-bold-duotone" class="text-2xl text-violet-500" /> Teilen
-					</label>
-					<ul
-						id="btn-share"
-						tabindex="-1"
-						class="menu dropdown-content rounded-box bg-base-200 z-1 p-2 shadow"
-					>
-						<li>
-							<button onclick={() => copyLink(false)}>Link kopieren</button>
-						</li>
-						<li>
-							<button class="whitespace-nowrap" onclick={() => copyLink(true)}
-								>Link bei {toHHMMSS(currentTime, false)} kopieren</button
-							>
-						</li>
-					</ul>
-				</div>
+		<div class="flex flex-col justify-end gap-4 md:flex-row md:flex-wrap">
+			<div class="dropdown md:dropdown-end">
+				<label
+					for="btn-share"
+					tabindex="-1"
+					class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
+				>
+					<Icon icon="solar:share-bold-duotone" class="text-2xl text-violet-500" /> Teilen
+				</label>
+				<ul
+					id="btn-share"
+					tabindex="-1"
+					class="menu dropdown-content rounded-box bg-base-200 z-1 p-2 shadow"
+				>
+					<li>
+						<button onclick={() => copyLink(false)}>Link kopieren</button>
+					</li>
+					<li>
+						<button class="whitespace-nowrap" onclick={() => copyLink(true)}
+							>Link bei {toHHMMSS(currentTime, false)} kopieren</button
+						>
+					</li>
+				</ul>
 			</div>
 		</div>
 		{#if vod['expand']}
