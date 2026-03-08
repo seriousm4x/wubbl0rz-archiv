@@ -72,16 +72,7 @@
 			{/if}
 		</media-provider>
 		<media-audio-layout></media-audio-layout>
-		<media-video-layout
-			{thumbnails}
-			playbackRates={[
-				0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4
-			]}
-			download={{
-				url: `${page.url.origin}/download/${video.collectionName}/${video.filename}`,
-				filename: video.filename
-			}}
-		></media-video-layout>
+		<media-video-layout {thumbnails}></media-video-layout>
 		<media-buffering-indicator></media-buffering-indicator>
 	</media-player>
 </div>
