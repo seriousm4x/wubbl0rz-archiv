@@ -10,16 +10,16 @@
 	let {
 		video = {} as RecordModel,
 		player = $bindable(),
+		// eslint-disable-next-line no-useless-assignment
 		currentTime = $bindable()
 	}: { video: RecordModel; player: MediaPlayerElement; currentTime: number } = $props();
 
 	class CustomLocalMediaStorage extends LocalMediaStorage {
-		getTime(): Promise<number | null> {
-			const t = parseInt(page.url.searchParams.get('t') || '0');
-			if (t) {
-				return Promise.resolve(t);
-			}
-			return Promise.resolve(currentTime);
+		async getTime(): Promise<number | null> {
+			const tParam = page.url.searchParams.get('t');
+			const t = tParam ? parseInt(tParam, 10) : 0;
+			if (t !== 0) return t;
+			return super.getTime();
 		}
 	}
 
