@@ -6,14 +6,16 @@ export const GET: RequestHandler = async ({ params, url, setHeaders }) => {
 		return new Response('Invalid type', { status: 400 });
 	}
 
-	const fileName =
+	const [fileName, ext] =
 		params.type === 'vod'
 			? url.searchParams.get('audio') === 'true'
-				? 'audio.ogg'
-				: 'vod.mp4'
-			: 'clip.mp4';
+				? ['audio', 'ogg']
+				: ['vod', 'mp4']
+			: ['clip', 'mp4'];
 
-	const res = await fetch(`${PUBLIC_API_URL}/${params.type}s/${params.filename}/${fileName}`);
+	const res = await fetch(
+		`${PUBLIC_API_URL}/${params.type}s/${params.filename}/${fileName}.${ext}`
+	);
 
 	if (!res.ok) {
 		return new Response('Not found', { status: 404 });
@@ -24,7 +26,7 @@ export const GET: RequestHandler = async ({ params, url, setHeaders }) => {
 
 	const headers: Record<string, string> = {
 		'Content-Type': contentType,
-		'Content-Disposition': `attachment; filename="${fileName}"`
+		'Content-Disposition': `attachment; filename="${params.filename}.${ext}"`
 	};
 
 	// Nur setzen, wenn contentLength existiert
