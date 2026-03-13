@@ -135,6 +135,14 @@ func RefreshMetadata(app core.App) {
 		record.Set("fps", m.Fps)
 		record.Set("size", m.Size)
 
+		opusPath := fmt.Sprintf("%s/vods/%s/audio.ogg", ArchiveDir, filename)
+		info, err := os.Stat(opusPath)
+		if err != nil {
+			logger.Error.Println(err)
+			return
+		}
+		record.Set("size_audio", info.Size())
+
 		if err := app.Save(record); err != nil {
 			logger.Error.Printf("failed to save vod record %s: %v\n", filename, err)
 			continue

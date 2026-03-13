@@ -30,6 +30,7 @@
 	let recommendations = $derived(data.recommendations);
 	let percentile = $derived((vodPosition * 100) / vodsCount);
 	let percentileRounded = $derived(percentile < 1 ? percentile.toFixed(2) : Math.round(percentile));
+	let isAudio = $state(false);
 
 	function copyLink(withTimestamp: boolean) {
 		const url = new URL(page.url.origin + page.url.pathname);
@@ -48,7 +49,7 @@
 ></div>
 <div class="mx-auto flex max-w-480 flex-col gap-8 xl:flex-row">
 	<div class="flex flex-col gap-4 xl:basis-4/5">
-		<Player bind:player bind:currentTime video={vod} />
+		<Player bind:player bind:currentTime video={vod} {isAudio} />
 		<h1 class="text-4xl font-bold">
 			{vod.title}
 		</h1>
@@ -115,40 +116,62 @@
 				<div class="stat-desc">{vod.fps} FPS</div>
 			</div>
 		</div>
-		<div class="flex flex-col justify-start gap-4 md:flex-row md:flex-wrap">
-			<a
-				href="/download/{vod.collectionName}/{vod.filename}"
-				class="btn rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-				aria-label="download"
+		<div class="flex flex-row flex-wrap justify-start gap-2 md:ms-auto">
+			<button
+				class="btn w-fit rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
+				onclick={() => (isAudio = !isAudio)}
 			>
-				<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download ({formatBytes(
-					vod.size
-				)})
-			</a>
-			<div class="md:ms-auto">
-				<div class="dropdown md:dropdown-end">
-					<label
-						for="btn-share"
-						tabindex="-1"
-						class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-					>
-						<Icon icon="solar:share-bold-duotone" class="text-2xl text-violet-500" /> Teilen
-					</label>
-					<ul
-						id="btn-share"
-						tabindex="-1"
-						class="menu dropdown-content rounded-box bg-base-200 z-1 p-2 shadow"
-					>
-						<li>
-							<button onclick={() => copyLink(false)}>Link kopieren</button>
-						</li>
-						<li>
-							<button class="whitespace-nowrap" onclick={() => copyLink(true)}
-								>Link bei {toHHMMSS(currentTime, false)} kopieren</button
-							>
-						</li>
-					</ul>
-				</div>
+				<Icon icon="solar:headphones-round-sound-bold" class="text-2xl text-violet-500" />
+				{isAudio ? 'Video' : 'Audio only'}
+			</button>
+			<div class="dropdown md:dropdown-end">
+				<label
+					for="btn-download"
+					tabindex="-1"
+					class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
+				>
+					<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download
+				</label>
+				<ul
+					id="btn-download"
+					tabindex="-1"
+					class="menu dropdown-content rounded-box bg-base-200 z-1 w-48 p-2 shadow"
+				>
+					<li>
+						<a href="/download/{vod.collectionName}/{vod.filename}"
+							>Video ({formatBytes(vod.size)})</a
+						>
+					</li>
+					<li>
+						<a href="/download/{vod.collectionName}/{vod.filename}?audio=true"
+							>Audio ({formatBytes(vod.size_audio)})</a
+						>
+					</li>
+				</ul>
+			</div>
+
+			<div class="dropdown md:dropdown-end">
+				<label
+					for="btn-share"
+					tabindex="-1"
+					class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
+				>
+					<Icon icon="solar:share-bold-duotone" class="text-2xl text-violet-500" /> Teilen
+				</label>
+				<ul
+					id="btn-share"
+					tabindex="-1"
+					class="menu dropdown-content rounded-box bg-base-200 z-1 p-2 shadow"
+				>
+					<li>
+						<button onclick={() => copyLink(false)}>Link kopieren</button>
+					</li>
+					<li>
+						<button class="whitespace-nowrap" onclick={() => copyLink(true)}
+							>Link bei {toHHMMSS(currentTime, false)} kopieren</button
+						>
+					</li>
+				</ul>
 			</div>
 		</div>
 		{#if vod['expand']}

@@ -304,3 +304,42 @@ func CreateAllAssets(app core.App) error {
 
 	return nil
 }
+
+// Create audio only opus file
+func CreateAudioOnly(app core.App, ids []string) error {
+	for i, id := range ids {
+		logger.Debug.Printf("[%d of %d] Recreating audio only for id \"%s\" ", i+1, len(ids), id)
+		record, err := app.FindRecordById("vod", id)
+		if err != nil {
+			return err
+		}
+
+		mp4 := filepath.Join(ArchiveDir, "vods", record.GetString("filename"), "vod.mp4")
+		outputOpus := filepath.Join(ArchiveDir, "vods", record.GetString("filename"), "audio.ogg")
+
+		cmd := exec.Command("ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", mp4, "-vn", "-c:a", "libopus", "-b:a", "96k",
+			outputOpus)
+
+		var stderr bytes.Buffer
+		cmd.Stderr = &stderr
+
+		if err := cmd.Run(); err != nil {
+			logger.Error.Printf("%v", stderr.String())
+			logger.Error.Println(err.Error())
+			return err
+		}
+
+		info, err := os.Stat(outputOpus)
+		if err != nil {
+			return err
+		}
+
+		record.Set("size_audio", info.Size())
+
+		if err := app.Save(record); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

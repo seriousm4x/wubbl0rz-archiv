@@ -30,6 +30,7 @@
 	let recommendations = $derived(data.recommendations);
 	let percentile = $derived((clipPosition * 100) / clipsCount);
 	let percentileRounded = $derived(percentile < 1 ? percentile.toFixed(2) : Math.round(percentile));
+	let isAudio = $state(false);
 
 	onMount(() => {
 		if (page.url.searchParams.has('t')) {
@@ -54,7 +55,7 @@
 ></div>
 <div class="mx-auto flex max-w-480 flex-col gap-8 xl:flex-row">
 	<div class="flex flex-col gap-4 xl:basis-4/5">
-		<Player bind:player bind:currentTime video={clip} />
+		<Player bind:player bind:currentTime video={clip} {isAudio} />
 		<h1 class="text-4xl font-bold">
 			{clip.title}
 		</h1>
@@ -133,40 +134,50 @@
 				<div class="stat-desc">{clip.fps} FPS</div>
 			</div>
 		</div>
-		<div class="flex flex-row flex-wrap gap-4 md:justify-between">
-			<a
-				href="/download/{clip.collectionName}/{clip.filename}"
-				class="btn rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-				aria-label="download"
-			>
-				<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download ({formatBytes(
-					clip.size
-				)})
-			</a>
-			<div>
-				<div class="dropdown dropdown-left md:dropdown-bottom">
-					<label
-						for="btn-share"
-						tabindex="-1"
-						class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-					>
-						<Icon icon="solar:share-bold-duotone" class="text-2xl text-violet-500" /> Teilen
-					</label>
-					<ul
-						id="btn-share"
-						tabindex="-1"
-						class="menu dropdown-content rounded-box bg-base-200 z-1 p-2 shadow"
-					>
-						<li>
-							<button onclick={() => copyLink(false)}>Link kopieren</button>
-						</li>
-						<li>
-							<button class="whitespace-nowrap" onclick={() => copyLink(true)}
-								>Link bei {toHHMMSS(currentTime, false)} kopieren</button
-							>
-						</li>
-					</ul>
-				</div>
+		<div class="flex flex-row flex-wrap justify-start gap-2 md:ms-auto">
+			<div class="dropdown md:dropdown-end">
+				<label
+					for="btn-download"
+					tabindex="-1"
+					class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
+				>
+					<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download
+				</label>
+				<ul
+					id="btn-download"
+					tabindex="-1"
+					class="menu dropdown-content rounded-box bg-base-200 z-1 w-48 p-2 shadow"
+				>
+					<li>
+						<a href="/download/{clip.collectionName}/{clip.filename}"
+							>Video ({formatBytes(clip.size)})</a
+						>
+					</li>
+				</ul>
+			</div>
+
+			<div class="dropdown md:dropdown-end">
+				<label
+					for="btn-share"
+					tabindex="-1"
+					class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
+				>
+					<Icon icon="solar:share-bold-duotone" class="text-2xl text-violet-500" /> Teilen
+				</label>
+				<ul
+					id="btn-share"
+					tabindex="-1"
+					class="menu dropdown-content rounded-box bg-base-200 z-1 p-2 shadow"
+				>
+					<li>
+						<button onclick={() => copyLink(false)}>Link kopieren</button>
+					</li>
+					<li>
+						<button class="whitespace-nowrap" onclick={() => copyLink(true)}
+							>Link bei {toHHMMSS(currentTime, false)} kopieren</button
+						>
+					</li>
+				</ul>
 			</div>
 		</div>
 		{#if clip['expand']}

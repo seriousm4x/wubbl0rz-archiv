@@ -93,6 +93,15 @@ func main() {
 	})
 
 	app.RootCmd.AddCommand(&cobra.Command{
+		Use:   "createAudioOnly",
+		Short: "Create an audio only ogg file",
+		Long:  "Creates an audio only ogg file for vods",
+		Run: func(cmd *cobra.Command, args []string) {
+			assets.CreateAudioOnly(app, args)
+		},
+	})
+
+	app.RootCmd.AddCommand(&cobra.Command{
 		Use:   "refreshMetadata",
 		Short: "Refresh metadata for vods and clips",
 		Long:  "Refresh duration, resolution, fps and size in database for vods and clips.",

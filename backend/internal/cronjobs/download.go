@@ -174,6 +174,14 @@ func DownloadVods(app core.App) int {
 			continue
 		}
 
+		// create audio only from mp4
+		if err := assets.CreateAudioOnly(app, []string{newVod.Id}); err != nil {
+			if err := os.RemoveAll(vodSubDir); err != nil {
+				logger.Error.Println(err)
+			}
+			continue
+		}
+
 		vods_downloaded += 1
 	}
 
