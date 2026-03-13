@@ -74,6 +74,7 @@ func Stats(app core.App, e *core.RequestEvent) error {
 			duration := vod.GetInt("duration")
 			countHoursInSeconds += duration
 			stats.CountSize += vod.GetInt("size")
+			stats.CountSize += vod.GetInt("size_audio")
 			vodTime := vod.GetDateTime("date").Time()
 			if vodTime.After(last30) {
 				countLast30++
@@ -114,7 +115,6 @@ func Stats(app core.App, e *core.RequestEvent) error {
 	})
 
 	// process chatmessages
-
 	errs.Go(func() error {
 		err := app.DB().NewQuery("select chatmessage.user_name as name, count(chatmessage.id) as msg_count from chatmessage where chatmessage.user_name not in ('nightbot', 'moobot', 'streamlabs', 'streamelements', 'wizebot', 'deepbot', 'coebot', 'phantombot', 'stay_hydrated_bot') group by chatmessage.user_name order by msg_count desc limit 8").All(&stats.Chatters)
 		if err != nil {
