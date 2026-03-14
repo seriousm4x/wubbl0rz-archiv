@@ -51,46 +51,51 @@
 </script>
 
 <div class="overflow-hidden rounded-xl">
-	<media-player
-		class="player"
-		title={video.title}
-		viewType={isAudio ? 'audio' : 'video'}
-		streamType="on-demand"
-		bind:this={player}
-		crossorigin
-		playsInline
-	>
-		<media-provider>
-			<media-poster class="vds-poster" src="{PUBLIC_API_URL}/{type}/{video.filename}/thumb-lg.webp"
-			></media-poster>
-			{#if isAudio}
-				<source src="{PUBLIC_API_URL}/{type}/{video.filename}/audio.ogg" type="audio/ogg" />
-			{:else}
-				<source
-					src="{PUBLIC_API_URL}/{type}/{video.filename}/{video.collectionName}.mp4"
-					type="video/mp4"
-				/>
-			{/if}
-			{#if type === 'vods'}
-				<track
-					label="Deutsch"
-					src="{PUBLIC_API_URL}/{type}/{video.filename}/subtitles.vtt"
-					kind="subtitles"
-					srclang="de"
-				/>
-			{/if}
-		</media-provider>
-		<media-audio-layout
-			playbackRates={[
-				0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4
-			]}
-		></media-audio-layout>
-		<media-video-layout
-			thumbnails="{PUBLIC_API_URL}/{type}/{video.filename}/sprites/sprites.vtt"
-			playbackRates={[
-				0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4
-			]}
-		></media-video-layout>
-		<media-buffering-indicator></media-buffering-indicator>
-	</media-player>
+	{#key video}
+		<media-player
+			class="player"
+			title={video.title}
+			viewType={isAudio ? 'audio' : 'video'}
+			streamType="on-demand"
+			bind:this={player}
+			crossorigin
+			playsInline
+			autoplay
+		>
+			<media-provider>
+				<media-poster
+					class="vds-poster"
+					src="{PUBLIC_API_URL}/{type}/{video.filename}/thumb-lg.webp"
+				></media-poster>
+				{#if isAudio}
+					<source src="{PUBLIC_API_URL}/{type}/{video.filename}/audio.ogg" type="audio/ogg" />
+				{:else}
+					<source
+						src="{PUBLIC_API_URL}/{type}/{video.filename}/{video.collectionName}.mp4"
+						type="video/mp4"
+					/>
+				{/if}
+				{#if type === 'vods'}
+					<track
+						label="Deutsch"
+						src="{PUBLIC_API_URL}/{type}/{video.filename}/subtitles.vtt"
+						kind="subtitles"
+						srclang="de"
+					/>
+				{/if}
+			</media-provider>
+			<media-audio-layout
+				playbackRates={[
+					0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4
+				]}
+			></media-audio-layout>
+			<media-video-layout
+				thumbnails="{PUBLIC_API_URL}/{type}/{video.filename}/sprites/sprites.vtt"
+				playbackRates={[
+					0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4
+				]}
+			></media-video-layout>
+			<media-buffering-indicator></media-buffering-indicator>
+		</media-player>
+	{/key}
 </div>
