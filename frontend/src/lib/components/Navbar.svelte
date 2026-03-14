@@ -153,7 +153,10 @@
 						Sortieren
 					</span>
 					<select
-						class="join-item select border-base-200/70 bg-base-200 rounded-e-full"
+						class="join-item select border-base-200/70 bg-base-200 {selectedSort.value !==
+						'relevancy'
+							? ''
+							: 'rounded-e-full'}"
 						aria-label="Sortieren"
 						bind:value={selectedSort}
 					>
@@ -174,7 +177,7 @@
 						</div>
 						<div title="Absteigend">
 							<input
-								class="btn join-item"
+								class="btn join-item rounded-e-full"
 								type="radio"
 								name="options"
 								aria-label="&#9660;"
