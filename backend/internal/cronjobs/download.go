@@ -249,11 +249,18 @@ func DownloadClips(app core.App) int {
 		game, err := app.FindFirstRecordByData("game", "ttv_id", clip.GameID)
 		if err == sql.ErrNoRows {
 			game = core.NewRecord(gameCollection)
+
+			boxUrl := fmt.Sprintf("https://static-cdn.jtvnw.net/ttv-boxart/%s-100x133.jpg", clip.GameID)
+			if clip.GameID == "" {
+				clip.GameID = "0"
+				boxUrl = "https://static-cdn.jtvnw.net/ttv-static/404_boxart-100x133.jpg"
+			}
+
 			game.Set("ttv_id", clip.GameID)
 			game.Set("name", "Unknown")
-			game.Set("box_art_url", "https://")
+			game.Set("box_art_url", boxUrl)
 			if err := app.Save(game); err != nil {
-				logger.Error.Println(err)
+				logger.Error.Println(err, fmt.Sprintf("%+v", clip))
 				return clips_downloaded
 			}
 		} else if err != nil {
