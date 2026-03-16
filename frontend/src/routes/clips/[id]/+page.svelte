@@ -153,7 +153,7 @@
 				onclick={() => (theaterEnabled = !theaterEnabled)}
 			>
 				<Icon icon="fluent:arrow-autofit-width-dotted-24-filled" class="text-2xl text-violet-500" />
-				{theaterEnabled ? 'Theater aus' : 'Theater an'}
+				{theaterEnabled ? 'Standardansicht' : 'Kinomodus'}
 			</button>
 
 			<div class="dropdown md:dropdown-end">
