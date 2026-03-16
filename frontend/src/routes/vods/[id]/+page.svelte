@@ -40,7 +40,19 @@
 		}
 		navigator.clipboard.writeText(url.toString());
 	}
+
+	function onKeyDown(e: KeyboardEvent) {
+		switch (e.key) {
+			case 't':
+				theaterEnabled = !theaterEnabled;
+				break;
+			default:
+				break;
+		}
+	}
 </script>
+
+<svelte:window on:keydown={onKeyDown} />
 
 <SEO bind:og />
 
