@@ -38,22 +38,29 @@
 	</h1>
 	<p class="text-base-content/80 mb-8 text-sm">Neue Nachrichten werden automatisch geladen...</p>
 	<h2 class="text-xl">Zu behaltende Nachrichten</h2>
-	<div class="flex flex-row flex-wrap gap-4">
+	<div class="w-full">
 		<input
 			type="range"
-			class="range"
+			class="range w-full"
 			min="100"
 			max="500"
 			step="100"
 			bind:value={sliderValue}
 			onchange={() => (data.items = data.items.slice(0, sliderValue))}
 		/>
-		<div class="flex w-full justify-between px-2 text-xs">
+		<div class="mt-2 flex justify-between px-2.5 text-xs">
+			<span>|</span>
+			<span>|</span>
+			<span>|</span>
+			<span>|</span>
+			<span>|</span>
+		</div>
+		<div class="mt-2 flex justify-between px-2.5 text-xs">
 			<span>100</span>
 			<span>200</span>
 			<span>300</span>
 			<span>400</span>
-			<span>Unendlich</span>
+			<span>∞</span>
 		</div>
 	</div>
 	<div class="mt-8 flex flex-col gap-2">
