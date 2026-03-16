@@ -54,7 +54,7 @@
 	style="background-image: url('{PUBLIC_API_URL}/clips/{clip.filename}/thumb-lg.webp');"
 ></div>
 <div class="mx-auto flex max-w-480 flex-col gap-8 xl:flex-row">
-	<div class="flex flex-col gap-4 xl:basis-4/5">
+	<div class="flex flex-col gap-4 xl:w-4/5">
 		<Player bind:player bind:currentTime video={clip} {isAudio} />
 		<h1 class="text-4xl font-bold">
 			{clip.title}
@@ -194,7 +194,7 @@
 			{/if}
 		{/if}
 	</div>
-	<div class="hidden xl:flex xl:basis-1/5 xl:flex-col xl:gap-4">
+	<div class="hidden xl:flex xl:w-1/5 xl:flex-col xl:gap-4">
 		<h2 class="text-3xl font-bold">
 			<span
 				class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
