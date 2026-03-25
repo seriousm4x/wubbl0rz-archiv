@@ -1,9 +1,16 @@
 <script>
-	import { page } from '$app/state';
+	import { beforeNavigate } from '$app/navigation';
+	import { page, updated } from '$app/state';
 	import Favicons from '$lib/components/Favicons.svelte';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import '../app.css';
+
+	beforeNavigate(({ willUnload, to }) => {
+		if (updated.current && !willUnload && to?.url) {
+			location.href = to.url.href;
+		}
+	});
 </script>
 
 <Favicons />
