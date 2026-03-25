@@ -6,6 +6,13 @@
 	import SEO from '$lib/components/SEO.svelte';
 	import { formatBytes, toHHMMSS } from '$lib/functions';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
+	import IconArrowAutofitWidthDotted24Filled from '@iconify-icons/fluent/arrow-autofit-width-dotted-24-filled';
+	import IconDownloadSquareBoldDuotone from '@iconify-icons/solar/download-square-bold-duotone';
+	import IconFireBoldDuotone from '@iconify-icons/solar/fire-bold-duotone';
+	import IconRoundArrowRightBoldDuotone from '@iconify-icons/solar/round-arrow-right-bold-duotone';
+	import IconRoundArrowRightDownBoldDuotone from '@iconify-icons/solar/round-arrow-right-down-bold-duotone';
+	import IconRoundArrowRightUpBoldDuotone from '@iconify-icons/solar/round-arrow-right-up-bold-duotone';
+	import IconShareBoldDuotone from '@iconify-icons/solar/share-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import { format, formatDistance, parseISO } from 'date-fns';
 	import { de } from 'date-fns/locale';
@@ -115,25 +122,19 @@
 					#{clipPosition}
 					{#if percentile <= 5}
 						<div title="Top {percentileRounded}%">
-							<Icon icon="solar:fire-bold-duotone" class="text-3xl text-red-500" />
+							<Icon icon={IconFireBoldDuotone} class="text-3xl text-red-500" />
 						</div>
 					{:else if percentile <= 33}
 						<div title="Top {percentileRounded}%">
-							<Icon
-								icon="solar:round-arrow-right-up-bold-duotone"
-								class="text-3xl text-green-500"
-							/>
+							<Icon icon={IconRoundArrowRightUpBoldDuotone} class="text-3xl text-green-500" />
 						</div>
 					{:else if percentile <= 66}
 						<div title="Top {percentileRounded}%">
-							<Icon icon="solar:round-arrow-right-bold-duotone" class="text-slate-500" />
+							<Icon icon={IconRoundArrowRightBoldDuotone} class="text-slate-500" />
 						</div>
 					{:else}
 						<div title="Top {percentileRounded}%">
-							<Icon
-								icon="solar:round-arrow-right-down-bold-duotone"
-								class="text-3xl text-red-500"
-							/>
+							<Icon icon={IconRoundArrowRightDownBoldDuotone} class="text-3xl text-red-500" />
 						</div>
 					{/if}
 				</div>
@@ -152,7 +153,7 @@
 				class="btn w-fit rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
 				onclick={() => (theaterEnabled = !theaterEnabled)}
 			>
-				<Icon icon="fluent:arrow-autofit-width-dotted-24-filled" class="text-2xl text-violet-500" />
+				<Icon icon={IconArrowAutofitWidthDotted24Filled} class="text-2xl text-violet-500" />
 				{theaterEnabled ? 'Standardansicht' : 'Kinomodus'}
 			</button>
 
@@ -162,7 +163,7 @@
 					tabindex="-1"
 					class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
 				>
-					<Icon icon="solar:download-square-bold-duotone" class="text-2xl text-violet-500" /> Download
+					<Icon icon={IconDownloadSquareBoldDuotone} class="text-2xl text-violet-500" /> Download
 				</label>
 				<ul
 					id="btn-download"
@@ -182,7 +183,7 @@
 					tabindex="-1"
 					class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
 				>
-					<Icon icon="solar:share-bold-duotone" class="text-2xl text-violet-500" /> Teilen
+					<Icon icon={IconShareBoldDuotone} class="text-2xl text-violet-500" /> Teilen
 				</label>
 				<ul
 					id="btn-share"

@@ -4,6 +4,7 @@
 	import { replaceEmotesInString } from '$lib/functions';
 	import { pb } from '$lib/stores/pocketbase';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
+	import IconCircleSquareArrowBoldDuotone from '@iconify-icons/solar/chat-square-arrow-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import { format, formatDistance, parseISO } from 'date-fns';
 	import { de } from 'date-fns/locale';
@@ -99,7 +100,7 @@
 								class="text-base-content/80 dark:bg-base-200 flex w-fit flex-row items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-xs font-bold"
 							>
 								<div>
-									<Icon icon="solar:chat-square-arrow-bold-duotone" class="text-primary text-lg" />
+									<Icon icon={IconCircleSquareArrowBoldDuotone} class="text-primary text-lg" />
 								</div>
 								{message.tags['reply-parent-display-name']}: {message.tags['reply-parent-msg-body']}
 							</a>

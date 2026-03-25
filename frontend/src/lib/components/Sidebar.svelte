@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import IconClapperboardBoldDuotone from '@iconify-icons/solar/clapperboard-bold-duotone';
+	import IconKeyboardBoldDuotone from '@iconify-icons/solar/keyboard-bold-duotone';
+	import IconPieChart2BoldDuotone from '@iconify-icons/solar/pie-chart-2-bold-duotone';
+	import IconVideocameraRecordBoldDuotone from '@iconify-icons/solar/videocamera-record-bold-duotone';
 	import Icon from '@iconify/svelte';
 
 	const sidebarHome = {
@@ -13,7 +17,7 @@
 		{
 			title: 'Vods',
 			href: '/vods',
-			icon: 'solar:videocamera-record-bold-duotone',
+			icon: IconVideocameraRecordBoldDuotone,
 			iconActive: 'text-[#9146FF] group-focus:text-[#772CE8] group-active:text-[#772CE8]',
 			iconInactive:
 				'group-hover:text-[#9146FF] group-focus:text-[#772CE8] group-active:text-[#772CE8]',
@@ -22,7 +26,7 @@
 		{
 			title: 'Clips',
 			href: '/clips',
-			icon: 'solar:clapperboard-bold-duotone',
+			icon: IconClapperboardBoldDuotone,
 			iconActive: 'text-red-500 group-focus:text-red-600 group-active:text-red-600',
 			iconInactive: 'group-hover:text-red-500 group-focus:text-red-600 group-active:text-red-600',
 			bgColor: 'from-rose-800 to-orange-800'
@@ -30,7 +34,7 @@
 		{
 			title: 'Stats',
 			href: '/stats',
-			icon: 'solar:pie-chart-2-bold-duotone',
+			icon: IconPieChart2BoldDuotone,
 			iconActive: 'text-green-500 group-focus:text-green-600 group-active:text-green-600',
 			iconInactive:
 				'group-hover:text-green-500 group-focus:text-green-600 group-active:text-green-600',
@@ -39,7 +43,7 @@
 		{
 			title: 'Chat',
 			href: '/chat',
-			icon: 'solar:keyboard-bold-duotone',
+			icon: IconKeyboardBoldDuotone,
 			iconActive: 'text-sky-500 group-focus:text-sky-600 group-active:text-sky-600',
 			iconInactive: 'group-hover:text-sky-500 group-focus:text-sky-600 group-active:text-sky-600',
 			bgColor: 'from-emerald-800 to-cyan-800'

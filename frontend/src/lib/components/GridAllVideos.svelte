@@ -4,6 +4,7 @@
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import Card from '$lib/components/Card.svelte';
 	import Pagination from '$lib/components/Pagination.svelte';
+	import IconFilterBoldDuotone from '@iconify-icons/solar/filter-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import type { ListResult, RecordModel } from 'pocketbase';
 
@@ -114,7 +115,7 @@
 				class="btn btn-sm flex-nowrap rounded-full"
 				onclick={() => (showFilter = !showFilter)}
 			>
-				<Icon icon="solar:filter-bold-duotone" class="text-lg text-violet-500" /> Filter
+				<Icon icon={IconFilterBoldDuotone} class="text-lg text-violet-500" /> Filter
 			</button>
 		</div>
 	</div>

@@ -2,6 +2,13 @@
 	import SEO from '$lib/components/SEO.svelte';
 	import { formatBytes } from '$lib/functions';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
+	import IconClapperboardBoldDuotone from '@iconify-icons/solar/clapperboard-bold-duotone';
+	import IconClockCircleBoldDuotone from '@iconify-icons/solar/clock-circle-bold-duotone';
+	import IconPieChart2BoldDuotone from '@iconify-icons/solar/pie-chart-2-bold-duotone';
+	import IconRoundArrowRightUpBoldDuotone from '@iconify-icons/solar/round-arrow-right-up-bold-duotone';
+	import IconSmartphoneUpdateBoldDuotone from '@iconify-icons/solar/smartphone-update-bold-duotone';
+	import IconTextBoldDuotone from '@iconify-icons/solar/text-bold-duotone';
+	import IconVideocameraRecordBoldDuotone from '@iconify-icons/solar/videocamera-record-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import { formatRelative, parseISO } from 'date-fns';
 	import { de } from 'date-fns/locale';
@@ -52,7 +59,7 @@
 		<div class="stats stats-vertical bg-base-200 xl:stats-horizontal w-full shadow">
 			<div class="stat">
 				<div class="stat-figure text-primary">
-					<Icon icon="solar:videocamera-record-bold-duotone" class="text-5xl" />
+					<Icon icon={IconVideocameraRecordBoldDuotone} class="text-5xl" />
 				</div>
 				<div class="stat-title">Vods</div>
 				<div class="stat-value text-primary">{data.stats.count_vods.toLocaleString('de-DE')}</div>
@@ -69,7 +76,7 @@
 			</div>
 			<div class="stat">
 				<div class="stat-figure text-red-500">
-					<Icon icon="solar:clapperboard-bold-duotone" class="text-5xl" />
+					<Icon icon={IconClapperboardBoldDuotone} class="text-5xl" />
 				</div>
 				<div class="stat-title">Clips</div>
 				<div class="stat-value text-red-500">{data.stats.count_clips.toLocaleString('de-DE')}</div>
@@ -86,7 +93,7 @@
 			</div>
 			<div class="stat">
 				<div class="stat-figure text-amber-500">
-					<Icon icon="solar:clock-circle-bold-duotone" class="text-5xl" />
+					<Icon icon={IconClockCircleBoldDuotone} class="text-5xl" />
 				</div>
 				<div class="stat-title">Stunden gestreamt</div>
 				<div class="stat-value text-amber-500">
@@ -105,7 +112,7 @@
 			</div>
 			<div class="stat">
 				<div class="stat-figure text-green-500">
-					<Icon icon="solar:pie-chart-2-bold-duotone" class="text-5xl" />
+					<Icon icon={IconPieChart2BoldDuotone} class="text-5xl" />
 				</div>
 				<div class="stat-title">Archivgröße</div>
 				<div class="stat-value text-green-500">{formatBytes(data.stats.count_size)}</div>
@@ -121,7 +128,7 @@
 		<div class="stats stats-vertical bg-base-200 xl:stats-horizontal w-full shadow">
 			<div class="stat">
 				<div class="stat-figure text-yellow-500">
-					<Icon icon="solar:text-bold-duotone" class="text-5xl" />
+					<Icon icon={IconTextBoldDuotone} class="text-5xl" />
 				</div>
 				<div class="stat-title">Streamtitel</div>
 				<div class="stat-value text-yellow-500">
@@ -130,7 +137,7 @@
 			</div>
 			<div class="stat">
 				<div class="stat-figure text-emerald-500">
-					<Icon icon="solar:subtitles-bold-duotone" class="text-5xl" />
+					<Icon icon={IconRoundArrowRightUpBoldDuotone} class="text-5xl" />
 				</div>
 				<div class="stat-title">Transkripte</div>
 				<div class="stat-value text-emerald-500">
@@ -140,7 +147,7 @@
 			</div>
 			<div class="stat">
 				<div class="stat-figure text-red-400">
-					<Icon icon="solar:smartphone-update-bold-duotone" class="text-5xl" />
+					<Icon icon={IconSmartphoneUpdateBoldDuotone} class="text-5xl" />
 				</div>
 				<div class="stat-title">Letztes Update</div>
 				<div class="stat-value whitespace-break-spaces text-red-400">
@@ -149,7 +156,7 @@
 			</div>
 			<div class="stat">
 				<div class="stat-figure text-violet-500">
-					<Icon icon="solar:pie-chart-2-bold-duotone" class="text-5xl" />
+					<Icon icon={IconPieChart2BoldDuotone} class="text-5xl" />
 				</div>
 				<div class="stat-title">Datenbankgröße</div>
 				<div class="stat-value text-violet-500">{formatBytes(data.meili.databaseSize)}</div>

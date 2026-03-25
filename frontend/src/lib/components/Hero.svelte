@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { PUBLIC_API_URL } from '$env/static/public';
+	import IconAltArrowRightBoldDuotone from '@iconify-icons/solar/alt-arrow-right-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import { formatDistance, parseISO } from 'date-fns';
 	import { de } from 'date-fns/locale';
@@ -69,7 +70,7 @@
 							class="btn btn-primary btn-sm border-none hover:bg-purple-700"
 							href={resolve(`/vods/${vod.id}`)}
 							>Jetzt ansehen
-							<Icon icon="solar:alt-arrow-right-bold-duotone" class="text-3xl" />
+							<Icon icon={IconAltArrowRightBoldDuotone} class="text-3xl" />
 						</a>
 					</div>
 				</div>

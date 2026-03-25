@@ -3,6 +3,7 @@
 	import { PUBLIC_MEILI_SEARCH_KEY, PUBLIC_MEILI_URL } from '$env/static/public';
 	import Pagination from '$lib/components/Pagination.svelte';
 	import SearchResult from '$lib/components/SearchResult.svelte';
+	import IconMenuDotsSquareBoldDuotone from '@iconify-icons/solar/menu-dots-square-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import { MeiliSearch } from 'meilisearch';
 	import { onMount } from 'svelte';
@@ -102,7 +103,7 @@
 		for="menu-drawer"
 		class="btn btn-ghost mask drawer-button mask-squircle flex-nowrap p-0 md:hidden"
 	>
-		<Icon icon="solar:menu-dots-square-bold-duotone" class="text-primary text-5xl" />
+		<Icon icon={IconMenuDotsSquareBoldDuotone} class="text-primary text-5xl" />
 	</label>
 	<button
 		class="input border-base-content/20 bg-base-300/50 text-base-content/50 hover:border-base-content/50 hover:bg-base-300/80 hover:text-base-content w-full cursor-pointer rounded-full drop-shadow-md transition duration-200 md:max-w-lg"
