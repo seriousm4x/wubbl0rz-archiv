@@ -340,7 +340,7 @@ func DownloadClips(app core.App) int {
 		}
 
 		// get metadata from clip url
-		if err := assets.GetMetadata(clipSubDir, &m); err != nil {
+		if err := assets.GetMetadata(outfile, &m); err != nil {
 			if err := os.RemoveAll(clipSubDir); err != nil {
 				logger.Error.Println(err)
 			}
