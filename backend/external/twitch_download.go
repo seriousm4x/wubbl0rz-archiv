@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"sort"
+	"strconv"
 
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
@@ -140,7 +141,9 @@ func BuildDownloadURL(id string, isVod bool) (string, error) {
 
 	qualities := playbackResponse.Data.Clip.VideoQualities
 	sort.Slice(qualities, func(i, j int) bool {
-		return qualities[i].Quality > qualities[j].Quality
+		qi, _ := strconv.Atoi(qualities[i].Quality)
+		qj, _ := strconv.Atoi(qualities[j].Quality)
+		return qi > qj
 	})
 
 	best := qualities[0]
