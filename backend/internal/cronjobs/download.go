@@ -252,7 +252,7 @@ func DownloadClips(app core.App) int {
 
 			boxUrl := fmt.Sprintf("https://static-cdn.jtvnw.net/ttv-boxart/%s-100x133.jpg", clip.GameID)
 			if clip.GameID == "" {
-				clip.GameID = "0"
+				clip.GameID = "1"
 				boxUrl = "https://static-cdn.jtvnw.net/ttv-static/404_boxart-100x133.jpg"
 			}
 
