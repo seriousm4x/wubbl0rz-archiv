@@ -246,16 +246,14 @@ func DownloadClips(app core.App) int {
 		m.Filename = clip.ID
 
 		// update game
+		boxUrl := fmt.Sprintf("https://static-cdn.jtvnw.net/ttv-boxart/%s-100x133.jpg", clip.GameID)
+		if clip.GameID == "" {
+			clip.GameID = "1"
+			boxUrl = "https://static-cdn.jtvnw.net/ttv-static/404_boxart-100x133.jpg"
+		}
 		game, err := app.FindFirstRecordByData("game", "ttv_id", clip.GameID)
 		if err == sql.ErrNoRows {
 			game = core.NewRecord(gameCollection)
-
-			boxUrl := fmt.Sprintf("https://static-cdn.jtvnw.net/ttv-boxart/%s-100x133.jpg", clip.GameID)
-			if clip.GameID == "" {
-				clip.GameID = "1"
-				boxUrl = "https://static-cdn.jtvnw.net/ttv-static/404_boxart-100x133.jpg"
-			}
-
 			game.Set("ttv_id", clip.GameID)
 			game.Set("name", "Unknown")
 			game.Set("box_art_url", boxUrl)
