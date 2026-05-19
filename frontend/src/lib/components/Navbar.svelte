@@ -5,7 +5,7 @@
 	import SearchResult from '$lib/components/SearchResult.svelte';
 	import IconMenuDotsSquareBoldDuotone from '@iconify-icons/solar/menu-dots-square-bold-duotone';
 	import Icon from '@iconify/svelte';
-	import { MeiliSearch } from 'meilisearch';
+	import { Meilisearch } from 'meilisearch';
 	import { onMount } from 'svelte';
 
 	let scrollY: number = $state(0);
@@ -15,7 +15,7 @@
 	let currentPage = $state(1);
 	let body: HTMLBodyElement;
 
-	const client = new MeiliSearch({
+	const client = new Meilisearch({
 		host: PUBLIC_MEILI_URL,
 		apiKey: PUBLIC_MEILI_SEARCH_KEY
 	});

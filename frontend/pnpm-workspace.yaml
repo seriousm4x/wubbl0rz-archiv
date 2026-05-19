@@ -1,0 +1,5 @@
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - daisyui@5.5.20
+  - postcss@8.5.15
