@@ -46,6 +46,7 @@
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",
 		"@tailwindcss/vite": "^4.3.0",
 		"date-fns": "^4.4.0",
+		"fscreen": "^1.2.0",
 		"hls.js": "^1.6.16",
 		"meilisearch": "^0.58.0",
 		"pocketbase": "^0.27.0",
