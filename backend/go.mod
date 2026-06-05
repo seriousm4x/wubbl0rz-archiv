@@ -1,14 +1,14 @@
 module github.com/seriousm4x/wubbl0rz-archiv
 
-go 1.26.2
+go 1.26.4
 
 require (
 	github.com/bwmarrin/discordgo v0.29.0
 	github.com/gempir/go-twitch-irc/v3 v3.3.0
 	github.com/joho/godotenv v1.5.1
-	github.com/meilisearch/meilisearch-go v0.36.2
+	github.com/meilisearch/meilisearch-go v0.36.3
 	github.com/pocketbase/dbx v1.12.0
-	github.com/pocketbase/pocketbase v0.39.0
+	github.com/pocketbase/pocketbase v0.39.1
 	github.com/spf13/cobra v1.10.2
 	golang.org/x/sync v0.20.0
 )

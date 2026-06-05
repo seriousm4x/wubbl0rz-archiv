@@ -165,9 +165,10 @@ var (
 				logger.Error.Println(err)
 				return
 			}
+			hitsPerPage := int64(5)
 			client := meilisearch.New(meiliUrl, meilisearch.WithAPIKey(meiliSearchKey))
 			searchRes, err := client.Index("transcripts").Search(searchStr, &meilisearch.SearchRequest{
-				HitsPerPage:           5,
+				HitsPerPage:           &hitsPerPage,
 				AttributesToHighlight: []string{"text"},
 				HighlightPreTag:       "***",
 				HighlightPostTag:      "***",
