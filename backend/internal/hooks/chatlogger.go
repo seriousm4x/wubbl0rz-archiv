@@ -20,7 +20,7 @@ var botBlacklist = []string{
 	"deepbot",
 	"coebot",
 	"phantombot",
-	"stay_hydrated_bo",
+	"stay_hydrated_bot",
 }
 
 type Chatlogger struct {
