@@ -2,12 +2,25 @@ package hooks
 
 import (
 	"html"
+	"slices"
 	"time"
 
 	"github.com/gempir/go-twitch-irc/v3"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/seriousm4x/wubbl0rz-archiv/internal/logger"
 )
+
+var botBlacklist = []string{
+	"nightbot",
+	"moobot",
+	"streamlabs",
+	"streamelements",
+	"wizebot",
+	"deepbot",
+	"coebot",
+	"phantombot",
+	"stay_hydrated_bo",
+}
 
 type Chatlogger struct {
 	Client     *twitch.Client
@@ -35,6 +48,9 @@ func (cl *Chatlogger) Run(broadcaster string) {
 	logger.Debug.Println("[hooks] running chatlogger")
 
 	cl.Client.OnPrivateMessage(func(message twitch.PrivateMessage) {
+		if slices.Contains(botBlacklist, message.User.Name) {
+			return
+		}
 		record := core.NewRecord(cl.Collection)
 		record.Set("date", message.Time)
 		record.Set("user_id", message.User.ID)

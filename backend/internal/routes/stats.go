@@ -190,17 +190,6 @@ func Stats(app core.App, e *core.RequestEvent) error {
 				user_name AS name,
 				COUNT(*) AS msg_count
 			FROM chatmessage
-			WHERE user_name NOT IN (
-				'nightbot',
-				'moobot',
-				'streamlabs',
-				'streamelements',
-				'wizebot',
-				'deepbot',
-				'coebot',
-				'phantombot',
-				'stay_hydrated_bot'
-			)
 			GROUP BY user_name
 			ORDER BY msg_count DESC
 			LIMIT 8
