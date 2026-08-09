@@ -185,19 +185,19 @@ func Stats(app core.App, e *core.RequestEvent) error {
 
 	// Process chat messages.
 	errs.Go(func() error {
-		err := app.DB().NewQuery(`
-			SELECT
-				user_name AS name,
-				COUNT(*) AS msg_count
-			FROM chatmessage
-			GROUP BY user_name
-			ORDER BY msg_count DESC
-			LIMIT 8
-		`).All(&stats.Chatters)
-
+		records, err := app.FindRecordsByFilter("chatterstats", "", "-msg_count", 8, 0)
 		if err != nil {
 			return e.JSON(http.StatusInternalServerError, map[string]any{
-				"message": "failed to get chatmessage statistics",
+				"message": "failed to get chatter statistics",
+			})
+		}
+
+		stats.Chatters = make([]chatter, 0, len(records))
+
+		for _, record := range records {
+			stats.Chatters = append(stats.Chatters, chatter{
+				Name:     record.GetString("user_name"),
+				MsgCount: record.GetInt("msg_count"),
 			})
 		}
 

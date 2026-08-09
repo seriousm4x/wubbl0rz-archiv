@@ -1,6 +1,7 @@
 package hooks
 
 import (
+	"database/sql"
 	"html"
 	"slices"
 	"time"
@@ -72,4 +73,63 @@ func (cl *Chatlogger) Run(broadcaster string) {
 			time.Sleep(1 * time.Second) // avoid rate limit
 		}
 	}
+}
+
+func UpdateChatMessageStats(e *core.RecordEvent) error {
+	userName := e.Record.GetString("user_name")
+
+	if userName == "" {
+		return e.Next()
+	}
+
+	err := e.App.RunInTransaction(func(txApp core.App) error {
+		stats, err := txApp.FindFirstRecordByData(
+			"chatterstats",
+			"user_name",
+			userName,
+		)
+
+		if err != nil {
+			if err != sql.ErrNoRows {
+				logger.Error.Println(err)
+				return err
+			}
+
+			collection, err := txApp.FindCollectionByNameOrId("chatterstats")
+			if err != nil {
+				logger.Error.Println(err)
+				return err
+			}
+
+			stats = core.NewRecord(collection)
+			stats.Set("user_name", userName)
+			stats.Set("msg_count", 1)
+
+			if err := txApp.Save(stats); err != nil {
+				logger.Error.Println(err)
+				return err
+			}
+
+			return nil
+		}
+
+		stats.Set(
+			"msg_count",
+			stats.GetInt("msg_count")+1,
+		)
+
+		if err := txApp.Save(stats); err != nil {
+			logger.Error.Println(err)
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		logger.Error.Println(err)
+		return err
+	}
+
+	return e.Next()
 }

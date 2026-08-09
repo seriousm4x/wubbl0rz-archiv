@@ -159,6 +159,9 @@ func main() {
 		return nil
 	})
 
+	// update chat message stats after each chat message is created
+	app.OnRecordAfterCreateSuccess("chatmessage").BindFunc(hooks.UpdateChatMessageStats)
+
 	if err := app.Start(); err != nil {
 		logger.Fatal.Fatalln(err)
 	}
