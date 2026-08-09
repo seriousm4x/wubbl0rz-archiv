@@ -87,7 +87,7 @@
 		<Card {video} />
 	{:else}
 		<div
-			class="card w-full rounded-xl bg-base-200 hover:shadow-lg aspect-video justify-center items-center"
+			class="card bg-base-200 aspect-video w-full items-center justify-center rounded-xl hover:shadow-lg"
 		>
 			❌ Keine Clips im letzen Monat
 		</div>
