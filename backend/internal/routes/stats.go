@@ -73,53 +73,7 @@ func Stats(app core.App, e *core.RequestEvent) error {
 
 		var result vodStats
 
-		err = app.DB().NewQuery(`
-			SELECT
-				COUNT(*) AS count_vods,
-
-				COALESCE(SUM(duration), 0) AS total_duration,
-
-				COALESCE(SUM(size), 0)
-					+ COALESCE(SUM(size_audio), 0) AS total_size,
-
-				COALESCE(SUM(
-					CASE
-						WHEN date >= {:last30} THEN 1
-						ELSE 0
-					END
-				), 0) AS count_last30,
-
-				COALESCE(SUM(
-					CASE
-						WHEN date >= {:last60to30}
-							AND date < {:last30}
-						THEN 1
-						ELSE 0
-					END
-				), 0) AS count_last60to30,
-
-				COALESCE(SUM(
-					CASE
-						WHEN date >= {:last30} THEN duration
-						ELSE 0
-					END
-				), 0) AS duration_last30,
-
-				COALESCE(SUM(
-					CASE
-						WHEN date >= {:last60to30}
-							AND date < {:last30}
-						THEN duration
-						ELSE 0
-					END
-				), 0) AS duration_last60to30
-
-			FROM vod
-			WHERE publish = true
-		`).Bind(dbx.Params{
-			"last30":     last30Str,
-			"last60to30": last60to30Str,
-		}).One(&result)
+		err = app.DB().NewQuery(`SELECT COUNT(*) AS count_vods, COALESCE(SUM(duration), 0) AS total_duration, COALESCE(SUM(size), 0) + COALESCE(SUM(size_audio), 0) AS total_size, COALESCE(SUM(CASE WHEN date >= {:last30} THEN 1 ELSE 0 END), 0) AS count_last30, COALESCE(SUM(CASE WHEN date >= {:last60to30} AND date < {:last30} THEN 1 ELSE 0 END), 0) AS count_last60to30, COALESCE(SUM(CASE WHEN date >= {:last30} THEN duration ELSE 0 END), 0) AS duration_last30, COALESCE(SUM(CASE WHEN date >= {:last60to30} AND date < {:last30} THEN duration ELSE 0 END), 0) AS duration_last60to30 FROM vod WHERE publish = true`).Bind(dbx.Params{"last30": last30Str, "last60to30": last60to30Str}).One(&result)
 
 		if err != nil {
 			return e.JSON(http.StatusInternalServerError, map[string]any{
@@ -142,33 +96,7 @@ func Stats(app core.App, e *core.RequestEvent) error {
 	errs.Go(func() error {
 		var result clipStats
 
-		err := app.DB().NewQuery(`
-			SELECT
-				COUNT(*) AS count_clips,
-
-				COALESCE(SUM(size), 0) AS total_size,
-
-				COALESCE(SUM(
-					CASE
-						WHEN date >= {:last30} THEN 1
-						ELSE 0
-					END
-				), 0) AS count_last30,
-
-				COALESCE(SUM(
-					CASE
-						WHEN date >= {:last60to30}
-							AND date < {:last30}
-						THEN 1
-						ELSE 0
-					END
-				), 0) AS count_last60to30
-
-			FROM clip
-		`).Bind(dbx.Params{
-			"last30":     last30Str,
-			"last60to30": last60to30Str,
-		}).One(&result)
+		err := app.DB().NewQuery(`SELECT COUNT(*) AS count_clips, COALESCE(SUM(size), 0) AS total_size, COALESCE(SUM(CASE WHEN date >= {:last30} THEN 1 ELSE 0 END), 0) AS count_last30, COALESCE(SUM(CASE WHEN date >= {:last60to30} AND date < {:last30} THEN 1 ELSE 0 END), 0) AS count_last60to30 FROM clip`).Bind(dbx.Params{"last30": last30Str, "last60to30": last60to30Str}).One(&result)
 
 		if err != nil {
 			return e.JSON(http.StatusInternalServerError, map[string]any{
