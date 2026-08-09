@@ -192,8 +192,6 @@ func Stats(app core.App, e *core.RequestEvent) error {
 			})
 		}
 
-		stats.Chatters = make([]chatter, 0, len(records))
-
 		for _, record := range records {
 			stats.Chatters = append(stats.Chatters, chatter{
 				Name:     record.GetString("user_name"),
