@@ -19,7 +19,8 @@ export async function load({ fetch }) {
 		chatters: [
 			{
 				name: '',
-				msg_count: 0
+				msg_count: 0,
+				updated: new Date()
 			}
 		]
 	};

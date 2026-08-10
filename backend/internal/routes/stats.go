@@ -7,14 +7,16 @@ import (
 
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase/core"
+	"github.com/pocketbase/pocketbase/tools/types"
 	"golang.org/x/sync/errgroup"
 )
 
 // Route to gather archive statistics
 func Stats(app core.App, e *core.RequestEvent) error {
 	type chatter struct {
-		Name     string `json:"name"`
-		MsgCount int    `json:"msg_count"`
+		Name     string         `json:"name"`
+		MsgCount int            `json:"msg_count"`
+		Updated  types.DateTime `json:"updated"`
 	}
 
 	type vodStats struct {
@@ -113,7 +115,7 @@ func Stats(app core.App, e *core.RequestEvent) error {
 
 	// Process chat messages.
 	errs.Go(func() error {
-		records, err := app.FindRecordsByFilter("chatterstats", "", "-msg_count", 8, 0)
+		records, err := app.FindRecordsByFilter("chatterstats", "", "-msg_count", 15, 0)
 		if err != nil {
 			return e.JSON(http.StatusInternalServerError, map[string]any{
 				"message": "failed to get chatter statistics",
@@ -124,6 +126,7 @@ func Stats(app core.App, e *core.RequestEvent) error {
 			stats.Chatters = append(stats.Chatters, chatter{
 				Name:     record.GetString("user_name"),
 				MsgCount: record.GetInt("msg_count"),
+				Updated:  record.GetDateTime("updated"),
 			})
 		}
 

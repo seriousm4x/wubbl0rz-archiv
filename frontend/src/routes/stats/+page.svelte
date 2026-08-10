@@ -10,7 +10,7 @@
 	import IconTextBoldDuotone from '@iconify-icons/solar/text-bold-duotone';
 	import IconVideocameraRecordBoldDuotone from '@iconify-icons/solar/videocamera-record-bold-duotone';
 	import Icon from '@iconify/svelte';
-	import { formatRelative, parseISO } from 'date-fns';
+	import { formatRelative, parseISO, formatDistanceToNow, format } from 'date-fns';
 	import { de } from 'date-fns/locale';
 	import type { RecordModel } from 'pocketbase';
 	import type { PageData } from './$types';
@@ -171,18 +171,25 @@
 		</h1>
 		<div class="overflow-x-auto">
 			<table class="table-sm table">
-				<!-- head -->
 				<thead>
 					<tr>
+						<th>#</th>
 						<th>Name</th>
 						<th>Nachrichten</th>
+						<th>Letzte Nachricht</th>
 					</tr>
 				</thead>
 				<tbody>
 					{#each data.stats.chatters as chatter, index (index)}
 						<tr class="hover">
+							<td>{index + 1}.</td>
 							<td>{chatter.name}</td>
 							<td>{chatter.msg_count.toLocaleString('de-DE')}</td>
+							<td title={format(chatter.updated, "dd.MM.yyyy 'um' HH:mm:ss")}
+								>vor {formatDistanceToNow(chatter.updated, {
+									locale: de
+								})}</td
+							>
 						</tr>
 					{/each}
 				</tbody>
