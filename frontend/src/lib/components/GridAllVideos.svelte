@@ -132,8 +132,10 @@
 					{placeholder}
 					bind:value={searchValue}
 				/>
-				<div class="join -furoundedll">
-					<span class="join-item bg-base-200 flex items-center justify-center rounded-s-full px-4">
+				<div class="join rounded-full">
+					<span
+						class="join-item bg-base-200 flex items-center justify-center rounded-s-full border-0 px-4"
+					>
 						Sortieren
 					</span>
 					<select
@@ -167,7 +169,9 @@
 					</div>
 				</div>
 				<div class="join">
-					<span class="join-item bg-base-100 flex items-center justify-center rounded-s-full px-4">
+					<span
+						class="join-item bg-base-100 flex items-center justify-center rounded-s-full border-0 px-4"
+					>
 						Von
 					</span>
 					<input
@@ -177,7 +181,9 @@
 					/>
 				</div>
 				<div class="join rounded-full">
-					<span class="join-item bg-base-100 flex items-center justify-center rounded-s-full px-4">
+					<span
+						class="join-item bg-base-100 flex items-center justify-center rounded-s-full border-0 px-4"
+					>
 						Bis
 					</span>
 					<input

@@ -9,3 +9,7 @@
 @plugin 'daisyui' {
 	themes: dark --default;
 }
+
+:root {
+	--depth: 0;
+}
