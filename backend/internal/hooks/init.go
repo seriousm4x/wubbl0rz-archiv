@@ -47,29 +47,35 @@ func InitBackend(app core.App) error {
 	if lastEmoteSync.IsZero() || lastEmoteSync.Time().Add(1*time.Hour).Before(time.Now()) {
 		go cronjobs.UpdateEmotes(app)
 	}
-	lastVodSync := publicSettings.GetDateTime("last_vod_sync")
-	if lastVodSync.IsZero() || lastVodSync.Time().Add(1*time.Hour).Before(time.Now()) {
-		go cronjobs.RunTwitchDownloads(app)
+
+	// only run twitch downloads in production
+	if !app.IsDev() {
+		lastVodSync := publicSettings.GetDateTime("last_vod_sync")
+		if lastVodSync.IsZero() || lastVodSync.Time().Add(1*time.Hour).Before(time.Now()) {
+			go cronjobs.RunTwitchDownloads(app)
+		}
 	}
 
-	// schedule cronjobs
-	scheduler := app.Cron()
-	scheduler.SetTimezone(time.Now().Local().Location())
-	scheduler.MustAdd("set_stream_status", "*/1 * * * *", func() {
-		cronjobs.SetStreamStatus(app)
-	})
-	scheduler.MustAdd("update_emotes", "@hourly", func() {
-		cronjobs.UpdateEmotes(app)
-	})
-	scheduler.MustAdd("twitch_downloads", "@hourly", func() {
-		cronjobs.RunTwitchDownloads(app)
-	})
-	scheduler.MustAdd("database_vacuum", "@monthly", func() {
-		cronjobs.RunVaccum(app)
-	})
+	// schedule cronjobs in production
+	if !app.IsDev() {
+		scheduler := app.Cron()
+		scheduler.SetTimezone(time.Now().Local().Location())
+		scheduler.MustAdd("set_stream_status", "*/1 * * * *", func() {
+			cronjobs.SetStreamStatus(app)
+		})
+		scheduler.MustAdd("update_emotes", "@hourly", func() {
+			cronjobs.UpdateEmotes(app)
+		})
+		scheduler.MustAdd("twitch_downloads", "@hourly", func() {
+			cronjobs.RunTwitchDownloads(app)
+		})
+		scheduler.MustAdd("database_vacuum", "@monthly", func() {
+			cronjobs.RunVaccum(app)
+		})
 
-	if err := deleteEmptyGameRecords(app); err != nil {
-		return err
+		if err := deleteEmptyGameRecords(app); err != nil {
+			return err
+		}
 	}
 
 	return nil
