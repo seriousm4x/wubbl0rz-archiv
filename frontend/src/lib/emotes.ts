@@ -71,7 +71,7 @@ export async function getEmotes(): Promise<[Emotes, RegExp]> {
 				});
 			}),
 
-		fetch('https://7tv.io/v3/emote-sets/62cdd34e72a832540de95857')
+		fetch('https://7tv.io/v3/emote-sets/01HKQT8EWR000ESSWF3625XCS4')
 			.then((response) => response.json())
 			.then((data) => {
 				data.emotes.forEach((e: seventvEmote) => {

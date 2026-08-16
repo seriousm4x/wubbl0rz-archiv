@@ -6,8 +6,7 @@
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
 	import IconCircleSquareArrowBoldDuotone from '@iconify-icons/solar/chat-square-arrow-bold-duotone';
 	import Icon from '@iconify/svelte';
-	import { format, formatDistance, parseISO } from 'date-fns';
-	import { de } from 'date-fns/locale';
+	import { format, parseISO } from 'date-fns';
 	import type { ListResult, RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 
@@ -86,11 +85,7 @@
 							title={format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}
 						>
 							<time class="text-xs opacity-50">
-								{formatDistance(parseISO(message.date), Date.now(), {
-									addSuffix: true,
-									includeSeconds: true,
-									locale: de
-								})}
+								{format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}
 							</time>
 						</div>
 					</div>
@@ -137,11 +132,7 @@
 							title={format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}
 						>
 							<time class="text-xs opacity-50">
-								{formatDistance(parseISO(message.date), Date.now(), {
-									addSuffix: true,
-									includeSeconds: true,
-									locale: de
-								})}
+								{format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}
 							</time>
 						</div>
 					</div>
