@@ -12,6 +12,9 @@
 	import { onMount } from 'svelte';
 
 	let { data }: { data: ListResult<RecordModel> } = $props();
+	let realtimeMessages = $state.raw<RecordModel[]>([]);
+	let messages = $derived(realtimeMessages.length > 0 ? realtimeMessages : data.items);
+	let emotesPromise = getEmotes();
 	let sliderValue = $state(200);
 
 	let og = $state({
@@ -19,11 +22,12 @@
 		title: 'Livechat'
 	});
 
-	onMount(async () => {
-		$pb.collection('chatmessage').subscribe('*', function (e) {
-			data.items = [e.record, ...data.items];
-			if (sliderValue === 500) return;
-			data.items = data.items.slice(0, sliderValue);
+	onMount(() => {
+		$pb.collection('chatmessage').subscribe('*', (e) => {
+			realtimeMessages = [e.record, ...messages];
+			if (sliderValue !== 500) {
+				realtimeMessages = realtimeMessages.slice(0, sliderValue);
+			}
 		});
 	});
 </script>
@@ -47,7 +51,7 @@
 			max="500"
 			step="100"
 			bind:value={sliderValue}
-			onchange={() => (data.items = data.items.slice(0, sliderValue))}
+			onchange={() => (realtimeMessages = messages.slice(0, sliderValue))}
 		/>
 		<div class="mt-2 flex justify-between px-2.5 text-xs">
 			<span>|</span>
@@ -65,12 +69,12 @@
 		</div>
 	</div>
 	<div class="mt-8 flex flex-col gap-2">
-		{#await getEmotes()}
+		{#await emotesPromise}
 			<div class="w-full text-center">
 				<span class="loading loading-spinner loading-lg"></span>
 			</div>
 		{:then [emotes, re]}
-			{#each data.items as message, index (index)}
+			{#each messages as message (message.id)}
 				<div class="chat chat-start rounded-sm transition duration-100">
 					<div class="chat-header">
 						<span
@@ -121,7 +125,7 @@
 				</div>
 			{/each}
 		{:catch}
-			{#each data.items as message, index (index)}
+			{#each messages as message (message.id)}
 				<div class="chat chat-start rounded-sm transition duration-100">
 					<div class="chat-header">
 						<span

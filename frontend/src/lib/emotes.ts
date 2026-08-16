@@ -37,7 +37,7 @@ type seventvEmote = {
 export async function getEmotes(): Promise<[Emotes, RegExp]> {
 	const finalEmotes: Emotes = {};
 
-	await Promise.all([
+	await Promise.allSettled([
 		pb
 			.collection('emote')
 			.getFullList()
@@ -88,8 +88,11 @@ export async function getEmotes(): Promise<[Emotes, RegExp]> {
 	// escape all emotes for regex: https://stackoverflow.com/a/6969486/6574444
 	emoteKeys = emoteKeys.map((emote) => emote.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
 
-	// join all emotes in word boundaries and match case insensitive
-	const re = new RegExp(`\\b(${emoteKeys.join('|')})\\b`, 'gi');
+	// Match emotes without matching normal names inside a larger word. Unlike \b,
+	// this also supports punctuation-only emotes such as :) and <3.
+	const re = emoteKeys.length
+		? new RegExp(`(?<![\\p{L}\\p{N}_])(${emoteKeys.join('|')})(?![\\p{L}\\p{N}_])`, 'giu')
+		: /$a/;
 
 	return [finalEmotes, re];
 }
