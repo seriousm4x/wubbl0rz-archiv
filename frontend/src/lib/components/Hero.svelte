@@ -15,7 +15,7 @@
 <section class="mx-auto max-w-6xl space-y-4" aria-labelledby="featured-vod-title">
 	<a
 		href={resolve(`/vods/${vod.id}`)}
-		class="card group rounded-box relative block aspect-[21/9] overflow-hidden shadow-sm"
+		class="card group rounded-box relative block aspect-21/9 overflow-hidden shadow-sm"
 		onmouseenter={() => (hover = true)}
 		onmouseleave={() => (hover = false)}
 	>

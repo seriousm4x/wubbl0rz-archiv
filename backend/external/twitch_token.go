@@ -26,7 +26,7 @@ func TwitchUpdateBearer(app core.App) error {
 	}
 
 	if !settings.GetDateTime("ttv_bearer_expire").Time().IsZero() &&
-		settings.GetDateTime("ttv_bearer_expire").Time().Before(time.Now().Add(24*time.Hour)) {
+		settings.GetDateTime("ttv_bearer_expire").Time().After(time.Now().Add(24*time.Hour)) {
 		return nil
 	}
 

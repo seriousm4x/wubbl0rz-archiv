@@ -39,9 +39,9 @@ export function replaceEmotesInString(
 
 	// and finally replace our emotes with html
 	const modifiedString = decodedmsg.replace(regexPattern, (match) => {
-		const replacement = `<div class="tooltip" data-tip="${match}"><img src="${
+		const replacement = `<span class="tooltip inline-flex items-center align-middle" data-tip="${match}"><img src="${
 			emotes[match.toLowerCase()]
-		}" alt="${match}" loading="lazy" style="height: 2em;" /></div>`;
+		}" alt="${match}" loading="lazy" style="height: 2em; width: auto;" /></span>`;
 		return replacement || match;
 	});
 

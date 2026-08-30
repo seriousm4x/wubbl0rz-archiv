@@ -1,21 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
-	import Card from '$lib/components/Card.svelte';
+	import ChatReplay from '$lib/components/ChatReplay.svelte';
 	import Player from '$lib/components/Player.svelte';
 	import SEO from '$lib/components/SEO.svelte';
-	import { formatBytes, toHHMMSS } from '$lib/functions';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
-	import IconArrowAutofitWidthDotted24Filled from '@iconify-icons/fluent/arrow-autofit-width-dotted-24-filled';
-	import IconDownloadSquareBoldDuotone from '@iconify-icons/solar/download-square-bold-duotone';
-	import IconFireBoldDuotone from '@iconify-icons/solar/fire-bold-duotone';
-	import IconHeadphonesRoundSoundBold from '@iconify-icons/solar/headphones-round-sound-bold';
-	import IconRoundArrowRightBoldDuotone from '@iconify-icons/solar/round-arrow-right-bold-duotone';
-	import IconRoundArrowRightDownBoldDuotone from '@iconify-icons/solar/round-arrow-right-down-bold-duotone';
-	import IconRoundArrowRightUpBoldDuotone from '@iconify-icons/solar/round-arrow-right-up-bold-duotone';
-	import IconShareBoldDuotone from '@iconify-icons/solar/share-bold-duotone';
-	import Icon from '@iconify/svelte';
-	import { format, formatDistance, parseISO } from 'date-fns';
+	import { format, parseISO } from 'date-fns';
 	import { de } from 'date-fns/locale';
 	import type { RecordModel } from 'pocketbase';
 	import type { MediaPlayerElement } from 'vidstack/elements';
@@ -30,205 +19,51 @@
 	});
 
 	let player: MediaPlayerElement = $state({} as MediaPlayerElement);
-	let currentTime: number = $state(0);
-
+	let playerHeight = $state(0);
+	let currentTime = $state(0);
 	let vod = $derived(data.vod as RecordModel);
-	let vodsCount = $derived(data.vodsCount);
-	let vodPosition = $derived(data.vodPosition);
-	let recommendations = $derived(data.recommendations);
-	let percentile = $derived((vodPosition * 100) / vodsCount);
-	let percentileRounded = $derived(percentile < 1 ? percentile.toFixed(2) : Math.round(percentile));
-	let isAudio = $state(false);
-	let theaterEnabled = $state(false);
-
-	function copyLink(withTimestamp: boolean) {
-		const url = new URL(page.url.origin + page.url.pathname);
-		if (withTimestamp) {
-			url.searchParams.set('t', currentTime.toFixed(0));
-		}
-		navigator.clipboard.writeText(url.toString());
-	}
-
-	function onKeyDown(e: KeyboardEvent) {
-		switch (e.key) {
-			case 't':
-				theaterEnabled = !theaterEnabled;
-				break;
-			default:
-				break;
-		}
-	}
 </script>
-
-<svelte:window onkeydown={onKeyDown} />
 
 <SEO {og} />
 
 <div
-	class="mx-auto flex w-full flex-col gap-8 {theaterEnabled
-		? 'max-w-none'
-		: 'max-w-480 xl:flex-row'}"
+	class="-m-4 grid h-[calc(100dvh-4rem)] grid-rows-[auto_minmax(0,1fr)] overflow-hidden xl:grid-cols-[minmax(0,1fr)_22rem] xl:grid-rows-[minmax(0,1fr)]"
 >
-	<div class="flex flex-col gap-4 {theaterEnabled ? '' : 'xl:w-4/5'}">
+	<div class="group relative min-h-0 min-w-0 bg-black xl:h-full" bind:clientHeight={playerHeight}>
+		<Player
+			class="vod-player h-full w-full"
+			bind:player
+			bind:currentTime
+			video={vod}
+			isAudio={false}
+		/>
+
 		<div
-			class={theaterEnabled ? 'mx-auto' : ''}
-			style:width={theaterEnabled ? 'min(100%, calc((100dvh - 5rem) * 16 / 9))' : undefined}
+			class="pointer-events-none absolute inset-x-0 top-0 bg-linear-to-b from-black/85 via-black/45 to-transparent px-4 pt-5 pb-16 text-white transition-opacity duration-200 xl:opacity-0 xl:group-hover:opacity-100"
 		>
-			<Player bind:player bind:currentTime video={vod} {isAudio} />
-		</div>
-		<h1 class="text-2xl leading-tight font-semibold tracking-tight sm:text-4xl">
-			{vod.title}
-		</h1>
-		<div class="stats stats-vertical bg-base-200 lg:stats-horizontal w-full shadow">
-			<div class="stat">
-				<div class="stat-title text-lg">Gestreamt am</div>
-				<div class="stat-value text-2xl">
-					{format(parseISO(vod.date), 'dd.MM.yyyy', { locale: de })}
-				</div>
-				<div class="stat-desc">
-					{formatDistance(parseISO(vod.date), Date.now(), {
-						addSuffix: true,
-						includeSeconds: true,
-						locale: de
-					})} um {format(parseISO(vod.date), 'HH:mm', { locale: de })} Uhr
-				</div>
+			<h1 class="max-w-4xl text-xl leading-tight font-semibold tracking-tight sm:text-2xl">
+				{vod.title}
+			</h1>
+			<div class="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-sm text-white/75">
+				<span>
+					{format(parseISO(vod.date), 'dd.MM.yyyy, HH:mm', { locale: de })} Uhr
+				</span>
+				|
+				<span>{vod.viewcount.toLocaleString('de-DE')} Views</span> |
+				<span>{vod.resolution}@{vod.fps} FPS</span>
 			</div>
-			<div class="stat">
-				<div class="stat-title text-lg">Views</div>
-				<div class="stat-value text-2xl">{vod.viewcount.toLocaleString('de-DE')}</div>
-				<div class="stat-desc">
-					Sync {formatDistance(parseISO(vod.updated), Date.now(), {
-						addSuffix: true,
-						includeSeconds: true,
-						locale: de
-					})}
-				</div>
-			</div>
-			<div class="stat">
-				<div class="stat-title text-lg">Platz</div>
-				<div class="stat-value flex items-center gap-1 text-2xl">
-					#{vodPosition}
-					{#if percentile <= 5}
-						<div title="Top {percentileRounded}%">
-							<Icon icon={IconFireBoldDuotone} class="text-3xl text-red-500" />
-						</div>
-					{:else if percentile <= 33}
-						<div title="Top {percentileRounded}%">
-							<Icon icon={IconRoundArrowRightUpBoldDuotone} class="text-3xl text-green-500" />
-						</div>
-					{:else if percentile <= 66}
-						<div title="Top {percentileRounded}%">
-							<Icon icon={IconRoundArrowRightBoldDuotone} class="text-slate-500" />
-						</div>
-					{:else}
-						<div title="Top {percentileRounded}%">
-							<Icon icon={IconRoundArrowRightDownBoldDuotone} class="text-3xl text-red-500" />
-						</div>
-					{/if}
-				</div>
-				<div class="stat-desc">
-					von {vodsCount} Vods
-				</div>
-			</div>
-			<div class="stat">
-				<div class="stat-title text-lg">Auflösung</div>
-				<div class="stat-value text-2xl">{vod.resolution}</div>
-				<div class="stat-desc">{vod.fps} FPS</div>
-			</div>
-		</div>
-		<div class="flex flex-row flex-wrap justify-start gap-2 md:ms-auto">
-			<button
-				class="btn w-fit rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-				onclick={() => (theaterEnabled = !theaterEnabled)}
-			>
-				<Icon icon={IconArrowAutofitWidthDotted24Filled} class="text-2xl text-violet-500" />
-				{theaterEnabled ? 'Standardansicht' : 'Kinomodus'}
-			</button>
-			<button
-				class="btn w-fit rounded-xl bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-				onclick={() => (isAudio = !isAudio)}
-			>
-				<Icon icon={IconHeadphonesRoundSoundBold} class="text-2xl text-violet-500" />
-				{isAudio ? 'Video' : 'Audio only'}
-			</button>
-			<div class="dropdown md:dropdown-end">
-				<label
-					for="btn-download"
-					tabindex="-1"
-					class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-				>
-					<Icon icon={IconDownloadSquareBoldDuotone} class="text-2xl text-violet-500" /> Download
-				</label>
-				<ul
-					id="btn-download"
-					tabindex="-1"
-					class="menu dropdown-content rounded-box bg-base-200 z-1 w-48 p-2 shadow"
-				>
-					<li>
-						<a href="/download/{vod.collectionName}/{vod.filename}"
-							>Video ({formatBytes(vod.size)})</a
-						>
-					</li>
-					<li>
-						<a href="/download/{vod.collectionName}/{vod.filename}?audio=true"
-							>Audio ({formatBytes(vod.size_audio)})</a
-						>
-					</li>
-				</ul>
-			</div>
-			<div class="dropdown md:dropdown-end">
-				<label
-					for="btn-share"
-					tabindex="-1"
-					class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-				>
-					<Icon icon={IconShareBoldDuotone} class="text-2xl text-violet-500" /> Teilen
-				</label>
-				<ul
-					id="btn-share"
-					tabindex="-1"
-					class="menu dropdown-content rounded-box bg-base-200 z-1 p-2 shadow"
-				>
-					<li>
-						<button onclick={() => copyLink(false)}>Link kopieren</button>
-					</li>
-					<li>
-						<button class="whitespace-nowrap" onclick={() => copyLink(true)}
-							>Link bei {toHHMMSS(currentTime, false)} kopieren</button
-						>
-					</li>
-				</ul>
-			</div>
-		</div>
-		{#if vod['expand']}
-			{#if vod['expand']['clip_via_vod'] && vod['expand']['clip_via_vod'].length > 0}
-				<h2 class="text-2xl font-semibold tracking-tight">
-					<span class="text-base-content">Clips für diesen Stream</span>
-				</h2>
-				<div
-					class="grid grid-flow-row-dense grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
-				>
-					{#each vod['expand']['clip_via_vod'] as video, index (index)}
-						<Card {video} />
-					{/each}
-				</div>
-			{/if}
-		{/if}
-	</div>
-	<div class="flex flex-col gap-4 {theaterEnabled ? '' : 'xl:w-1/5'}">
-		<h2 class="text-2xl font-semibold tracking-tight">
-			<span class="text-base-content">Empfohlene Streams</span>
-		</h2>
-		<div
-			class="grid grid-flow-row-dense gap-4 {theaterEnabled
-				? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'
-				: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-1'}"
-		>
-			{#each recommendations as video (video.id)}
-				<Card {video} />
-			{:else}
-				Keine Ergebnisse
-			{/each}
 		</div>
 	</div>
+
+	<aside class="min-h-0 p-4 xl:h-full xl:p-0">
+		<ChatReplay {vod} {currentTime} {playerHeight} />
+	</aside>
 </div>
+
+<style>
+	:global(.vod-player [data-media-provider] video) {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+</style>

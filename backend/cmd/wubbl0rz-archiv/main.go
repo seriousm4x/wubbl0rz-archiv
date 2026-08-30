@@ -125,6 +125,11 @@ func main() {
 			return routes.Stats(app, e)
 		})
 
+		// proxy Twitch badge metadata without exposing Twitch app credentials
+		se.Router.GET("/twitch/badges", func(e *core.RequestEvent) error {
+			return routes.TwitchBadges(app, e)
+		})
+
 		return se.Next()
 	})
 
