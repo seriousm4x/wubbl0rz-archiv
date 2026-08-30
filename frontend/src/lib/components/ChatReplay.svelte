@@ -156,7 +156,7 @@
 				{#await badgesPromise then badges}
 					{#each visibleMessages as message (message.id)}
 						<p class="mb-1 text-sm leading-5 wrap-break-word hyphens-auto">
-							<span class="text-base-content/45 me-1 text-xs">
+							<span class="text-base-content/45 me-1 font-mono text-xs">
 								{toHHMMSS((Date.parse(message.date) - startTime) / 1000, false)}
 							</span>
 							<span class="me-1 inline-flex align-middle">
