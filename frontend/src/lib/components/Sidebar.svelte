@@ -23,7 +23,7 @@
 	<div class="drawer-content">
 		{@render children()}
 	</div>
-	<div class="drawer-side border-base-content/10 z-50 border-r">
+	<div class="drawer-side border-base-content/10 z-50">
 		<label for="menu-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
 		<ul class="menu bg-base-100 text-base-content min-h-full w-20 gap-1 p-2">
 			<li>
