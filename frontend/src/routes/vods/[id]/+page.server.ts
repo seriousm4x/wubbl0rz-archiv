@@ -1,14 +1,14 @@
 import { createInstance } from '$lib/stores/pocketbase.js';
 import { error } from '@sveltejs/kit';
 import { add, format, parseISO } from 'date-fns';
-import type { ListResult, RecordModel } from 'pocketbase';
+import type { RecordModel } from 'pocketbase';
 
 export async function load({ params }) {
 	const pb = createInstance();
 	let vod = {} as RecordModel;
-	let allVods = {} as ListResult<RecordModel>;
-	let vodPosition = {} as ListResult<RecordModel>;
-	let recommendations = {} as ListResult<RecordModel>;
+	let vodsCount = 0;
+	let vodPosition = 0;
+	let recommendations: RecordModel[] = [];
 
 	await Promise.all([
 		pb
@@ -29,7 +29,7 @@ export async function load({ params }) {
 				requestKey: 'vod_count'
 			})
 			.then((data) => {
-				allVods = data;
+				vodsCount = data.totalItems;
 			})
 			.catch((e) => {
 				return e;
@@ -49,7 +49,7 @@ export async function load({ params }) {
 				requestKey: 'vod_position'
 			})
 			.then((data) => {
-				vodPosition = data;
+				vodPosition = data.totalItems;
 			})
 			.catch((e) => {
 				return e;
@@ -65,7 +65,7 @@ export async function load({ params }) {
 				requestKey: 'vod_recommendations'
 			})
 			.then((data) => {
-				recommendations = data;
+				recommendations = data.items;
 			})
 			.catch((e) => {
 				return e;
@@ -74,8 +74,8 @@ export async function load({ params }) {
 
 	return structuredClone({
 		vod: vod,
-		vodsCount: allVods.totalItems,
-		vodPosition: vodPosition.totalItems,
-		recommendations: recommendations.items.filter((v: RecordModel) => v.id !== vod.id)
+		vodsCount: vodsCount,
+		vodPosition: vodPosition,
+		recommendations: recommendations.filter((v: RecordModel) => v.id !== vod.id)
 	});
 }
