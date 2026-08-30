@@ -68,9 +68,18 @@
 	class="absolute top-0 left-0 -z-10 aspect-video h-full w-full bg-cover bg-center opacity-10 blur-2xl"
 	style="background-image: url('{PUBLIC_API_URL}/vods/{vod.filename}/thumb-lg.webp');"
 ></div>
-<div class="mx-auto flex max-w-480 flex-col gap-8 {theaterEnabled ? '' : 'xl:flex-row'}">
+<div
+	class="mx-auto flex w-full flex-col gap-8 {theaterEnabled
+		? 'max-w-none'
+		: 'max-w-480 xl:flex-row'}"
+>
 	<div class="flex flex-col gap-4 {theaterEnabled ? '' : 'xl:w-4/5'}">
-		<Player bind:player bind:currentTime video={vod} {isAudio} />
+		<div
+			class={theaterEnabled ? 'mx-auto' : ''}
+			style:width={theaterEnabled ? 'min(100%, calc((100dvh - 5rem) * 16 / 9))' : undefined}
+		>
+			<Player bind:player bind:currentTime video={vod} {isAudio} />
+		</div>
 		<h1 class="text-4xl font-bold">
 			{vod.title}
 		</h1>
