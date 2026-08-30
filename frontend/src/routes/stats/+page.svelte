@@ -17,36 +17,44 @@
 
 	let { data }: { data: PageData } = $props();
 
-	let og = $state({
+	let og = $derived({
 		...DefaultOpenGraph,
 		title: 'Statistik',
 		description: 'Übersicht der Metadaten des Archivs.',
 		updated_time: parseISO(data.stats.last_update).toISOString()
 	});
 
-	const sevenTv = data.emotes
-		.filter((emote: RecordModel) => emote.provider === '7tv')
-		.sort((a: RecordModel, b: RecordModel) =>
-			a.name.localeCompare(b.name, 'de', { sensitivity: 'base', numeric: true })
-		);
-	const bttv = data.emotes
-		.filter((emote: RecordModel) => emote.provider === 'bttv')
-		.sort((a: RecordModel, b: RecordModel) =>
-			a.name.localeCompare(b.name, 'de', { sensitivity: 'base', numeric: true })
-		);
-	const twitch = data.emotes
-		.filter((emote: RecordModel) => emote.provider === 'twitch')
-		.sort((a: RecordModel, b: RecordModel) =>
-			a.name.localeCompare(b.name, 'de', { sensitivity: 'base', numeric: true })
-		);
-	const ffz = data.emotes
-		.filter((emote: RecordModel) => emote.provider === 'ffz')
-		.sort((a: RecordModel, b: RecordModel) =>
-			a.name.localeCompare(b.name, 'de', { sensitivity: 'base', numeric: true })
-		);
+	let sevenTv = $derived(
+		data.emotes
+			.filter((emote: RecordModel) => emote.provider === '7tv')
+			.sort((a: RecordModel, b: RecordModel) =>
+				a.name.localeCompare(b.name, 'de', { sensitivity: 'base', numeric: true })
+			)
+	);
+	let bttv = $derived(
+		data.emotes
+			.filter((emote: RecordModel) => emote.provider === 'bttv')
+			.sort((a: RecordModel, b: RecordModel) =>
+				a.name.localeCompare(b.name, 'de', { sensitivity: 'base', numeric: true })
+			)
+	);
+	let twitch = $derived(
+		data.emotes
+			.filter((emote: RecordModel) => emote.provider === 'twitch')
+			.sort((a: RecordModel, b: RecordModel) =>
+				a.name.localeCompare(b.name, 'de', { sensitivity: 'base', numeric: true })
+			)
+	);
+	let ffz = $derived(
+		data.emotes
+			.filter((emote: RecordModel) => emote.provider === 'ffz')
+			.sort((a: RecordModel, b: RecordModel) =>
+				a.name.localeCompare(b.name, 'de', { sensitivity: 'base', numeric: true })
+			)
+	);
 </script>
 
-<SEO bind:og />
+<SEO {og} />
 
 <div class="container mx-auto">
 	<div class="flex flex-col gap-4">

@@ -31,23 +31,20 @@
 	}
 
 	onMount(() => {
-		if (player) {
-			player.storage = new CustomLocalMediaStorage();
+		if (!player) return;
 
-			player.addEventListener('time-update', (event: Event) => {
-				const e = event as CustomEvent<MediaTimeUpdateEventDetail>;
-				currentTime = e.detail.currentTime;
-			});
-		}
+		player.storage = new CustomLocalMediaStorage();
+		const onTimeUpdate = (event: Event) => {
+			const e = event as CustomEvent<MediaTimeUpdateEventDetail>;
+			currentTime = e.detail.currentTime;
+		};
+		player.addEventListener('time-update', onTimeUpdate);
+		player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
+
+		return () => player.removeEventListener('time-update', onTimeUpdate);
 	});
 
-	$effect(() => {
-		if (player) {
-			player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
-		}
-	});
-
-	let type = video.collectionName === 'vod' ? 'vods' : 'clips';
+	let type = $derived(video.collectionName === 'vod' ? 'vods' : 'clips');
 </script>
 
 <div class="overflow-hidden rounded-xl">

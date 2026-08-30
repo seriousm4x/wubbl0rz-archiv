@@ -17,7 +17,6 @@
 	import { format, formatDistance, parseISO } from 'date-fns';
 	import { de } from 'date-fns/locale';
 	import type { RecordModel } from 'pocketbase';
-	import { onMount } from 'svelte';
 	import type { MediaPlayerElement } from 'vidstack/elements';
 
 	let { data } = $props();
@@ -25,7 +24,7 @@
 	let player: MediaPlayerElement = $state({} as MediaPlayerElement);
 	let currentTime: number = $state(0);
 
-	let og = $state({
+	let og = $derived({
 		...DefaultOpenGraph,
 		title: data.clip?.title,
 		image: `${PUBLIC_API_URL}/clips/${data.clip.filename}/thumb-lg.webp`,
@@ -39,12 +38,6 @@
 	let percentileRounded = $derived(percentile < 1 ? percentile.toFixed(2) : Math.round(percentile));
 	let isAudio = $state(false);
 	let theaterEnabled = $state(false);
-
-	onMount(() => {
-		if (page.url.searchParams.has('t')) {
-			player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
-		}
-	});
 
 	function copyLink(withTimestamp: boolean) {
 		const url = new URL(page.url.origin + page.url.pathname);
@@ -65,9 +58,9 @@
 	}
 </script>
 
-<svelte:window on:keydown={onKeyDown} />
+<svelte:window onkeydown={onKeyDown} />
 
-<SEO bind:og />
+<SEO {og} />
 
 <div
 	class="absolute top-0 left-0 -z-10 aspect-video h-full w-full bg-cover bg-center opacity-10 blur-2xl"
@@ -229,7 +222,7 @@
 				? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'
 				: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-1'}"
 		>
-			{#each recommendations as video, index (index)}
+			{#each recommendations as video (video.id)}
 				<Card {video} />
 			{:else}
 				Keine Ergebnisse

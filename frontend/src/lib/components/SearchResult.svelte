@@ -12,8 +12,8 @@
 		searchIn = 'transcripts'
 	}: { hit: Hit; searchIn: 'transcripts' | 'vods' } = $props();
 
-	const video = hit as RecordModel;
-	const offset = searchIn === 'transcripts' ? hit.start : 0;
+	let video = $derived(hit as RecordModel);
+	let offset = $derived(searchIn === 'transcripts' ? hit.start : 0);
 </script>
 
 <div class="card bg-base-200 w-full overflow-hidden rounded-xl transition hover:shadow-lg">

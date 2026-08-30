@@ -6,7 +6,7 @@
 	import type { RecordModel } from 'pocketbase';
 
 	let { video = {} as RecordModel, offset = 0 }: { video: RecordModel; offset?: number } = $props();
-	const type = video.collectionName === 'vod' ? 'vods' : 'clips';
+	let type = $derived<'vods' | 'clips'>(video.collectionName === 'vod' ? 'vods' : 'clips');
 </script>
 
 <div class="card bg-base-200 w-full overflow-hidden rounded-xl transition hover:shadow-lg">

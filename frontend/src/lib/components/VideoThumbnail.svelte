@@ -12,7 +12,7 @@
 		isVod = false
 	}: { video: RecordModel; offset: number; isVod?: boolean } = $props();
 
-	const type = isVod || video.collectionName === 'vod' ? 'vods' : 'clips';
+	let type = $derived<'vods' | 'clips'>(isVod || video.collectionName === 'vod' ? 'vods' : 'clips');
 	let hover = $state(false);
 	let progress = $state(0);
 

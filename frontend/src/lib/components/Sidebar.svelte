@@ -5,6 +5,9 @@
 	import IconPieChart2BoldDuotone from '@iconify-icons/solar/pie-chart-2-bold-duotone';
 	import IconVideocameraRecordBoldDuotone from '@iconify-icons/solar/videocamera-record-bold-duotone';
 	import Icon from '@iconify/svelte';
+	import type { Snippet } from 'svelte';
+
+	let { children }: { children: Snippet } = $props();
 
 	const sidebarHome = {
 		title: 'Home',
@@ -54,7 +57,7 @@
 <div class="drawer md:drawer-open">
 	<input id="menu-drawer" type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content">
-		<slot />
+		{@render children()}
 	</div>
 	<div class="drawer-side z-50 shadow-xl">
 		<label for="menu-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
@@ -81,7 +84,7 @@
 				</a>
 			</li>
 			<li class="menu-title md:mb-4"><hr class="border-base-content rounded opacity-25" /></li>
-			{#each sidebarItems as item, index (index)}
+			{#each sidebarItems as item (item.href)}
 				<li class="group mask mask-squircle relative">
 					<a
 						href={item.href}

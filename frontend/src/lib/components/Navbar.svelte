@@ -1,19 +1,17 @@
 <script lang="ts">
-	import { navigating } from '$app/stores';
+	import { navigating } from '$app/state';
 	import { PUBLIC_MEILI_SEARCH_KEY, PUBLIC_MEILI_URL } from '$env/static/public';
 	import Pagination from '$lib/components/Pagination.svelte';
 	import SearchResult from '$lib/components/SearchResult.svelte';
 	import IconMenuDotsSquareBoldDuotone from '@iconify-icons/solar/menu-dots-square-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import { Meilisearch } from 'meilisearch';
-	import { onMount } from 'svelte';
 
 	let scrollY: number = $state(0);
 	let modal: HTMLDialogElement;
 	let searchText: string = $state('');
 	let meiliIndex: 'transcripts' | 'vods' = $state('transcripts');
 	let currentPage = $state(1);
-	let body: HTMLBodyElement;
 
 	const client = new Meilisearch({
 		host: PUBLIC_MEILI_URL,
@@ -47,10 +45,7 @@
 	let selectedSort = $state(sorts[0]);
 
 	$effect(() => {
-		if (meiliIndex || searchText) currentPage = 1;
-	});
-	$effect(() => {
-		if ($navigating && modal) modal.close();
+		if (navigating && modal) modal.close();
 	});
 
 	let searchConfig = $derived({
@@ -62,17 +57,13 @@
 		sort: selectedSort.value === 'relevancy' ? [] : [`${selectedSort.value}:${ordering}`]
 	});
 
-	onMount(() => {
-		body = document.body as HTMLBodyElement;
-	});
-
 	function showModal() {
-		body.classList.add('overflow-hidden');
+		document.body.classList.add('overflow-hidden');
 		modal.show();
 	}
 
 	function onModalClose() {
-		body.classList.remove('overflow-hidden');
+		document.body.classList.remove('overflow-hidden');
 	}
 
 	function onKeyDown(e: KeyboardEvent) {
@@ -91,7 +82,7 @@
 	}
 </script>
 
-<svelte:window bind:scrollY on:keydown={onKeyDown} />
+<svelte:window bind:scrollY onkeydown={onKeyDown} />
 
 <div
 	class="navbar sticky top-0 z-40 justify-center backdrop-blur-sm transition duration-200 {scrollY >
@@ -127,6 +118,7 @@
 				placeholder="Suchen"
 				class="input border-base-content/20 bg-base-300/50 hover:border-base-content/50 hover:bg-base-300/80 w-full rounded-full drop-shadow-md transition duration-200"
 				bind:value={searchText}
+				oninput={() => (currentPage = 1)}
 			/>
 			<div class="flex flex-row flex-wrap gap-4">
 				<div class="join">
@@ -137,6 +129,7 @@
 						aria-label="Transcripts"
 						value="transcripts"
 						bind:group={meiliIndex}
+						onchange={() => (currentPage = 1)}
 					/>
 					<input
 						class="btn join-item btn-sm bg-base-100 md:btn-md rounded-e-full"
@@ -145,6 +138,7 @@
 						aria-label="Streamtitel"
 						value="vods"
 						bind:group={meiliIndex}
+						onchange={() => (currentPage = 1)}
 					/>
 				</div>
 				<div class="join">
@@ -160,9 +154,10 @@
 							: 'rounded-e-full'}"
 						aria-label="Sortieren"
 						bind:value={selectedSort}
+						onchange={() => (currentPage = 1)}
 					>
-						{#each sorts as sort, index (index)}
-							<option value={sort} selected={sort === selectedSort}>{sort.text}</option>
+						{#each sorts as sort (sort.value)}
+							<option value={sort}>{sort.text}</option>
 						{/each}
 					</select>
 					{#if selectedSort.value !== 'relevancy'}
@@ -174,6 +169,7 @@
 								aria-label="&#9650;"
 								value="asc"
 								bind:group={ordering}
+								onchange={() => (currentPage = 1)}
 							/>
 						</div>
 						<div title="Absteigend">
@@ -184,6 +180,7 @@
 								aria-label="&#9660;"
 								value="desc"
 								bind:group={ordering}
+								onchange={() => (currentPage = 1)}
 							/>
 						</div>
 					{/if}
@@ -205,11 +202,15 @@
 						{result.totalHits} Ergebnisse in {result.processingTimeMs}ms
 					</p>
 					<div class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-						{#each result.hits as hit, index (index)}
+						{#each result.hits as hit (hit.meili_id)}
 							<SearchResult {hit} searchIn={meiliIndex} />
 						{/each}
 					</div>
-					<Pagination bind:currentPage totalPages={result.totalPages} />
+					<Pagination
+						{currentPage}
+						totalPages={result.totalPages}
+						onPageChange={(page) => (currentPage = page)}
+					/>
 				{/await}
 			{/if}
 		</div>

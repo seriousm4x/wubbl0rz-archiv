@@ -14,7 +14,7 @@
 		placeholder
 	}: { data: ListResult<RecordModel>; title: string; placeholder: string } = $props();
 
-	const type = data.items[0]?.collectionName === 'vod' ? 'vods' : 'clips';
+	let type = $derived(data.items[0]?.collectionName === 'vod' ? 'vods' : 'clips');
 
 	const origin = page.url.origin;
 	const pathname = page.url.pathname;
@@ -28,15 +28,7 @@
 	};
 
 	// parse page from url
-	let currentPage = $state(parseInt(page.url.searchParams.get('page') || `${data.page}`));
-	let oldPage = parseInt(page.url.searchParams.get('page') || `${data.page}`);
-	$effect(() => {
-		// hack to fix search function to trigger in searchValue change
-		if (oldPage !== currentPage) {
-			oldPage = currentPage;
-			search(oldPage);
-		}
-	});
+	let currentPage = $state(parseInt(page.url.searchParams.get('page') || '1', 10));
 
 	// available sorts
 	let sorts: sort[] = [
@@ -61,7 +53,7 @@
 
 	// form elements
 	let searchValue: string = $state('');
-	let selectedSort: sort = $derived(
+	let selectedSort: sort = $state(
 		sorts.find((sort) => {
 			return sort.value === paramSort;
 		}) || sorts[0]
@@ -98,7 +90,6 @@
 		url.searchParams.append('page', page.toString());
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		goto(url);
-		currentPage = page;
 	}
 </script>
 
@@ -143,8 +134,8 @@
 						aria-label="Sortieren"
 						bind:value={selectedSort}
 					>
-						{#each sorts as sort, index (index)}
-							<option value={sort} selected={sort === selectedSort}>{sort.text}</option>
+						{#each sorts as sort (sort.value)}
+							<option value={sort}>{sort.text}</option>
 						{/each}
 					</select>
 					<div title="Aufsteigend">
@@ -215,11 +206,11 @@
 				class="h-auto w-full"
 			/>
 		</div>
-		{#each data.items as video, index (index)}
+		{#each data.items as video (video.id)}
 			<Card {video} />
 		{:else}
 			Keine Ergebnisse
 		{/each}
 	</div>
-	<Pagination bind:currentPage totalPages={data.totalPages} />
+	<Pagination {currentPage} totalPages={data.totalPages} onPageChange={search} />
 </div>

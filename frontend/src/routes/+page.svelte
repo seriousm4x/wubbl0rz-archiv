@@ -11,7 +11,7 @@
 
 	let innerWidth = $state(0);
 
-	let og = $state({
+	let og = $derived({
 		...DefaultOpenGraph,
 		updated_time: parseISO(data.new?.items?.[0]?.date).toISOString()
 	});
@@ -21,7 +21,7 @@
 
 <svelte:window bind:innerWidth />
 
-<SEO bind:og />
+<SEO {og} />
 
 {#if showHero && data.new?.items?.length > 0}
 	<Hero vod={data.new.items[0]} />
@@ -50,11 +50,11 @@
 		/>
 	</div>
 	{#if showHero && data.new?.items?.length > 0}
-		{#each data.new?.items?.filter((vod) => vod !== data.new?.items?.[0]) as video, index (index)}
+		{#each data.new?.items?.filter((vod) => vod !== data.new?.items?.[0]) as video (video.id)}
 			<Card {video} />
 		{/each}
 	{:else}
-		{#each data.new?.items as video, index (index)}
+		{#each data.new?.items as video (video.id)}
 			<Card {video} />
 		{/each}
 	{/if}
@@ -69,7 +69,7 @@
 <div
 	class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
 >
-	{#each data.popular?.items as video, index (index)}
+	{#each data.popular?.items as video (video.id)}
 		<Card {video} />
 	{/each}
 </div>
@@ -83,7 +83,7 @@
 <div
 	class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
 >
-	{#each data.clips?.items as video, index (index)}
+	{#each data.clips?.items as video (video.id)}
 		<Card {video} />
 	{:else}
 		<div

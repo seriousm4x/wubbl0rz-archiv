@@ -7,7 +7,7 @@
 
 	let { data }: { data: ListResult<RecordModel> } = $props();
 
-	let og = $state({
+	let og = $derived({
 		...DefaultOpenGraph,
 		title: 'Alle Clips',
 		updated_time:
@@ -15,6 +15,6 @@
 	});
 </script>
 
-<SEO bind:og />
+<SEO {og} />
 
 <GridAllVideos {data} title="Alle Clips" placeholder="Cliptitel" />

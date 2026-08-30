@@ -22,7 +22,7 @@
 
 	let { data } = $props();
 
-	let og = $state({
+	let og = $derived({
 		...DefaultOpenGraph,
 		title: data.vod?.title,
 		image: `${PUBLIC_API_URL}/vods/${data.vod?.filename}/thumb-lg.webp`,
@@ -60,9 +60,9 @@
 	}
 </script>
 
-<svelte:window on:keydown={onKeyDown} />
+<svelte:window onkeydown={onKeyDown} />
 
-<SEO bind:og />
+<SEO {og} />
 
 <div
 	class="absolute top-0 left-0 -z-10 aspect-video h-full w-full bg-cover bg-center opacity-10 blur-2xl"
@@ -225,7 +225,7 @@
 				? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'
 				: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-1'}"
 		>
-			{#each recommendations as video, index (index)}
+			{#each recommendations as video (video.id)}
 				<Card {video} />
 			{:else}
 				Keine Ergebnisse
