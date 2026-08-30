@@ -3,6 +3,7 @@
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import type { RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
+	import type { Snippet } from 'svelte';
 	import type { MediaTimeUpdateEventDetail } from 'vidstack';
 	import { LocalMediaStorage } from 'vidstack';
 	import 'vidstack/bundle';
@@ -14,13 +15,17 @@
 		player = $bindable(),
 		// eslint-disable-next-line no-useless-assignment
 		currentTime = $bindable(),
-		isAudio = $bindable(false)
+		isAudio = $bindable(false),
+		info,
+		actions
 	}: {
 		video: RecordModel;
 		class?: string;
 		player: MediaPlayerElement;
 		currentTime: number;
 		isAudio: boolean;
+		info?: Snippet;
+		actions?: Snippet;
 	} = $props();
 
 	class CustomLocalMediaStorage extends LocalMediaStorage {
@@ -91,6 +96,22 @@
 				0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4
 			]}
 		></media-video-layout>
+		{#if (info || actions) && !isAudio}
+			<media-controls class="vds-controls pointer-events-none">
+				{#if info}
+					<div
+						class="absolute inset-x-0 top-0 bg-linear-to-b from-black/85 via-black/45 to-transparent px-4 pt-5 pb-16 text-white"
+					>
+						{@render info()}
+					</div>
+				{/if}
+				{#if actions}
+					<div class="pointer-events-auto absolute top-3 right-3 flex items-center gap-1">
+						{@render actions()}
+					</div>
+				{/if}
+			</media-controls>
+		{/if}
 		<media-buffering-indicator></media-buffering-indicator>
 	</media-player>
 {/key}

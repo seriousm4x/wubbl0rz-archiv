@@ -173,8 +173,8 @@
 								{/each}
 							</span>
 							<span class="me-1 font-semibold" style="color: {message.tags?.color || 'inherit'}">
-								{message.user_display_name}:
-							</span>
+								{message.user_display_name}
+							</span>:
 							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 							{@html replaceEmotesInString(message.message, emotes, regex)}
 						</p>
