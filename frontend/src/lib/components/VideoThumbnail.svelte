@@ -9,8 +9,14 @@
 	let {
 		video = {} as RecordModel,
 		offset = 0,
-		isVod = false
-	}: { video: RecordModel; offset: number; isVod?: boolean } = $props();
+		isVod = false,
+		onclick = () => {}
+	}: {
+		video: RecordModel;
+		offset: number;
+		isVod?: boolean;
+		onclick?: () => void;
+	} = $props();
 
 	let type = $derived<'vods' | 'clips'>(isVod || video.collectionName === 'vod' ? 'vods' : 'clips');
 	let hover = $state(false);
@@ -27,7 +33,8 @@
 
 <a
 	href={resolve(`/${type}/${video.id}${offset > 0 ? `?t=${offset}` : ''}`)}
-	class="aspect-video overflow-hidden"
+	class="relative block aspect-video overflow-hidden"
+	{onclick}
 	onmouseenter={() => (hover = true)}
 	onmouseleave={() => (hover = false)}
 >
@@ -37,7 +44,7 @@
 			loop
 			autoplay
 			transition:fade={{ duration: 250 }}
-			class="absolute top-0 left-0 z-10 h-auto w-full"
+			class="absolute inset-0 z-10 h-full w-full object-cover"
 		>
 			<source
 				src="{PUBLIC_API_URL}/{type}/{video.filename}/preview.webm"

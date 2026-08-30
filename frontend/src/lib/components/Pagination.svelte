@@ -21,7 +21,11 @@
 	{#each range(1, totalPages) as i (i)}
 		{#if i <= currentPage + 3 && i >= currentPage - 3}
 			{#if currentPage == i}
-				<button class="btn join-item btn-active" onclick={() => onPageChange(i)}>{i}</button>
+				<button
+					class="btn btn-primary join-item"
+					aria-current="page"
+					onclick={() => onPageChange(i)}>{i}</button
+				>
 			{:else}
 				<button class="btn join-item" onclick={() => onPageChange(i)}>{i}</button>
 			{/if}

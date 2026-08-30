@@ -65,10 +65,6 @@
 <SEO {og} />
 
 <div
-	class="absolute top-0 left-0 -z-10 aspect-video h-full w-full bg-cover bg-center opacity-10 blur-2xl"
-	style="background-image: url('{PUBLIC_API_URL}/vods/{vod.filename}/thumb-lg.webp');"
-></div>
-<div
 	class="mx-auto flex w-full flex-col gap-8 {theaterEnabled
 		? 'max-w-none'
 		: 'max-w-480 xl:flex-row'}"
@@ -80,7 +76,7 @@
 		>
 			<Player bind:player bind:currentTime video={vod} {isAudio} />
 		</div>
-		<h1 class="text-4xl font-bold">
+		<h1 class="text-2xl leading-tight font-semibold tracking-tight sm:text-4xl">
 			{vod.title}
 		</h1>
 		<div class="stats stats-vertical bg-base-200 lg:stats-horizontal w-full shadow">
@@ -206,11 +202,8 @@
 		</div>
 		{#if vod['expand']}
 			{#if vod['expand']['clip_via_vod'] && vod['expand']['clip_via_vod'].length > 0}
-				<h2 class="text-3xl font-bold">
-					<span
-						class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
-						>Clips für diesen Stream</span
-					>
+				<h2 class="text-2xl font-semibold tracking-tight">
+					<span class="text-base-content">Clips für diesen Stream</span>
 				</h2>
 				<div
 					class="grid grid-flow-row-dense grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
@@ -223,11 +216,8 @@
 		{/if}
 	</div>
 	<div class="flex flex-col gap-4 {theaterEnabled ? '' : 'xl:w-1/5'}">
-		<h2 class="text-3xl font-bold">
-			<span
-				class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
-				>Empfohlene Streams</span
-			>
+		<h2 class="text-2xl font-semibold tracking-tight">
+			<span class="text-base-content">Empfohlene Streams</span>
 		</h2>
 		<div
 			class="grid grid-flow-row-dense gap-4 {theaterEnabled

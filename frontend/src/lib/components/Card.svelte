@@ -9,14 +9,16 @@
 	let type = $derived<'vods' | 'clips'>(video.collectionName === 'vod' ? 'vods' : 'clips');
 </script>
 
-<div class="card bg-base-200 w-full overflow-hidden rounded-xl transition hover:shadow-lg">
+<article class="group min-w-0">
 	<VideoThumbnail {video} {offset} />
-	<div class="card-body justify-between gap-1 p-3">
-		<a href={resolve(`/${type}/${video.id}${offset > 0 ? `?t=${offset}` : ''}`)}>
-			<h2 class="text-md font-bold">{video.title}</h2>
+	<div class="space-y-1 px-1 pt-3">
+		<a class="block" href={resolve(`/${type}/${video.id}${offset > 0 ? `?t=${offset}` : ''}`)}>
+			<h2 class="line-clamp-2 text-sm leading-5 font-semibold">
+				{video.title}
+			</h2>
 		</a>
-		<div class="card-actions text-base-content/70 mt-4 justify-between text-sm font-semibold">
-			{video.viewcount.toLocaleString('de-DE')} Aufrufe
+		<div class="text-base-content/65 flex flex-wrap gap-x-2 text-xs">
+			<span>{video.viewcount.toLocaleString('de-DE')} Aufrufe</span>
 			<span title={format(parseISO(video.date), "dd.MM.yyyy 'um' HH:mm:ss")}>
 				{formatDistance(parseISO(video.date), Date.now(), {
 					addSuffix: true,
@@ -26,4 +28,4 @@
 			</span>
 		</div>
 	</div>
-</div>
+</article>

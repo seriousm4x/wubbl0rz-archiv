@@ -12,69 +12,69 @@
 	let hover = $state(false);
 </script>
 
-<div class="flex items-center justify-center">
-	<div
-		class="hero border-base-100/20 relative aspect-video max-h-[45vh] min-h-80 max-w-360 place-items-center justify-items-end overflow-hidden rounded-xl border-2 shadow-md transition duration-200 hover:shadow-2xl"
-		role="none"
+<section class="mx-auto max-w-6xl space-y-4" aria-labelledby="featured-vod-title">
+	<a
+		href={resolve(`/vods/${vod.id}`)}
+		class="card group rounded-box relative block aspect-[21/9] overflow-hidden shadow-sm"
 		onmouseenter={() => (hover = true)}
 		onmouseleave={() => (hover = false)}
 	>
-		<a href={resolve(`/vods/${vod.id}`)} class="h-full w-full">
-			{#if hover}
-				<video
-					muted
-					loop
-					autoplay
-					transition:fade={{ duration: 250 }}
-					class="absolute top-0 left-0 z-10 h-auto w-full"
-				>
-					<source
-						src="{PUBLIC_API_URL}/vods/{vod.filename}/preview.webm"
-						type="video/webm;codecs=vp9"
-					/>
-					<source
-						src="{PUBLIC_API_URL}/vods/{vod.filename}/preview.mp4"
-						type="video/mp4; codecs=hvc1"
-					/>
-					<track kind="captions" />
-				</video>
-			{/if}
+		{#if hover}
+			<video
+				muted
+				loop
+				autoplay
+				playsinline
+				transition:fade={{ duration: 200 }}
+				class="absolute inset-0 z-10 h-full w-full object-cover"
+			>
+				<source
+					src="{PUBLIC_API_URL}/vods/{vod.filename}/preview.webm"
+					type="video/webm;codecs=vp9"
+				/>
+				<source
+					src="{PUBLIC_API_URL}/vods/{vod.filename}/preview.mp4"
+					type="video/mp4; codecs=hvc1"
+				/>
+				<track kind="captions" />
+			</video>
+		{/if}
+		<img
+			src="{PUBLIC_API_URL}/vods/{vod.filename}/thumb-lg.webp"
+			alt="Vorschaubild: {vod.title}"
+			class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.01]"
+			width="1536"
+			height="860"
+		/>
+	</a>
 
-			<div
-				class="h-full w-full bg-cover bg-center"
-				role="none"
-				style="background-image: url('{PUBLIC_API_URL}/vods/{vod.filename}/thumb-lg.webp');"
-			></div>
-		</a>
-		<div class="hero-content p-0">
-			<div class="card bg-base-100/80 me-4 w-fit max-w-xl shadow-xl backdrop-blur-sm xl:me-16">
-				<div class="card-body p-5">
-					<h1 class="card-title text-2xl font-extrabold xl:text-4xl">
-						<span class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent"
-							>Aktueller Stream</span
-						>
-					</h1>
-					<h2 class="card-title line-clamp-3 text-lg font-bold xl:text-2xl">
-						{vod.title}
-					</h2>
-					<p>
-						{vod.viewcount.toLocaleString('de-DE')} Aufrufe <span class="mx-1">•</span>
-						{formatDistance(parseISO(vod.date), Date.now(), {
-							addSuffix: true,
-							includeSeconds: true,
-							locale: de
-						})}
-					</p>
-					<div class="card-actions justify-end">
-						<a
-							class="btn btn-primary btn-sm border-none hover:bg-purple-700"
-							href={resolve(`/vods/${vod.id}`)}
-							>Jetzt ansehen
-							<Icon icon={IconAltArrowRightBoldDuotone} class="text-3xl" />
-						</a>
-					</div>
-				</div>
-			</div>
+	<div
+		class="border-base-content/10 flex flex-col gap-4 border-b pb-6 sm:flex-row sm:items-end sm:justify-between"
+	>
+		<div class="space-y-2">
+			<p class="text-base-content/60 text-sm font-medium tracking-wide uppercase">Neuster Stream</p>
+			<h1
+				id="featured-vod-title"
+				class="text-2xl leading-tight font-semibold tracking-tight sm:text-4xl"
+			>
+				<a class="link link-hover" href={resolve(`/vods/${vod.id}`)}>{vod.title}</a>
+			</h1>
+			<p class="text-base-content/70">
+				{vod.viewcount.toLocaleString('de-DE')} Aufrufe
+				<span class="mx-1.5" aria-hidden="true">•</span>
+				{formatDistance(parseISO(vod.date), Date.now(), {
+					addSuffix: true,
+					includeSeconds: true,
+					locale: de
+				})}
+			</p>
 		</div>
+		<a
+			class="btn border-base-content/15 bg-base-content text-base-100 hover:bg-base-content/85 sm:shrink-0"
+			href={resolve(`/vods/${vod.id}`)}
+		>
+			Jetzt ansehen
+			<Icon icon={IconAltArrowRightBoldDuotone} class="text-xl" />
+		</a>
 	</div>
-</div>
+</section>

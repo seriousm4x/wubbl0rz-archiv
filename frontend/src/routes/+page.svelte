@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { PUBLIC_API_URL } from '$env/static/public';
 	import Card from '$lib/components/Card.svelte';
-	import Hero from '$lib/components/Hero.svelte';
 	import SEO from '$lib/components/SEO.svelte';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
 	import { parseISO } from 'date-fns';
@@ -9,87 +7,45 @@
 
 	let { data }: { data: PageData } = $props();
 
-	let innerWidth = $state(0);
-
 	let og = $derived({
 		...DefaultOpenGraph,
 		updated_time: parseISO(data.new?.items?.[0]?.date).toISOString()
 	});
-
-	let showHero = $derived(innerWidth > 767);
 </script>
-
-<svelte:window bind:innerWidth />
 
 <SEO {og} />
 
-{#if showHero && data.new?.items?.length > 0}
-	<Hero vod={data.new.items[0]} />
-{/if}
-
-<h1 class="mb-4 text-4xl font-bold md:ms-3 md:mt-10">
-	<span
-		class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
-		>Neue Streams</span
-	>
-</h1>
-<div
-	class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
->
+<section class="space-y-4">
+	<h1 class="text-2xl font-semibold tracking-tight">Neue Streams</h1>
 	<div
-		class="absolute top-0 left-0 -z-10 aspect-video h-auto w-full bg-cover bg-center opacity-40 blur-2xl"
+		class="grid grid-cols-1 gap-x-3 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5"
 	>
-		<img
-			src={data.new?.items?.[0]?.filename
-				? `${PUBLIC_API_URL}/vods/${data.new?.items?.[0]?.filename}/thumb-lg.webp`
-				: ''}
-			alt={data.new?.items?.[0]?.title}
-			class="h-auto w-full"
-			width="1536"
-			height="860"
-		/>
-	</div>
-	{#if showHero && data.new?.items?.length > 0}
-		{#each data.new?.items?.filter((vod) => vod !== data.new?.items?.[0]) as video (video.id)}
-			<Card {video} />
-		{/each}
-	{:else}
 		{#each data.new?.items as video (video.id)}
 			<Card {video} />
 		{/each}
-	{/if}
-</div>
+	</div>
+</section>
 
-<h1 class="ms-3 mt-10 mb-4 text-4xl font-bold">
-	<span
-		class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
-		>Beliebte Streams</span
+<section class="mt-10 space-y-4">
+	<h2 class="text-2xl font-semibold tracking-tight">Beliebte Streams</h2>
+	<div
+		class="grid grid-cols-1 gap-x-3 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5"
 	>
-</h1>
-<div
-	class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
->
-	{#each data.popular?.items as video (video.id)}
-		<Card {video} />
-	{/each}
-</div>
+		{#each data.popular?.items as video (video.id)}
+			<Card {video} />
+		{/each}
+	</div>
+</section>
 
-<h1 class="ms-3 mt-10 mb-4 text-4xl font-bold">
-	<span
-		class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
-		>Top Clips des Monats</span
+<section class="mt-10 space-y-4">
+	<h2 class="text-2xl font-semibold tracking-tight">Top Clips des Monats</h2>
+	<div
+		class="grid grid-cols-1 gap-x-3 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5"
 	>
-</h1>
-<div
-	class="grid grid-flow-row-dense grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
->
-	{#each data.clips?.items as video (video.id)}
-		<Card {video} />
-	{:else}
-		<div
-			class="card bg-base-200 aspect-video w-full items-center justify-center rounded-xl hover:shadow-lg"
-		>
-			❌ Keine Clips im letzen Monat
-		</div>
-	{/each}
-</div>
+		{#each data.clips?.items as video (video.id)}
+			<Card {video} />
+		{:else}
+			<p class="text-base-content/65 col-span-full py-8 text-sm">Keine Clips im letzten Monat.</p>
+		{/each}
+	</div>
+</section>

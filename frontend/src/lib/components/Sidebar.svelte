@@ -9,48 +9,12 @@
 
 	let { children }: { children: Snippet } = $props();
 
-	const sidebarHome = {
-		title: 'Home',
-		href: '/',
-		icon: '/home.webp',
-		iconInactive: 'grayscale group-hover:grayscale-0',
-		bgColor: 'from-yellow-800 to-orange-800'
-	};
+	const sidebarHome = { title: 'Home', href: '/', icon: '/home.webp' };
 	const sidebarItems = [
-		{
-			title: 'Vods',
-			href: '/vods',
-			icon: IconVideocameraRecordBoldDuotone,
-			iconActive: 'text-[#9146FF] group-focus:text-[#772CE8] group-active:text-[#772CE8]',
-			iconInactive:
-				'group-hover:text-[#9146FF] group-focus:text-[#772CE8] group-active:text-[#772CE8]',
-			bgColor: 'from-pink-800 to-purple-800'
-		},
-		{
-			title: 'Clips',
-			href: '/clips',
-			icon: IconClapperboardBoldDuotone,
-			iconActive: 'text-red-500 group-focus:text-red-600 group-active:text-red-600',
-			iconInactive: 'group-hover:text-red-500 group-focus:text-red-600 group-active:text-red-600',
-			bgColor: 'from-rose-800 to-orange-800'
-		},
-		{
-			title: 'Stats',
-			href: '/stats',
-			icon: IconPieChart2BoldDuotone,
-			iconActive: 'text-green-500 group-focus:text-green-600 group-active:text-green-600',
-			iconInactive:
-				'group-hover:text-green-500 group-focus:text-green-600 group-active:text-green-600',
-			bgColor: 'from-lime-800 to-teal-800'
-		},
-		{
-			title: 'Chat',
-			href: '/chat',
-			icon: IconKeyboardBoldDuotone,
-			iconActive: 'text-sky-500 group-focus:text-sky-600 group-active:text-sky-600',
-			iconInactive: 'group-hover:text-sky-500 group-focus:text-sky-600 group-active:text-sky-600',
-			bgColor: 'from-emerald-800 to-cyan-800'
-		}
+		{ title: 'Vods', href: '/vods', icon: IconVideocameraRecordBoldDuotone },
+		{ title: 'Clips', href: '/clips', icon: IconClapperboardBoldDuotone },
+		{ title: 'Stats', href: '/stats', icon: IconPieChart2BoldDuotone },
+		{ title: 'Chat', href: '/chat', icon: IconKeyboardBoldDuotone }
 	];
 </script>
 
@@ -59,49 +23,33 @@
 	<div class="drawer-content">
 		{@render children()}
 	</div>
-	<div class="drawer-side z-50 shadow-xl">
+	<div class="drawer-side border-base-content/10 z-50 border-r">
 		<label for="menu-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-		<ul
-			class="menu bg-base-200/80 text-base-content md:bg-base-200/40 min-h-full w-20 justify-items-center gap-2 backdrop-blur-md md:backdrop-blur-none xl:w-28"
-		>
-			<li class="group mask mask-squircle relative md:my-4">
+		<ul class="menu bg-base-100 text-base-content min-h-full w-20 gap-1 p-2">
+			<li>
 				<a
 					href={sidebarHome.href}
-					class="group flex flex-col justify-center gap-1 p-2 text-center hover:bg-transparent"
+					class="flex flex-col items-center gap-1 rounded-lg px-1 py-2 text-[10px] font-medium {page
+						.url.pathname === sidebarHome.href
+						? 'bg-base-200 text-base-content'
+						: 'text-base-content/65 hover:bg-base-200 hover:text-base-content'}"
 				>
-					<div
-						class="absolute -inset-0.5 bg-linear-to-r opacity-0 transition duration-200 group-hover:opacity-[.2] group-hover:duration-200 {sidebarHome.bgColor}"
-					></div>
-					<img
-						src={sidebarHome.icon}
-						alt="{sidebarHome.title} Icon"
-						class="mask mask-squircle h-10 w-10 contrast-[1.3] saturate-[.75] duration-200 group-hover:scale-110 group-hover:-rotate-6 {page
-							.url.pathname === sidebarHome.href
-							? ''
-							: sidebarHome.iconInactive}"
-					/>
-					<span class="text-xs font-bold uppercase transition">{sidebarHome.title}</span>
+					<img src={sidebarHome.icon} alt="" class="h-7 w-7 rounded-full object-cover" />
+					<span>{sidebarHome.title}</span>
 				</a>
 			</li>
-			<li class="menu-title md:mb-4"><hr class="border-base-content rounded opacity-25" /></li>
 			{#each sidebarItems as item (item.href)}
-				<li class="group mask mask-squircle relative">
+				<li>
 					<a
 						href={item.href}
-						class="group flex flex-col justify-center gap-0 p-2 text-center hover:bg-transparent"
+						class="flex flex-col items-center gap-1 rounded-lg px-1 py-2 text-[10px] font-medium {page.url.pathname.startsWith(
+							item.href
+						)
+							? 'bg-base-200 text-base-content'
+							: 'text-base-content/65 hover:bg-base-200 hover:text-base-content'}"
 					>
-						<div
-							class="absolute -inset-0.5 bg-linear-to-r opacity-0 transition duration-200 group-hover:opacity-[.2] group-hover:duration-200 {item.bgColor}"
-						></div>
-						<Icon
-							icon={item.icon}
-							class="text-5xl duration-200 group-hover:scale-110 group-hover:-rotate-6 {page.url.pathname.startsWith(
-								item.href
-							)
-								? item.iconActive
-								: item.iconInactive}"
-						/>
-						<span class="text-xs font-bold uppercase">{item.title}</span>
+						<Icon icon={item.icon} class="text-2xl" />
+						<span>{item.title}</span>
 					</a>
 				</li>
 			{/each}

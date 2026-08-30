@@ -13,7 +13,7 @@ export async function load() {
 		// new vods
 		pb
 			.collection('vod')
-			.getList(1, 13, { sort: '-date', skipTotal: true, requestKey: 'newest_vods' })
+			.getList(1, 12, { sort: '-date', skipTotal: true, requestKey: 'newest_vods' })
 			.then((data) => {
 				newestVods = data;
 			})

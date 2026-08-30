@@ -34,14 +34,11 @@
 <SEO {og} />
 
 <div class="container mx-auto">
-	<h1 class="mb-4 text-4xl font-bold">
-		<span
-			class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
-			>Livechat</span
-		>
+	<h1 class="mb-4 text-2xl font-semibold tracking-tight">
+		<span class="text-base-content tracking-tight">Livechat</span>
 	</h1>
 	<p class="text-base-content/80 mb-8 text-sm">Neue Nachrichten werden automatisch geladen...</p>
-	<h2 class="text-xl">Zu behaltende Nachrichten</h2>
+	<h2 class="text-lg font-semibold sm:text-xl">Zu behaltende Nachrichten</h2>
 	<div class="w-full">
 		<input
 			type="range"
@@ -67,7 +64,7 @@
 			<span>∞</span>
 		</div>
 	</div>
-	<div class="mt-8 flex flex-col gap-2">
+	<div class="message-list mt-8 flex flex-col gap-2">
 		{#await emotesPromise}
 			<div class="w-full text-center">
 				<span class="loading loading-spinner loading-lg"></span>
@@ -147,3 +144,20 @@
 		{/await}
 	</div>
 </div>
+
+<style>
+	@media (max-width: 639px) {
+		.message-list :global(.chat-header) {
+			font-size: 0.75rem;
+		}
+
+		.message-list :global(.chat-bubble) {
+			font-size: 0.875rem;
+			line-height: 1.25rem;
+		}
+
+		.message-list :global(.chat-bubble .text-xs) {
+			font-size: 0.6875rem;
+		}
+	}
+</style>

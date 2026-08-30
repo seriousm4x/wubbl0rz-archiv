@@ -7,9 +7,67 @@
 }
 
 @plugin 'daisyui' {
-	themes: dark --default;
+	themes: archive --default;
 }
 
-:root {
+@plugin 'daisyui/theme' {
+	name: 'archive';
+	default: true;
+	prefersdark: true;
+	color-scheme: dark;
+	--color-base-100: oklch(18% 0.008 70);
+	--color-base-200: oklch(22% 0.008 70);
+	--color-base-300: oklch(27% 0.009 70);
+	--color-base-content: oklch(93% 0.008 70);
+	--color-primary: #9146ff;
+	--color-primary-content: #ffffff;
+	--color-secondary: oklch(70% 0.09 165);
+	--color-secondary-content: oklch(18% 0.01 165);
+	--color-accent: oklch(74% 0.11 45);
+	--color-accent-content: oklch(20% 0.015 45);
+	--color-neutral: oklch(31% 0.008 70);
+	--color-neutral-content: oklch(93% 0.008 70);
+	--color-info: oklch(73% 0.1 235);
+	--color-info-content: oklch(20% 0.02 235);
+	--color-success: oklch(72% 0.1 155);
+	--color-success-content: oklch(18% 0.02 155);
+	--color-warning: oklch(80% 0.13 82);
+	--color-warning-content: oklch(20% 0.02 82);
+	--color-error: oklch(68% 0.15 25);
+	--color-error-content: oklch(96% 0.01 25);
+	--radius-selector: 0.5rem;
+	--radius-field: 0.5rem;
+	--radius-box: 0.75rem;
+	--size-selector: 0.25rem;
+	--size-field: 0.25rem;
+	--border: 1px;
 	--depth: 0;
+	--noise: 1;
+}
+
+body {
+	min-height: 100dvh;
+	background:
+		radial-gradient(ellipse 85% 55% at 50% -18%, oklch(42% 0.15 300 / 0.5), transparent 70%),
+		var(--color-base-100);
+	background-attachment: fixed;
+}
+
+@media (max-width: 639px) {
+	h1.text-2xl,
+	h2.text-2xl {
+		font-size: 1.25rem;
+	}
+
+	.stat-title {
+		font-size: 0.875rem;
+	}
+
+	.stat-value {
+		font-size: 1.25rem;
+	}
+
+	.stat-figure {
+		font-size: 1.875rem;
+	}
 }

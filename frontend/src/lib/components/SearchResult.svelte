@@ -9,15 +9,20 @@
 
 	let {
 		hit = {} as Hit,
-		searchIn = 'transcripts'
-	}: { hit: Hit; searchIn: 'transcripts' | 'vods' } = $props();
+		searchIn = 'transcripts',
+		onresultselect = () => {}
+	}: {
+		hit: Hit;
+		searchIn: 'transcripts' | 'vods';
+		onresultselect?: () => void;
+	} = $props();
 
 	let video = $derived(hit as RecordModel);
 	let offset = $derived(searchIn === 'transcripts' ? hit.start : 0);
 </script>
 
 <div class="card bg-base-200 w-full overflow-hidden rounded-xl transition hover:shadow-lg">
-	<VideoThumbnail {video} isVod={true} {offset} />
+	<VideoThumbnail {video} isVod={true} {offset} onclick={onresultselect} />
 	<div class="card-body gap-1 p-4">
 		<a href={resolve(`/vods/${video.id}${offset > 0 ? `?t=${offset}` : ''}`)}>
 			{#if searchIn === 'vods'}
@@ -53,7 +58,7 @@
 		font-weight: bold;
 		border-radius: 5px;
 		padding: 0.1rem;
-		color: var(--color-warning-content);
-		background-color: var(--color-warning);
+		color: var(--color-primary-content);
+		background-color: var(--color-primary);
 	}
 </style>

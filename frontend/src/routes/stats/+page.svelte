@@ -58,7 +58,7 @@
 
 <div class="container mx-auto">
 	<div class="flex flex-col gap-4">
-		<h1 class="flex flex-row gap-4 text-4xl drop-shadow-md">
+		<h1 class="flex flex-row gap-4 text-2xl font-semibold tracking-tight">
 			<img src="/pocketbase.svg" alt="pocketbase" class="h-10" />
 			<span>
 				Pocket<span class="font-bold">Base</span>
@@ -127,12 +127,12 @@
 				<div class="stat-desc">Vods und Clips gemeinsam</div>
 			</div>
 		</div>
-		<h1 class="mt-8 flex flex-row gap-4 text-4xl font-bold drop-shadow-md">
+		<h2 class="mt-8 flex flex-row gap-4 text-2xl font-semibold tracking-tight">
 			<img src="/meilisearch.svg" alt="meilisearch" class="h-10" />
 			<span>
 				meili<span class="font-light">search</span>
 			</span>
-		</h1>
+		</h2>
 		<div class="stats stats-vertical bg-base-200 xl:stats-horizontal w-full shadow">
 			<div class="stat">
 				<div class="stat-figure text-yellow-500">
@@ -171,12 +171,9 @@
 				<div class="stat-desc">Transkripte und Vods</div>
 			</div>
 		</div>
-		<h1 class="mt-8 text-4xl font-bold">
-			<span
-				class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent drop-shadow-md"
-				>Top Chatter</span
-			>
-		</h1>
+		<h2 class="mt-8 text-2xl font-semibold tracking-tight">
+			<span class="text-base-content">Top Chatter</span>
+		</h2>
 		<div class="overflow-x-auto">
 			<table class="table-sm table">
 				<thead>
@@ -203,59 +200,65 @@
 				</tbody>
 			</table>
 		</div>
-		<h1 class="mt-8 flex flex-row flex-wrap items-center gap-4 text-4xl font-bold drop-shadow-md">
-			<span class="bg-linear-to-r from-pink-500 to-violet-500 bg-clip-text text-transparent">
-				Emotes
-			</span>
-			<span class="badge badge-primary">{data.emotes.length}</span>
-		</h1>
-		<h1 class="mt-4 flex flex-row flex-wrap items-center gap-4 text-2xl font-bold">
+		<h2
+			class="mt-8 flex flex-row flex-wrap items-center gap-3 text-2xl font-semibold tracking-tight"
+		>
+			<span class="text-base-content">Emotes</span>
+			<span class="badge badge-neutral">{data.emotes.length}</span>
+		</h2>
+		<h3 class="mt-4 flex flex-row flex-wrap items-center gap-3 text-lg font-semibold">
 			<span>7tv</span>
 			<span class="badge badge-neutral">{sevenTv.length}</span>
-		</h1>
+		</h3>
 		<div class="flex flex-row flex-wrap gap-2">
 			{#each sevenTv as emote, index (index)}
 				<div title={emote.name}>
-					<img src={emote.url} alt={emote.name} class="h-14" loading="lazy" title={emote.name} />
+					<img
+						src={emote.url}
+						alt={emote.name}
+						class="h-10 sm:h-14"
+						loading="lazy"
+						title={emote.name}
+					/>
 				</div>
 			{:else}
 				Keine Emotes
 			{/each}
 		</div>
-		<h1 class="mt-4 flex flex-row flex-wrap items-center gap-4 text-2xl font-bold">
+		<h3 class="mt-4 flex flex-row flex-wrap items-center gap-3 text-lg font-semibold">
 			<span>BetterTTV</span>
 			<span class="badge badge-neutral">{bttv.length}</span>
-		</h1>
+		</h3>
 		<div class="flex flex-row flex-wrap gap-2">
 			{#each bttv as emote, index (index)}
 				<div title={emote.name}>
-					<img src={emote.url} alt={emote.name} class="h-14" loading="lazy" />
+					<img src={emote.url} alt={emote.name} class="h-10 sm:h-14" loading="lazy" />
 				</div>
 			{:else}
 				Keine Emotes
 			{/each}
 		</div>
-		<h1 class="mt-4 flex flex-row flex-wrap items-center gap-4 text-2xl font-bold">
+		<h3 class="mt-4 flex flex-row flex-wrap items-center gap-3 text-lg font-semibold">
 			<span>FrankerFaceZ</span>
 			<span class="badge badge-neutral">{ffz.length}</span>
-		</h1>
+		</h3>
 		<div class="flex flex-row flex-wrap gap-2">
 			{#each ffz as emote, index (index)}
 				<div title={emote.name}>
-					<img src={emote.url} alt={emote.name} class="h-14" loading="lazy" />
+					<img src={emote.url} alt={emote.name} class="h-10 sm:h-14" loading="lazy" />
 				</div>
 			{:else}
 				Keine Emotes
 			{/each}
 		</div>
-		<h1 class="mt-4 flex flex-row flex-wrap items-center gap-4 text-2xl font-bold">
+		<h3 class="mt-4 flex flex-row flex-wrap items-center gap-3 text-lg font-semibold">
 			<span>Twitch</span>
 			<span class="badge badge-neutral">{twitch.length}</span>
-		</h1>
+		</h3>
 		<div class="flex flex-row flex-wrap gap-2">
 			{#each twitch as emote, index (index)}
 				<div title={emote.name}>
-					<img src={emote.url} alt={emote.name} class="h-14" loading="lazy" />
+					<img src={emote.url} alt={emote.name} class="h-10 sm:h-14" loading="lazy" />
 				</div>
 			{:else}
 				Keine Emotes
