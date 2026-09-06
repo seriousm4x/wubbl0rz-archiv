@@ -31,8 +31,8 @@
 	class CustomLocalMediaStorage extends LocalMediaStorage {
 		async getTime(): Promise<number | null> {
 			const tParam = page.url.searchParams.get('t');
-			const t = tParam ? parseInt(tParam, 10) : 0;
-			if (t !== 0) return t;
+			const t = tParam ? Number(tParam) : 0;
+			if (Number.isFinite(t) && t > 0) return t;
 			return super.getTime();
 		}
 	}
@@ -46,9 +46,15 @@
 			currentTime = e.detail.currentTime;
 		};
 		player.addEventListener('time-update', onTimeUpdate);
-		player.currentTime = parseInt(page.url.searchParams.get('t') || '0');
 
 		return () => player.removeEventListener('time-update', onTimeUpdate);
+	});
+
+	$effect(() => {
+		if (!player) return;
+
+		const t = Number(page.url.searchParams.get('t'));
+		if (Number.isFinite(t) && t > 0) player.currentTime = t;
 	});
 
 	let type = $derived(video.collectionName === 'vod' ? 'vods' : 'clips');
