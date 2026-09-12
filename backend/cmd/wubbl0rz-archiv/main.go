@@ -130,6 +130,14 @@ func main() {
 			return routes.TwitchBadges(app, e)
 		})
 
+		// omit successful health checks to avoid noisy logs
+		se.Router.BindFunc(func(e *core.RequestEvent) error {
+			if e.Request.URL.Path == "/api/health" {
+				return apis.SkipSuccessActivityLog().Func(e)
+			}
+			return e.Next()
+		})
+
 		return se.Next()
 	})
 
