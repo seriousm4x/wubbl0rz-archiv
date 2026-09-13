@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getEmotes, type Emotes } from '$lib/emotes';
+	import ChatterHistory from '$lib/components/ChatterHistory.svelte';
 	import { replaceEmotesInString, toHHMMSS } from '$lib/functions';
 	import { pb } from '$lib/stores/pocketbase';
 	import { getTwitchBadges, type TwitchBadges } from '$lib/twitch-badges';
@@ -25,6 +26,7 @@
 	let messageContainer: HTMLDivElement;
 	let emotesPromise = $state<Promise<[Emotes, RegExp]>>(pendingEmotes);
 	let badgesPromise = $state<Promise<TwitchBadges>>(Promise.resolve(EMPTY_BADGES));
+	let chatterHistory: { show: (userName: string) => void };
 
 	const loadedWindows = new SvelteSet<number>();
 	let loadedVodId = '';
@@ -132,6 +134,7 @@
 	});
 </script>
 
+<ChatterHistory bind:this={chatterHistory} />
 <section
 	class="bg-base-200 flex h-full min-h-0 flex-col overflow-hidden shadow xl:h-(--player-height)"
 	style:--player-height={playerHeight ? `${playerHeight}px` : undefined}
@@ -155,7 +158,18 @@
 			{#if visibleMessages.length > 0}
 				{#await badgesPromise then badges}
 					{#each visibleMessages as message (message.id)}
-						<p class="mb-1 text-sm leading-5 wrap-break-word hyphens-auto">
+						<p
+							class={[
+								'mb-1 text-sm leading-5 wrap-break-word hyphens-auto',
+								message.tags?.['first-msg'] === '1' &&
+									'relative border-r-4 border-fuchsia-500 bg-[#422342] px-2 py-1 pr-36'
+							]}
+						>
+							{#if message.tags?.['first-msg'] === '1'}
+								<span class="absolute top-1 right-2 text-xs font-semibold text-fuchsia-500">
+									FIRST MESSAGE
+								</span>
+							{/if}
 							<span class="text-base-content/45 me-1 font-mono text-xs">
 								{toHHMMSS((Date.parse(message.date) - startTime) / 1000, false)}
 							</span>
@@ -172,9 +186,13 @@
 									{/if}
 								{/each}
 							</span>
-							<span class="me-1 font-semibold" style="color: {message.tags?.color || 'inherit'}">
+							<button
+								class="me-1 cursor-pointer border-0 bg-transparent p-0 font-semibold hover:underline"
+								style="color: {message.tags?.color || 'inherit'}"
+								onclick={() => chatterHistory.show(message.user_name)}
+							>
 								{message.user_display_name}
-							</span>:
+							</button>:
 							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 							{@html replaceEmotesInString(message.message, emotes, regex)}
 						</p>

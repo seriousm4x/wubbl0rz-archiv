@@ -1,20 +1,24 @@
 <script lang="ts">
 	import SEO from '$lib/components/SEO.svelte';
+	import ChatterHistory from '$lib/components/ChatterHistory.svelte';
 	import { getEmotes } from '$lib/emotes';
 	import { replaceEmotesInString } from '$lib/functions';
 	import { pb } from '$lib/stores/pocketbase';
+	import { getTwitchBadges, type TwitchBadges } from '$lib/twitch-badges';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
-	import IconCircleSquareArrowBoldDuotone from '@iconify-icons/solar/chat-square-arrow-bold-duotone';
-	import Icon from '@iconify/svelte';
 	import { format, parseISO } from 'date-fns';
 	import type { ListResult, RecordModel } from 'pocketbase';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 
 	let { data }: { data: ListResult<RecordModel> } = $props();
 	let realtimeMessages = $state.raw<RecordModel[]>([]);
-	let messages = $derived(realtimeMessages.length > 0 ? realtimeMessages : data.items);
+	let messages = $derived(realtimeMessages.length > 0 ? realtimeMessages : data.items.toReversed());
 	let emotesPromise = getEmotes();
-	let sliderValue = $state(200);
+	let badgesPromise = $state<Promise<TwitchBadges>>(Promise.resolve({}));
+	let roomId = $derived(String(messages.at(0)?.tags?.['room-id'] || ''));
+	let lastMessageId = $derived(messages.at(-1)?.id);
+	let shouldAutoScroll = $state(true);
+	let chatterHistory: { show: (userName: string) => void };
 
 	let og = $state({
 		...DefaultOpenGraph,
@@ -23,141 +27,127 @@
 
 	onMount(() => {
 		$pb.collection('chatmessage').subscribe('*', (e) => {
-			realtimeMessages = [e.record, ...messages];
-			if (sliderValue !== 500) {
-				realtimeMessages = realtimeMessages.slice(0, sliderValue);
-			}
+			realtimeMessages = [...messages, e.record].slice(-1000);
 		});
+	});
+
+	$effect(() => {
+		if (roomId) badgesPromise = getTwitchBadges(roomId);
+	});
+
+	function getBadgeKeys(message: RecordModel): string[] {
+		const badges = message.tags?.badges;
+		return typeof badges === 'string' && badges ? badges.split(',') : [];
+	}
+
+	function handleScroll() {
+		shouldAutoScroll =
+			window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 24;
+	}
+
+	$effect(() => {
+		if (!shouldAutoScroll || !lastMessageId) return;
+
+		void Promise.allSettled([emotesPromise, badgesPromise])
+			.then(() => tick())
+			.then(() => {
+				if (shouldAutoScroll) window.scrollTo({ top: document.documentElement.scrollHeight });
+			});
 	});
 </script>
 
 <SEO {og} />
+<svelte:window onscroll={handleScroll} />
+<ChatterHistory bind:this={chatterHistory} />
 
 <div class="container mx-auto">
 	<h1 class="mb-4 text-2xl font-semibold tracking-tight">
 		<span class="text-base-content tracking-tight">Livechat</span>
 	</h1>
 	<p class="text-base-content/80 mb-8 text-sm">Neue Nachrichten werden automatisch geladen...</p>
-	<h2 class="text-lg font-semibold sm:text-xl">Zu behaltende Nachrichten</h2>
-	<div class="w-full">
-		<input
-			type="range"
-			class="range w-full"
-			min="100"
-			max="500"
-			step="100"
-			bind:value={sliderValue}
-			onchange={() => (realtimeMessages = messages.slice(0, sliderValue))}
-		/>
-		<div class="mt-2 flex justify-between px-2.5 text-xs">
-			<span>|</span>
-			<span>|</span>
-			<span>|</span>
-			<span>|</span>
-			<span>|</span>
-		</div>
-		<div class="mt-2 flex justify-between px-2.5 text-xs">
-			<span>100</span>
-			<span>200</span>
-			<span>300</span>
-			<span>400</span>
-			<span>∞</span>
-		</div>
-	</div>
-	<div class="message-list mt-8 flex flex-col gap-2">
+	<div class="message-list">
 		{#await emotesPromise}
 			<div class="w-full text-center">
 				<span class="loading loading-spinner loading-lg"></span>
 			</div>
 		{:then [emotes, re]}
-			{#each messages as message (message.id)}
-				<div class="chat chat-start rounded-sm transition duration-100">
-					<div class="chat-header">
-						<span
-							class="font-semibold drop-shadow-md"
-							style="color: {message?.tags['color'] || 'inherit'}">{message.user_display_name}</span
-						>
-						<div
-							class="inline-block"
+			{#await badgesPromise then badges}
+				{#each messages as message (message.id)}
+					<p
+						id={message.tags?.id}
+						class={[
+							'mb-1 text-sm leading-5 wrap-break-word hyphens-auto',
+							message.tags?.['first-msg'] === '1' &&
+								'relative border-r-4 border-fuchsia-500 bg-[#422342] px-2 py-1 pr-36'
+						]}
+					>
+						{#if message.tags?.['first-msg'] === '1'}
+							<span class="absolute top-1 right-2 text-xs font-semibold text-fuchsia-500">
+								FIRST MESSAGE
+							</span>
+						{/if}
+						<time
+							class="text-base-content/45 me-1 font-mono text-xs"
 							title={format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}
 						>
-							<time class="text-xs opacity-50">
-								{format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}
-							</time>
-						</div>
-					</div>
-					{#if 'tags' in message && 'reply-parent-msg-body' in message.tags}
-						<div
-							id={message.tags['id']}
-							class="chat-bubble flex scroll-mt-24 flex-col gap-1 wrap-anywhere transition duration-100 hover:shadow-lg"
+							{format(parseISO(message.date), 'HH:mm:ss')}
+						</time>
+						<span class="me-1 inline-flex align-middle">
+							{#each getBadgeKeys(message) as badgeKey (badgeKey)}
+								{#if badges[badgeKey]}
+									<img
+										src={badges[badgeKey].image_url_1x}
+										alt={badges[badgeKey].title}
+										title={badges[badgeKey].title}
+										class="inline-block h-4.5 w-4.5"
+										loading="lazy"
+									/>
+								{/if}
+							{/each}
+						</span>
+						<button
+							class="me-1 cursor-pointer border-0 bg-transparent p-0 font-semibold hover:underline"
+							style="color: {message.tags?.color || 'inherit'}"
+							onclick={() => chatterHistory.show(message.user_name)}
 						>
-							<a
-								href={`#${message.tags['reply-parent-msg-id']}`}
-								class="text-base-content/80 dark:bg-base-200 flex w-fit flex-row items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-xs font-bold"
-							>
-								<div>
-									<Icon icon={IconCircleSquareArrowBoldDuotone} class="text-primary text-lg" />
-								</div>
-								{message.tags['reply-parent-display-name']}: {message.tags['reply-parent-msg-body']}
-							</a>
-							<div class="flex flex-row flex-wrap items-center gap-1 wrap-anywhere">
-								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-								{@html replaceEmotesInString(message.message, emotes, re)}
-							</div>
-						</div>
-					{:else}
-						<div
-							id={message.tags['id']}
-							class="chat-bubble flex scroll-mt-24 flex-row flex-wrap items-center gap-1 wrap-anywhere text-slate-100 transition duration-100 hover:shadow-lg"
-						>
-							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-							{@html replaceEmotesInString(message.message, emotes, re)}
-						</div>
-					{/if}
-				</div>
-			{/each}
+							{message.user_display_name}
+						</button>:
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						{@html replaceEmotesInString(message.message, emotes, re)}
+					</p>
+				{/each}
+			{/await}
 		{:catch}
 			{#each messages as message (message.id)}
-				<div class="chat chat-start rounded-sm transition duration-100">
-					<div class="chat-header">
-						<span
-							class="font-semibold drop-shadow-md"
-							style="color: {message?.tags['color'] || 'inherit'}">{message.user_display_name}</span
-						>
-						<div
-							class="inline-block"
-							title={format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}
-						>
-							<time class="text-xs opacity-50">
-								{format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}
-							</time>
-						</div>
-					</div>
-					<div
-						id={message.tags['id']}
-						class="chat-bubble flex scroll-mt-24 flex-row flex-wrap items-center gap-1 wrap-anywhere text-slate-100 transition duration-100 hover:shadow-lg"
+				<p
+					id={message.tags?.id}
+					class={[
+						'mb-1 text-sm leading-5 wrap-break-word hyphens-auto',
+						message.tags?.['first-msg'] === '1' &&
+							'relative border-r-4 border-fuchsia-500 bg-[#422342] px-2 py-1 pr-36'
+					]}
+				>
+					{#if message.tags?.['first-msg'] === '1'}
+						<span class="absolute top-1 right-2 text-xs font-semibold text-fuchsia-500">
+							FIRST MESSAGE
+						</span>
+					{/if}
+					<time
+						class="text-base-content/45 me-1 font-mono text-xs"
+						title={format(parseISO(message.date), "dd.MM.yyyy 'um' HH:mm:ss")}
 					>
-						{message.message}
-					</div>
-				</div>
+						{format(parseISO(message.date), 'HH:mm:ss')}
+					</time>
+					<button
+						class="me-1 cursor-pointer border-0 bg-transparent p-0 font-semibold hover:underline"
+						style="color: {message.tags?.color || 'inherit'}"
+						onclick={() => chatterHistory.show(message.user_name)}
+					>
+						{message.user_display_name}
+					</button>:
+					{message.message}
+				</p>
 			{/each}
 		{/await}
 	</div>
 </div>
-
-<style>
-	@media (max-width: 639px) {
-		.message-list :global(.chat-header) {
-			font-size: 0.75rem;
-		}
-
-		.message-list :global(.chat-bubble) {
-			font-size: 0.875rem;
-			line-height: 1.25rem;
-		}
-
-		.message-list :global(.chat-bubble .text-xs) {
-			font-size: 0.6875rem;
-		}
-	}
-</style>

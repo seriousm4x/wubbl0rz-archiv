@@ -8,7 +8,7 @@ export async function load() {
 
 	await pb
 		.collection('chatmessage')
-		.getList(1, 200, { sort: '-date', skipTotal: true, requestKey: 'chatmessages' })
+		.getList(1, 1000, { sort: '-date', skipTotal: true, requestKey: 'chatmessages' })
 		.then((data) => {
 			chatmessages = data;
 		})
