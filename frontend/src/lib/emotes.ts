@@ -5,82 +5,13 @@ export type Emotes = {
 	[name: string]: string;
 };
 
-type ttvEmote = {
-	code: string;
-	urls: [
-		{
-			url: string;
-		}
-	];
-};
-
-type bttvEmote = {
-	id: string;
-	code: string;
-};
-
-type ffzEmote = {
-	id: string;
-	name: string;
-};
-
-type seventvEmote = {
-	id: string;
-	name: string;
-	data: {
-		host: {
-			files: [{ name: string }];
-		};
-	};
-};
-
 export async function getEmotes(): Promise<[Emotes, RegExp]> {
 	const finalEmotes: Emotes = {};
 
-	await Promise.allSettled([
-		pb
-			.collection('emote')
-			.getFullList()
-			.then((pbEmotes) => {
-				pbEmotes.forEach((e) => {
-					finalEmotes[e.name.toLowerCase()] = e.url;
-				});
-			}),
-
-		fetch('https://emotes.adamcy.pl/v1/global/emotes/twitch')
-			.then((response) => response.json())
-			.then((data) => {
-				data.forEach((e: ttvEmote) => {
-					finalEmotes[e.code.toLowerCase()] = e.urls[0]?.url || '';
-				});
-			}),
-
-		fetch('https://api.betterttv.net/3/cached/emotes/global')
-			.then((response) => response.json())
-			.then((data) => {
-				data.forEach((e: bttvEmote) => {
-					finalEmotes[e.code.toLowerCase()] = `https://cdn.betterttv.net/emote/${e.id}/1x`;
-				});
-			}),
-
-		fetch('https://api.frankerfacez.com/v1/set/global')
-			.then((response) => response.json())
-			.then((data) => {
-				data.sets[data.default_sets[0]]?.emoticons.forEach((e: ffzEmote) => {
-					finalEmotes[e.name.toLowerCase()] = `https://cdn.frankerfacez.com/emoticon/${e.id}/1`;
-				});
-			}),
-
-		fetch('https://7tv.io/v3/emote-sets/01HKQT8EWR000ESSWF3625XCS4')
-			.then((response) => response.json())
-			.then((data) => {
-				data.emotes.forEach((e: seventvEmote) => {
-					finalEmotes[e.name.toLowerCase()] = `https://cdn.7tv.app/emote/${e.id}/${
-						e.data.host.files[0]?.name || ''
-					}`;
-				});
-			})
-	]);
+	const pbEmotes = await pb.collection('emote').getFullList({ requestKey: null });
+	pbEmotes.forEach((emote) => {
+		finalEmotes[emote.name.toLowerCase()] = emote.url;
+	});
 
 	// sort emotes by length to match long emote names before short ones
 	let emoteKeys = Object.keys(finalEmotes).sort((a, b) => b.length - a.length);
