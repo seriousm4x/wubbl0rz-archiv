@@ -3,3 +3,11 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - daisyui@5.5.20
   - postcss@8.5.15
+  - '@videojs/core@10.0.1'
+  - '@videojs/element@10.0.1'
+  - '@videojs/html@10.0.1'
+  - '@videojs/media@10.0.1'
+  - '@videojs/native-hls-video@10.0.1'
+  - '@videojs/spf@10.0.1'
+  - '@videojs/store@10.0.1'
+  - '@videojs/utils@10.0.1'

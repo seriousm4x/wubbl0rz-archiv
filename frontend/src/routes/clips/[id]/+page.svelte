@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import Card from '$lib/components/Card.svelte';
@@ -7,7 +8,7 @@
 	import { formatBytes, toHHMMSS } from '$lib/functions';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
 	import IconArrowAutofitWidthDotted24Filled from '@iconify-icons/fluent/arrow-autofit-width-dotted-24-filled';
-	import IconDownloadSquareBoldDuotone from '@iconify-icons/solar/download-square-bold-duotone';
+	import IconDownloadMinimalisticBoldDuotone from '@iconify-icons/solar/download-minimalistic-bold-duotone';
 	import IconFireBoldDuotone from '@iconify-icons/solar/fire-bold-duotone';
 	import IconRoundArrowRightBoldDuotone from '@iconify-icons/solar/round-arrow-right-bold-duotone';
 	import IconRoundArrowRightDownBoldDuotone from '@iconify-icons/solar/round-arrow-right-down-bold-duotone';
@@ -17,11 +18,11 @@
 	import { format, formatDistance, parseISO } from 'date-fns';
 	import { de } from 'date-fns/locale';
 	import type { RecordModel } from 'pocketbase';
-	import type { MediaPlayerElement } from 'vidstack/elements';
+	import type { ArchivePlayerElement } from '$lib/player';
 
 	let { data } = $props();
 
-	let player: MediaPlayerElement = $state({} as MediaPlayerElement);
+	let player = $state<ArchivePlayerElement>();
 	let currentTime: number = $state(0);
 
 	let og = $derived({
@@ -64,7 +65,57 @@
 
 <div class="mx-auto flex max-w-480 flex-col gap-8 {theaterEnabled ? '' : 'xl:flex-row'}">
 	<div class="flex flex-col gap-4 {theaterEnabled ? '' : 'xl:w-4/5'}">
-		<Player bind:player bind:currentTime video={clip} {isAudio} />
+		<Player bind:player bind:currentTime video={clip} {isAudio}>
+			{#snippet actions()}
+				<media-menu-item commandfor="clip-download" class="media-menu-trigger-item">
+					<Icon icon={IconDownloadMinimalisticBoldDuotone} class="media-menu-trigger-item-icon" />
+					<span>Herunterladen</span>
+					<span class="media-menu-hint">
+						<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
+					</span>
+				</media-menu-item>
+				<media-menu-content class="media-menu-content" id="clip-download">
+					<media-menu-item class="media-menu-back-item">
+						<media-icon name="chevron" class="media-menu-back-chevron"></media-icon>
+						<span>Herunterladen</span>
+					</media-menu-item>
+					<media-menu-separator class="media-menu-separator"></media-menu-separator>
+					<media-menu-item class="media-menu-radio-item">
+						<a
+							class="block w-full"
+							download={`${clip.filename}.mp4`}
+							href={resolve('/download/[type]/[filename]', {
+								type: clip.collectionName,
+								filename: clip.filename
+							})}
+						>
+							Video ({formatBytes(clip.size)})
+						</a>
+					</media-menu-item>
+				</media-menu-content>
+
+				<media-menu-item commandfor="clip-share" class="media-menu-trigger-item">
+					<Icon icon={IconShareBoldDuotone} class="media-menu-trigger-item-icon" />
+					<span>Teilen</span>
+					<span class="media-menu-hint">
+						<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
+					</span>
+				</media-menu-item>
+				<media-menu-content class="media-menu-content" id="clip-share">
+					<media-menu-item class="media-menu-back-item">
+						<media-icon name="chevron" class="media-menu-back-chevron"></media-icon>
+						<span>Teilen</span>
+					</media-menu-item>
+					<media-menu-separator class="media-menu-separator"></media-menu-separator>
+					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink(false)}>
+						Link kopieren
+					</media-menu-item>
+					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink(true)}>
+						Link bei {toHHMMSS(currentTime, false)} kopieren
+					</media-menu-item>
+				</media-menu-content>
+			{/snippet}
+		</Player>
 		<h1 class="text-2xl leading-tight font-semibold tracking-tight sm:text-4xl">
 			{clip.title}
 		</h1>
@@ -145,50 +196,6 @@
 				<Icon icon={IconArrowAutofitWidthDotted24Filled} class="text-2xl text-violet-500" />
 				{theaterEnabled ? 'Standardansicht' : 'Kinomodus'}
 			</button>
-
-			<div class="dropdown md:dropdown-end">
-				<label
-					for="btn-download"
-					tabindex="-1"
-					class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-				>
-					<Icon icon={IconDownloadSquareBoldDuotone} class="text-2xl text-violet-500" /> Download
-				</label>
-				<ul
-					id="btn-download"
-					tabindex="-1"
-					class="menu dropdown-content rounded-box bg-base-200 z-1 w-48 p-2 shadow"
-				>
-					<li>
-						<a href="/download/{clip.collectionName}/{clip.filename}"
-							>Video ({formatBytes(clip.size)})</a
-						>
-					</li>
-				</ul>
-			</div>
-			<div class="dropdown md:dropdown-end">
-				<label
-					for="btn-share"
-					tabindex="-1"
-					class="btn rounded-xl border-none bg-linear-to-r shadow transition duration-200 hover:shadow-lg"
-				>
-					<Icon icon={IconShareBoldDuotone} class="text-2xl text-violet-500" /> Teilen
-				</label>
-				<ul
-					id="btn-share"
-					tabindex="-1"
-					class="menu dropdown-content rounded-box bg-base-200 z-1 p-2 shadow"
-				>
-					<li>
-						<button onclick={() => copyLink(false)}>Link kopieren</button>
-					</li>
-					<li>
-						<button class="whitespace-nowrap" onclick={() => copyLink(true)}
-							>Link bei {toHHMMSS(currentTime, false)} kopieren</button
-						>
-					</li>
-				</ul>
-			</div>
 		</div>
 		{#if clip['expand']}
 			{#if clip['expand']['vod']}

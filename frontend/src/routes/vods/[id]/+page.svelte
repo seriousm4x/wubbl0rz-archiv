@@ -7,13 +7,13 @@
 	import SEO from '$lib/components/SEO.svelte';
 	import { formatBytes, toHHMMSS } from '$lib/functions';
 	import { DefaultOpenGraph } from '$lib/types/opengraph';
-	import IconDownloadSquareBoldDuotone from '@iconify-icons/solar/download-square-bold-duotone';
+	import IconDownloadMinimalisticBoldDuotone from '@iconify-icons/solar/download-minimalistic-bold-duotone';
 	import IconShareBoldDuotone from '@iconify-icons/solar/share-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import { format, parseISO } from 'date-fns';
 	import { de } from 'date-fns/locale';
 	import type { RecordModel } from 'pocketbase';
-	import type { MediaPlayerElement } from 'vidstack/elements';
+	import type { ArchivePlayerElement } from '$lib/player';
 
 	let { data } = $props();
 
@@ -24,7 +24,7 @@
 		updated_time: parseISO(data.vod?.date).toISOString()
 	});
 
-	let player: MediaPlayerElement = $state({} as MediaPlayerElement);
+	let player = $state<ArchivePlayerElement>();
 	let playerHeight = $state(0);
 	let currentTime = $state(0);
 	let vod = $derived(data.vod as RecordModel);
@@ -68,63 +68,65 @@
 			{/snippet}
 
 			{#snippet actions()}
-				<div class="dropdown dropdown-end">
-					<div
-						tabindex="0"
-						role="button"
-						class="btn btn-sm btn-circle border-0 bg-black/45 text-white hover:bg-black/65"
-						aria-label="Herunterladen"
-					>
-						<Icon icon={IconDownloadSquareBoldDuotone} class="text-xl" />
-					</div>
-					<ul
-						tabindex="-1"
-						class="menu dropdown-content dropdown-bottom rounded-box bg-base-200 text-base-content z-1 mt-2 w-52 p-2 shadow"
-					>
-						<li>
-							<a
-								href={resolve('/download/[type]/[filename]', {
-									type: vod.collectionName,
-									filename: vod.filename
-								})}
-							>
-								Video ({formatBytes(vod.size)})
-							</a>
-						</li>
-						<li>
-							<a
-								href={resolve('/download/[type]/[filename]?audio=true', {
-									type: vod.collectionName,
-									filename: vod.filename
-								})}
-							>
-								Audio ({formatBytes(vod.size_audio)})
-							</a>
-						</li>
-					</ul>
-				</div>
+				<media-menu-item commandfor="vod-download" class="media-menu-trigger-item">
+					<Icon icon={IconDownloadMinimalisticBoldDuotone} class="media-menu-trigger-item-icon" />
+					<span>Herunterladen</span>
+					<span class="media-menu-hint">
+						<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
+					</span>
+				</media-menu-item>
+				<media-menu-content class="media-menu-content" id="vod-download">
+					<media-menu-item class="media-menu-back-item">
+						<media-icon name="chevron" class="media-menu-back-chevron"></media-icon>
+						<span>Herunterladen</span>
+					</media-menu-item>
+					<media-menu-separator class="media-menu-separator"></media-menu-separator>
+					<media-menu-item class="media-menu-radio-item">
+						<a
+							class="block w-full"
+							download={`${vod.filename}.mp4`}
+							href={resolve('/download/[type]/[filename]', {
+								type: vod.collectionName,
+								filename: vod.filename
+							})}
+						>
+							Video ({formatBytes(vod.size)})
+						</a>
+					</media-menu-item>
+					<media-menu-item class="media-menu-radio-item">
+						<a
+							class="block w-full"
+							download={`${vod.filename}.ogg`}
+							href={resolve('/download/[type]/[filename]?audio=true', {
+								type: vod.collectionName,
+								filename: vod.filename
+							})}
+						>
+							Audio ({formatBytes(vod.size_audio)})
+						</a>
+					</media-menu-item>
+				</media-menu-content>
 
-				<div class="dropdown dropdown-end">
-					<div
-						tabindex="0"
-						role="button"
-						class="btn btn-sm btn-circle border-0 bg-black/45 text-white hover:bg-black/65"
-						aria-label="Teilen"
-					>
-						<Icon icon={IconShareBoldDuotone} class="text-xl" />
-					</div>
-					<ul
-						tabindex="-1"
-						class="menu dropdown-content dropdown-bottom rounded-box bg-base-200 text-base-content z-1 mt-2 w-64 p-2 shadow"
-					>
-						<li><button onclick={() => copyLink(false)}>Link kopieren</button></li>
-						<li>
-							<button onclick={() => copyLink(true)}>
-								Link bei {toHHMMSS(currentTime, false)} kopieren
-							</button>
-						</li>
-					</ul>
-				</div>
+				<media-menu-item commandfor="vod-share" class="media-menu-trigger-item">
+					<Icon icon={IconShareBoldDuotone} class="media-menu-trigger-item-icon" />
+					<span>Teilen</span>
+					<span class="media-menu-hint">
+						<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
+					</span>
+				</media-menu-item>
+				<media-menu-content class="media-menu-content" id="vod-share">
+					<media-menu-item class="media-menu-back-item">
+						<media-icon name="chevron" class="media-menu-back-chevron"></media-icon>
+						<span>Teilen</span>
+					</media-menu-item>
+					<media-menu-separator class="media-menu-separator"></media-menu-separator>
+					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink(false)}>
+						Link kopieren
+					</media-menu-item>
+					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink(true)}>
+						Link bei {toHHMMSS(currentTime, false)} kopieren
+					</media-menu-item>
+				</media-menu-content>
 			{/snippet}
 		</Player>
 	</div>
@@ -135,7 +137,7 @@
 </div>
 
 <style>
-	:global(.vod-player [data-media-provider] video) {
+	:global(.vod-player video) {
 		width: 100%;
 		height: 100%;
 		object-fit: contain;

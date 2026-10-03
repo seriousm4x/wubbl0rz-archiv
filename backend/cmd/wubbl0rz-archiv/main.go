@@ -23,11 +23,11 @@ func main() {
 		// probably ran with go run
 		switch runtime.GOOS {
 		case "windows":
-			assets.ArchiveDir = "Z:\\Archiv\\media"
+			assets.ArchiveDir = "Z:\\Archiv"
 		case "darwin":
-			assets.ArchiveDir = "/Volumes/nas/Archiv/media"
+			assets.ArchiveDir = "/Volumes/nas/Archiv"
 		default:
-			assets.ArchiveDir = "/mnt/nas/Archiv/media"
+			assets.ArchiveDir = "/mnt/nas/Archiv"
 		}
 	} else {
 		// probably ran with go build
