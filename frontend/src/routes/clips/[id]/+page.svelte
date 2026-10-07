@@ -105,7 +105,7 @@
 		<h1 class="text-2xl leading-tight font-semibold tracking-tight sm:text-4xl">
 			{clip.title}
 		</h1>
-		<div class="stats stats-vertical bg-base-200 lg:stats-horizontal w-full shadow">
+		<div class="stats max-md:stats-vertical bg-base-200 lg:stats-horizontal w-full shrink-0 shadow">
 			<div class="stat">
 				<div class="stat-title text-lg">Geclippt am</div>
 				<div class="stat-value text-2xl">
