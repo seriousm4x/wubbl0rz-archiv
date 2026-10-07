@@ -8,13 +8,12 @@ services:
     ports:
       - 127.0.0.1:8090:8090
     volumes:
-      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - /mnt/archiv/media/:/var/www/media/
       - /mnt/archiv/pb_data:/app/pb_data
   meili:
     container_name: archiv-meili
-    image: getmeili/meilisearch:v1.16.0
+    image: getmeili/meilisearch:v1.54.3
     #command: meilisearch --experimental-dumpless-upgrade
     env_file: .env
     ports:
@@ -36,7 +35,6 @@ services:
     ports:
       - 127.0.0.1:3000:3000
     volumes:
-      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       - backend
