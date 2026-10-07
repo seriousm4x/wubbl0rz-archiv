@@ -1,6 +1,6 @@
-import { PRIVATE_ALLOW_SEARCH_INDEXING } from '$env/static/private';
-import { PUBLIC_API_URL, PUBLIC_FRONTEND_URL } from '$env/static/public';
-import { createInstance } from '$lib/stores/pocketbase.js';
+import { PRIVATE_ALLOW_SEARCH_INDEXING } from '$app/env/private';
+import { PUBLIC_API_URL, PUBLIC_FRONTEND_URL } from '$app/env/public';
+import { createInstance } from '#lib/stores/pocketbase.js';
 import { error } from '@sveltejs/kit';
 import { parseISO } from 'date-fns';
 import type { RecordModel } from 'pocketbase';

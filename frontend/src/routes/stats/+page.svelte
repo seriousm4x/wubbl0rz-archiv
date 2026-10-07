@@ -1,7 +1,7 @@
 <script lang="ts">
-	import SEO from '$lib/components/SEO.svelte';
-	import { formatBytes } from '$lib/functions';
-	import { DefaultOpenGraph } from '$lib/types/opengraph';
+	import SEO from '#lib/components/SEO.svelte';
+	import { formatBytes } from '#lib/functions';
+	import { DefaultOpenGraph } from '#lib/types/opengraph';
 	import IconClapperboardBoldDuotone from '@iconify-icons/solar/clapperboard-bold-duotone';
 	import IconClockCircleBoldDuotone from '@iconify-icons/solar/clock-circle-bold-duotone';
 	import IconPieChart2BoldDuotone from '@iconify-icons/solar/pie-chart-2-bold-duotone';

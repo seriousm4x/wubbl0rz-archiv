@@ -1,29 +1,27 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { PUBLIC_API_URL } from '$env/static/public';
-	import Card from '$lib/components/Card.svelte';
-	import Player from '$lib/components/Player.svelte';
-	import SEO from '$lib/components/SEO.svelte';
-	import { formatBytes, toHHMMSS } from '$lib/functions';
-	import { DefaultOpenGraph } from '$lib/types/opengraph';
+	import { PUBLIC_API_URL } from '$app/env/public';
+	import Card from '#lib/components/Card.svelte';
+	import Player from '#lib/components/Player.svelte';
+	import SEO from '#lib/components/SEO.svelte';
+	import { formatBytes } from '#lib/functions';
+	import { DefaultOpenGraph } from '#lib/types/opengraph';
 	import IconArrowAutofitWidthDotted24Filled from '@iconify-icons/fluent/arrow-autofit-width-dotted-24-filled';
-	import IconDownloadMinimalisticBoldDuotone from '@iconify-icons/solar/download-minimalistic-bold-duotone';
 	import IconFireBoldDuotone from '@iconify-icons/solar/fire-bold-duotone';
 	import IconRoundArrowRightBoldDuotone from '@iconify-icons/solar/round-arrow-right-bold-duotone';
 	import IconRoundArrowRightDownBoldDuotone from '@iconify-icons/solar/round-arrow-right-down-bold-duotone';
 	import IconRoundArrowRightUpBoldDuotone from '@iconify-icons/solar/round-arrow-right-up-bold-duotone';
-	import IconShareBoldDuotone from '@iconify-icons/solar/share-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import { format, formatDistance, parseISO } from 'date-fns';
 	import { de } from 'date-fns/locale';
 	import type { RecordModel } from 'pocketbase';
-	import type { ArchivePlayerElement } from '$lib/player';
+	import type { ArchivePlayerElement } from '#lib/player';
 
 	let { data } = $props();
 
 	let player = $state<ArchivePlayerElement>();
-	let currentTime: number = $state(0);
+	let currentTime = $state(0);
 
 	let og = $derived({
 		...DefaultOpenGraph,
@@ -40,12 +38,18 @@
 	let isAudio = $state(false);
 	let theaterEnabled = $state(false);
 
-	function copyLink(withTimestamp: boolean) {
-		const url = new URL(page.url.origin + page.url.pathname);
-		if (withTimestamp) {
-			url.searchParams.set('t', currentTime.toFixed(0));
-		}
-		navigator.clipboard.writeText(url.toString());
+	function copyLink(withTimecode = false) {
+		const url = new URL(page.url.href);
+		if (withTimecode) url.searchParams.set('t', Math.floor(currentTime).toString());
+		else url.searchParams.delete('t');
+		void navigator.clipboard.writeText(url.href);
+	}
+
+	function download() {
+		window.location.href = resolve('/download/[type]/[filename]', {
+			type: clip.collectionName,
+			filename: clip.filename
+		});
 	}
 
 	function onKeyDown(e: KeyboardEvent) {
@@ -67,52 +71,34 @@
 	<div class="flex flex-col gap-4 {theaterEnabled ? '' : 'xl:w-4/5'}">
 		<Player bind:player bind:currentTime video={clip} {isAudio}>
 			{#snippet actions()}
-				<media-menu-item commandfor="clip-download" class="media-menu-trigger-item">
-					<Icon icon={IconDownloadMinimalisticBoldDuotone} class="media-menu-trigger-item-icon" />
-					<span>Herunterladen</span>
-					<span class="media-menu-hint">
-						<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
-					</span>
+				<media-menu-item commandfor="clip-download-menu" class="media-menu-trigger-item">
+					<media-text>Herunterladen</media-text>
+					<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
 				</media-menu-item>
-				<media-menu-content class="media-menu-content" id="clip-download">
+				<media-menu-content id="clip-download-menu" class="media-menu-content">
 					<media-menu-item class="media-menu-back-item">
 						<media-icon name="chevron" class="media-menu-back-chevron"></media-icon>
-						<span>Herunterladen</span>
+						<media-text>Herunterladen</media-text>
 					</media-menu-item>
-					<media-menu-separator class="media-menu-separator"></media-menu-separator>
-					<media-menu-item class="media-menu-radio-item">
-						<a
-							class="block w-full"
-							download={`${clip.filename}.mp4`}
-							href={resolve('/download/[type]/[filename]', {
-								type: clip.collectionName,
-								filename: clip.filename
-							})}
-						>
-							Video ({formatBytes(clip.size)})
-						</a>
+					<media-menu-item class="media-menu-radio-item" onselect={download}>
+						Video <span class="media-menu-hint">{formatBytes(Number(clip.size))}</span>
 					</media-menu-item>
 				</media-menu-content>
-
-				<media-menu-item commandfor="clip-share" class="media-menu-trigger-item">
-					<Icon icon={IconShareBoldDuotone} class="media-menu-trigger-item-icon" />
-					<span>Teilen</span>
-					<span class="media-menu-hint">
-						<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
-					</span>
+				<media-menu-item commandfor="clip-share-menu" class="media-menu-trigger-item">
+					<media-text>Teilen</media-text>
+					<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
 				</media-menu-item>
-				<media-menu-content class="media-menu-content" id="clip-share">
+				<media-menu-content id="clip-share-menu" class="media-menu-content">
 					<media-menu-item class="media-menu-back-item">
 						<media-icon name="chevron" class="media-menu-back-chevron"></media-icon>
-						<span>Teilen</span>
+						<media-text>Teilen</media-text>
 					</media-menu-item>
-					<media-menu-separator class="media-menu-separator"></media-menu-separator>
-					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink(false)}>
-						Link kopieren
-					</media-menu-item>
-					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink(true)}>
-						Link bei {toHHMMSS(currentTime, false)} kopieren
-					</media-menu-item>
+					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink()}
+						>Ohne Zeitstempel</media-menu-item
+					>
+					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink(true)}
+						>Mit Zeitstempel</media-menu-item
+					>
 				</media-menu-content>
 			{/snippet}
 		</Player>

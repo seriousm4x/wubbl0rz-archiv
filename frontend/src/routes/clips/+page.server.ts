@@ -1,4 +1,4 @@
-import { createInstance } from '$lib/stores/pocketbase.js';
+import { createInstance } from '#lib/stores/pocketbase.js';
 import type { ListResult, RecordModel } from 'pocketbase';
 
 export async function load({ url }) {

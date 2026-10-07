@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Card from '$lib/components/Card.svelte';
-	import SEO from '$lib/components/SEO.svelte';
-	import { DefaultOpenGraph } from '$lib/types/opengraph';
+	import Card from '#lib/components/Card.svelte';
+	import SEO from '#lib/components/SEO.svelte';
+	import { DefaultOpenGraph } from '#lib/types/opengraph';
 	import { parseISO } from 'date-fns';
 	import type { PageData } from './$types.js';
 

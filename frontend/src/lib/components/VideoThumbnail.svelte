@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { PUBLIC_API_URL } from '$env/static/public';
-	import { toHHMMSS } from '$lib/functions';
+	import { PUBLIC_API_URL } from '$app/env/public';
+	import { toHHMMSS } from '#lib/functions';
 	import type { RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
@@ -32,7 +32,7 @@
 </script>
 
 <a
-	href={resolve(`/${type}/${video.id}${offset > 0 ? `?t=${offset}` : ''}`)}
+	href={`${resolve(type === 'vods' ? '/vods/[id]' : '/clips/[id]', { id: video.id })}${offset > 0 ? `?t=${offset}` : ''}`}
 	class="relative block aspect-video overflow-hidden"
 	{onclick}
 	onmouseenter={() => (hover = true)}

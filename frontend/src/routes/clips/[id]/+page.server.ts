@@ -1,4 +1,4 @@
-import { createInstance } from '$lib/stores/pocketbase.js';
+import { createInstance } from '#lib/stores/pocketbase.js';
 import { error } from '@sveltejs/kit';
 import { add, format, parseISO } from 'date-fns';
 import type { ListResult, RecordModel } from 'pocketbase';

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import type { Snippet } from 'svelte';
-	import Favicons from '$lib/components/Favicons.svelte';
-	import Navbar from '$lib/components/Navbar.svelte';
-	import Sidebar from '$lib/components/Sidebar.svelte';
+	import Favicons from '#lib/components/Favicons.svelte';
+	import Navbar from '#lib/components/Navbar.svelte';
+	import Sidebar from '#lib/components/Sidebar.svelte';
 	import '../app.css';
 
 	let { children }: { children: Snippet } = $props();

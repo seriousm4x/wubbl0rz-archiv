@@ -2,8 +2,8 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
-	import Card from '$lib/components/Card.svelte';
-	import Pagination from '$lib/components/Pagination.svelte';
+	import Card from '#lib/components/Card.svelte';
+	import Pagination from '#lib/components/Pagination.svelte';
 	import IconFilterBoldDuotone from '@iconify-icons/solar/filter-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import type { ListResult, RecordModel } from 'pocketbase';
@@ -86,7 +86,7 @@
 		url.searchParams.append('filter', filter.join(' && ') || '');
 		url.searchParams.append('sort', `${ordering}${selectedSort.value}`);
 		url.searchParams.append('page', page.toString());
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
+
 		goto(url);
 	}
 </script>

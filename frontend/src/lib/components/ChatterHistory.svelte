@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { getEmotes } from '$lib/emotes';
-	import { replaceEmotesInString } from '$lib/functions';
-	import { pb } from '$lib/stores/pocketbase';
-	import { getTwitchBadges, type TwitchBadges } from '$lib/twitch-badges';
+	import { getEmotes } from '#lib/emotes';
+	import { replaceEmotesInString } from '#lib/functions';
+	import { pb } from '#lib/stores/pocketbase';
+	import { getTwitchBadges, type TwitchBadges } from '#lib/twitch-badges';
 	import { format, parseISO } from 'date-fns';
 	import type { RecordModel } from 'pocketbase';
 

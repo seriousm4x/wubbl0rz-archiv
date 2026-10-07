@@ -1,4 +1,4 @@
-import { createInstance } from '$lib/stores/pocketbase';
+import { createInstance } from '#lib/stores/pocketbase';
 import { error } from '@sveltejs/kit';
 import type { ListResult, RecordModel } from 'pocketbase';
 

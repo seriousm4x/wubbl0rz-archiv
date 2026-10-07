@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import VideoThumbnail from '$lib/components/VideoThumbnail.svelte';
+	import VideoThumbnail from '#lib/components/VideoThumbnail.svelte';
 	import { format, formatDistance, parseISO } from 'date-fns';
 	import { de } from 'date-fns/locale';
 	import type { RecordModel } from 'pocketbase';
@@ -12,7 +12,10 @@
 <article class="group min-w-0">
 	<VideoThumbnail {video} {offset} />
 	<div class="space-y-1 px-1 pt-3">
-		<a class="block" href={resolve(`/${type}/${video.id}${offset > 0 ? `?t=${offset}` : ''}`)}>
+		<a
+			class="block"
+			href={`${resolve(type === 'vods' ? '/vods/[id]' : '/clips/[id]', { id: video.id })}${offset > 0 ? `?t=${offset}` : ''}`}
+		>
 			<h2 class="line-clamp-2 text-sm leading-5 font-semibold">
 				{video.title}
 			</h2>

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import SEO from '$lib/components/SEO.svelte';
-	import ChatterHistory from '$lib/components/ChatterHistory.svelte';
-	import { getEmotes } from '$lib/emotes';
-	import { replaceEmotesInString } from '$lib/functions';
-	import { pb } from '$lib/stores/pocketbase';
-	import { getTwitchBadges, type TwitchBadges } from '$lib/twitch-badges';
-	import { DefaultOpenGraph } from '$lib/types/opengraph';
+	import SEO from '#lib/components/SEO.svelte';
+	import ChatterHistory from '#lib/components/ChatterHistory.svelte';
+	import { getEmotes } from '#lib/emotes';
+	import { replaceEmotesInString } from '#lib/functions';
+	import { pb } from '#lib/stores/pocketbase';
+	import { getTwitchBadges, type TwitchBadges } from '#lib/twitch-badges';
+	import { DefaultOpenGraph } from '#lib/types/opengraph';
 	import { format, parseISO } from 'date-fns';
 	import type { ListResult, RecordModel } from 'pocketbase';
 	import { onMount, tick } from 'svelte';

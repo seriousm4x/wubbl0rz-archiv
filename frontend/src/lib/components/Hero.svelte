@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { PUBLIC_API_URL } from '$env/static/public';
+	import { PUBLIC_API_URL } from '$app/env/public';
 	import IconAltArrowRightBoldDuotone from '@iconify-icons/solar/alt-arrow-right-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import { formatDistance, parseISO } from 'date-fns';
@@ -14,7 +14,7 @@
 
 <section class="mx-auto max-w-6xl space-y-4" aria-labelledby="featured-vod-title">
 	<a
-		href={resolve(`/vods/${vod.id}`)}
+		href={resolve('/vods/[id]', { id: vod.id })}
 		class="card group rounded-box relative block aspect-21/9 overflow-hidden shadow-sm"
 		onmouseenter={() => (hover = true)}
 		onmouseleave={() => (hover = false)}
@@ -57,7 +57,7 @@
 				id="featured-vod-title"
 				class="text-2xl leading-tight font-semibold tracking-tight sm:text-4xl"
 			>
-				<a class="link link-hover" href={resolve(`/vods/${vod.id}`)}>{vod.title}</a>
+				<a class="link link-hover" href={resolve('/vods/[id]', { id: vod.id })}>{vod.title}</a>
 			</h1>
 			<p class="text-base-content/70">
 				{vod.viewcount.toLocaleString('de-DE')} Aufrufe
@@ -71,7 +71,7 @@
 		</div>
 		<a
 			class="btn border-base-content/15 bg-base-content text-base-100 hover:bg-base-content/85 sm:shrink-0"
-			href={resolve(`/vods/${vod.id}`)}
+			href={resolve('/vods/[id]', { id: vod.id })}
 		>
 			Jetzt ansehen
 			<Icon icon={IconAltArrowRightBoldDuotone} class="text-xl" />

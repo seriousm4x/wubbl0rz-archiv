@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { getEmotes, type Emotes } from '$lib/emotes';
-	import ChatterHistory from '$lib/components/ChatterHistory.svelte';
-	import { replaceEmotesInString, toHHMMSS } from '$lib/functions';
-	import { pb } from '$lib/stores/pocketbase';
-	import { getTwitchBadges, type TwitchBadges } from '$lib/twitch-badges';
+	import { getEmotes, type Emotes } from '#lib/emotes';
+	import ChatterHistory from '#lib/components/ChatterHistory.svelte';
+	import { replaceEmotesInString, toHHMMSS } from '#lib/functions';
+	import { pb } from '#lib/stores/pocketbase';
+	import { getTwitchBadges, type TwitchBadges } from '#lib/twitch-badges';
 	import type { RecordModel } from 'pocketbase';
 	import { onMount, tick } from 'svelte';
 	import { SvelteMap, SvelteSet } from 'svelte/reactivity';

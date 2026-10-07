@@ -1,4 +1,4 @@
-import { PUBLIC_API_URL } from '$env/static/public';
+import { PUBLIC_API_URL } from '$app/env/public';
 
 export type TwitchBadgeVersion = {
 	image_url_1x: string;

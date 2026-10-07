@@ -1,19 +1,15 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { PUBLIC_API_URL } from '$env/static/public';
-	import ChatReplay from '$lib/components/ChatReplay.svelte';
-	import Player from '$lib/components/Player.svelte';
-	import SEO from '$lib/components/SEO.svelte';
-	import { formatBytes, toHHMMSS } from '$lib/functions';
-	import { DefaultOpenGraph } from '$lib/types/opengraph';
-	import IconDownloadMinimalisticBoldDuotone from '@iconify-icons/solar/download-minimalistic-bold-duotone';
-	import IconShareBoldDuotone from '@iconify-icons/solar/share-bold-duotone';
-	import Icon from '@iconify/svelte';
-	import { format, parseISO } from 'date-fns';
-	import { de } from 'date-fns/locale';
+	import { PUBLIC_API_URL } from '$app/env/public';
+	import ChatReplay from '#lib/components/ChatReplay.svelte';
+	import Player from '#lib/components/Player.svelte';
+	import SEO from '#lib/components/SEO.svelte';
+	import { formatBytes } from '#lib/functions';
+	import { DefaultOpenGraph } from '#lib/types/opengraph';
+	import { parseISO } from 'date-fns';
 	import type { RecordModel } from 'pocketbase';
-	import type { ArchivePlayerElement } from '$lib/player';
+	import type { ArchivePlayerElement } from '#lib/player';
 
 	let { data } = $props();
 
@@ -29,12 +25,19 @@
 	let currentTime = $state(0);
 	let vod = $derived(data.vod as RecordModel);
 
-	function copyLink(withTimestamp: boolean) {
-		const url = new URL(page.url.origin + page.url.pathname);
-		if (withTimestamp) {
-			url.searchParams.set('t', currentTime.toFixed(0));
-		}
-		navigator.clipboard.writeText(url.toString());
+	function copyLink(withTimecode = false) {
+		const url = new URL(page.url.href);
+		if (withTimecode) url.searchParams.set('t', Math.floor(currentTime).toString());
+		else url.searchParams.delete('t');
+		void navigator.clipboard.writeText(url.href);
+	}
+
+	function download(audio = false) {
+		const url = resolve('/download/[type]/[filename]', {
+			type: vod.collectionName,
+			filename: vod.filename
+		});
+		window.location.href = audio ? `${url}?audio=true` : url;
 	}
 </script>
 
@@ -51,81 +54,38 @@
 			video={vod}
 			isAudio={false}
 		>
-			{#snippet info()}
-				<h1
-					class="max-w-[calc(100%-5rem)] text-xl leading-tight font-semibold tracking-tight sm:text-2xl"
-				>
-					{vod.title}
-				</h1>
-				<div class="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-sm text-white/75">
-					<span>
-						{format(parseISO(vod.date), 'dd.MM.yyyy, HH:mm', { locale: de })} Uhr
-					</span>
-					|
-					<span>{vod.viewcount.toLocaleString('de-DE')} Views</span> |
-					<span>{vod.resolution}@{vod.fps} FPS</span>
-				</div>
-			{/snippet}
-
 			{#snippet actions()}
-				<media-menu-item commandfor="vod-download" class="media-menu-trigger-item">
-					<Icon icon={IconDownloadMinimalisticBoldDuotone} class="media-menu-trigger-item-icon" />
-					<span>Herunterladen</span>
-					<span class="media-menu-hint">
-						<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
-					</span>
+				<media-menu-item commandfor="vod-download-menu" class="media-menu-trigger-item">
+					<media-text>Herunterladen</media-text>
+					<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
 				</media-menu-item>
-				<media-menu-content class="media-menu-content" id="vod-download">
+				<media-menu-content id="vod-download-menu" class="media-menu-content">
 					<media-menu-item class="media-menu-back-item">
 						<media-icon name="chevron" class="media-menu-back-chevron"></media-icon>
-						<span>Herunterladen</span>
+						<media-text>Herunterladen</media-text>
 					</media-menu-item>
-					<media-menu-separator class="media-menu-separator"></media-menu-separator>
-					<media-menu-item class="media-menu-radio-item">
-						<a
-							class="block w-full"
-							download={`${vod.filename}.mp4`}
-							href={resolve('/download/[type]/[filename]', {
-								type: vod.collectionName,
-								filename: vod.filename
-							})}
-						>
-							Video ({formatBytes(vod.size)})
-						</a>
+					<media-menu-item class="media-menu-radio-item" onselect={() => download()}>
+						Video <span class="media-menu-hint">{formatBytes(Number(vod.size))}</span>
 					</media-menu-item>
-					<media-menu-item class="media-menu-radio-item">
-						<a
-							class="block w-full"
-							download={`${vod.filename}.ogg`}
-							href={resolve('/download/[type]/[filename]?audio=true', {
-								type: vod.collectionName,
-								filename: vod.filename
-							})}
-						>
-							Audio ({formatBytes(vod.size_audio)})
-						</a>
+					<media-menu-item class="media-menu-radio-item" onselect={() => download(true)}>
+						Audio <span class="media-menu-hint">{formatBytes(Number(vod.size_audio))}</span>
 					</media-menu-item>
 				</media-menu-content>
-
-				<media-menu-item commandfor="vod-share" class="media-menu-trigger-item">
-					<Icon icon={IconShareBoldDuotone} class="media-menu-trigger-item-icon" />
-					<span>Teilen</span>
-					<span class="media-menu-hint">
-						<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
-					</span>
+				<media-menu-item commandfor="vod-share-menu" class="media-menu-trigger-item">
+					<media-text>Teilen</media-text>
+					<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
 				</media-menu-item>
-				<media-menu-content class="media-menu-content" id="vod-share">
+				<media-menu-content id="vod-share-menu" class="media-menu-content">
 					<media-menu-item class="media-menu-back-item">
 						<media-icon name="chevron" class="media-menu-back-chevron"></media-icon>
-						<span>Teilen</span>
+						<media-text>Teilen</media-text>
 					</media-menu-item>
-					<media-menu-separator class="media-menu-separator"></media-menu-separator>
-					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink(false)}>
-						Link kopieren
-					</media-menu-item>
-					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink(true)}>
-						Link bei {toHHMMSS(currentTime, false)} kopieren
-					</media-menu-item>
+					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink()}
+						>Ohne Zeitstempel</media-menu-item
+					>
+					<media-menu-item class="media-menu-radio-item" onselect={() => copyLink(true)}
+						>Mit Zeitstempel</media-menu-item
+					>
 				</media-menu-content>
 			{/snippet}
 		</Player>
@@ -135,11 +95,3 @@
 		<ChatReplay {vod} {currentTime} {playerHeight} />
 	</aside>
 </div>
-
-<style>
-	:global(.vod-player video) {
-		width: 100%;
-		height: 100%;
-		object-fit: contain;
-	}
-</style>

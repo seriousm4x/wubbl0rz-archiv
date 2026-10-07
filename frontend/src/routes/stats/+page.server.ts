@@ -1,6 +1,6 @@
-import { PRIVATE_MEILI_ADMIN_KEY } from '$env/static/private';
-import { PUBLIC_API_URL, PUBLIC_MEILI_URL } from '$env/static/public';
-import { createInstance } from '$lib/stores/pocketbase.js';
+import { PRIVATE_MEILI_ADMIN_KEY } from '$app/env/private';
+import { PUBLIC_API_URL, PUBLIC_MEILI_URL } from '$app/env/public';
+import { createInstance } from '#lib/stores/pocketbase.js';
 import type { Stats } from 'meilisearch';
 import type { RecordModel } from 'pocketbase';
 

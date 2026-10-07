@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { navigating } from '$app/state';
-	import { PUBLIC_MEILI_SEARCH_KEY, PUBLIC_MEILI_URL } from '$env/static/public';
-	import Pagination from '$lib/components/Pagination.svelte';
-	import SearchResult from '$lib/components/SearchResult.svelte';
+	import { PUBLIC_MEILI_SEARCH_KEY, PUBLIC_MEILI_URL } from '$app/env/public';
+	import Pagination from '#lib/components/Pagination.svelte';
+	import SearchResult from '#lib/components/SearchResult.svelte';
 	import IconMenuDotsSquareBoldDuotone from '@iconify-icons/solar/menu-dots-square-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import { Meilisearch } from 'meilisearch';
@@ -13,10 +13,9 @@
 	let meiliIndex: 'transcripts' | 'vods' = $state('transcripts');
 	let currentPage = $state(1);
 
-	const client = new Meilisearch({
-		host: PUBLIC_MEILI_URL,
-		apiKey: PUBLIC_MEILI_SEARCH_KEY
-	});
+	const client = PUBLIC_MEILI_URL
+		? new Meilisearch({ host: PUBLIC_MEILI_URL, apiKey: PUBLIC_MEILI_SEARCH_KEY })
+		: undefined;
 
 	// available sorts
 	type sort = {
@@ -196,7 +195,7 @@
 		</div>
 		<hr class="border-base-content/20 w-full rounded" />
 		<div class="flex max-h-[90dvh] w-full flex-col gap-4 overflow-y-auto p-6">
-			{#if searchText}
+			{#if searchText && client}
 				{#await client.index(meiliIndex).search(searchText, searchConfig)}
 					<div class="w-full text-center">
 						<span class="loading loading-spinner loading-lg"></span>

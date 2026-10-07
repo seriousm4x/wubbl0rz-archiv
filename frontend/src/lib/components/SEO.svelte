@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import type { OpenGraph } from '$lib/types/opengraph';
+	import type { OpenGraph } from '#lib/types/opengraph';
 
 	let { og }: { og: OpenGraph } = $props();
 </script>
