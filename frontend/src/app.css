@@ -1,6 +1,7 @@
 @import url(./fonts.css);
 
 @import 'tailwindcss';
+@import '@videojs/html/video/skin.css';
 
 @theme {
 	--default-font-family: 'Poppins', var(--font-sans);

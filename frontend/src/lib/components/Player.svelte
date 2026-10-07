@@ -5,7 +5,6 @@
 	import '@videojs/html/video/player';
 	import '@videojs/html/video/skin';
 	import '@videojs/html/audio/player';
-	import '@videojs/html/video/skin.css';
 	import type { RecordModel } from 'pocketbase';
 	import { untrack, type Snippet } from 'svelte';
 
