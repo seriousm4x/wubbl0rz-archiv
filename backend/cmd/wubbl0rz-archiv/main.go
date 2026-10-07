@@ -35,7 +35,7 @@ func main() {
 		case "windows":
 			assets.ArchiveDir = "Z:\\Archiv\\media"
 		case "darwin":
-			assets.ArchiveDir = "/Volumes/nas/Archiv/media"
+			assets.ArchiveDir = "/Volumes/nas/Archiv"
 		default:
 			assets.ArchiveDir = "/var/www/media"
 		}

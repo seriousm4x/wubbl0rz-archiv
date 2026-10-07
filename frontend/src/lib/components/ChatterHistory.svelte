@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { getEmotes } from '#lib/emotes';
+	import { getEmotes, type Emotes } from '#lib/emotes';
 	import { replaceEmotesInString } from '#lib/functions';
 	import { pb } from '#lib/stores/pocketbase';
 	import { getTwitchBadges, type TwitchBadges } from '#lib/twitch-badges';
 	import { format, parseISO } from 'date-fns';
+	import { onMount } from 'svelte';
 	import type { RecordModel } from 'pocketbase';
 
 	let dialog: HTMLDialogElement;
@@ -15,8 +16,13 @@
 	let hasLoadError = $state(false);
 	let hasMore = $state(true);
 	let page = $state(0);
-	let emotesPromise = getEmotes();
+	const pendingEmotes = new Promise<[Emotes, RegExp]>(() => {});
+	let emotesPromise = $state<Promise<[Emotes, RegExp]>>(pendingEmotes);
 	let badgesPromise = $state<Promise<TwitchBadges>>(Promise.resolve({}));
+
+	onMount(() => {
+		emotesPromise = getEmotes();
+	});
 
 	export function show(requestedUserName: string) {
 		userName = requestedUserName;
@@ -116,11 +122,11 @@
 								class={[
 									'mb-1 text-sm leading-5 wrap-break-word hyphens-auto',
 									message.tags?.['first-msg'] === '1' &&
-										'relative border-r-4 border-fuchsia-500 bg-[#422342] px-2 py-1 pr-36'
+										'border-r-4 border-fuchsia-500 bg-[#422342] px-2 py-1'
 								]}
 							>
 								{#if message.tags?.['first-msg'] === '1'}
-									<span class="absolute top-1 right-2 text-xs font-semibold text-fuchsia-500">
+									<span class="block text-right text-xs font-semibold text-fuchsia-500">
 										FIRST MESSAGE
 									</span>
 								{/if}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SEO from '#lib/components/SEO.svelte';
 	import ChatterHistory from '#lib/components/ChatterHistory.svelte';
-	import { getEmotes } from '#lib/emotes';
+	import { getEmotes, type Emotes } from '#lib/emotes';
 	import { replaceEmotesInString } from '#lib/functions';
 	import { pb } from '#lib/stores/pocketbase';
 	import { getTwitchBadges, type TwitchBadges } from '#lib/twitch-badges';
@@ -13,7 +13,8 @@
 	let { data }: { data: ListResult<RecordModel> } = $props();
 	let realtimeMessages = $state.raw<RecordModel[]>([]);
 	let messages = $derived(realtimeMessages.length > 0 ? realtimeMessages : data.items.toReversed());
-	let emotesPromise = getEmotes();
+	const pendingEmotes = new Promise<[Emotes, RegExp]>(() => {});
+	let emotesPromise = $state<Promise<[Emotes, RegExp]>>(pendingEmotes);
 	let badgesPromise = $state<Promise<TwitchBadges>>(Promise.resolve({}));
 	let roomId = $derived(String(messages.at(0)?.tags?.['room-id'] || ''));
 	let lastMessageId = $derived(messages.at(-1)?.id);
@@ -26,6 +27,7 @@
 	});
 
 	onMount(() => {
+		emotesPromise = getEmotes();
 		$pb.collection('chatmessage').subscribe('*', (e) => {
 			realtimeMessages = [...messages, e.record].slice(-1000);
 		});
@@ -78,11 +80,11 @@
 						class={[
 							'mb-1 text-sm leading-5 wrap-break-word hyphens-auto',
 							message.tags?.['first-msg'] === '1' &&
-								'relative border-r-4 border-fuchsia-500 bg-[#422342] px-2 py-1 pr-36'
+								'border-r-4 border-fuchsia-500 bg-[#422342] px-2 py-1'
 						]}
 					>
 						{#if message.tags?.['first-msg'] === '1'}
-							<span class="absolute top-1 right-2 text-xs font-semibold text-fuchsia-500">
+							<span class="block text-right text-xs font-semibold text-fuchsia-500">
 								FIRST MESSAGE
 							</span>
 						{/if}
@@ -124,11 +126,11 @@
 					class={[
 						'mb-1 text-sm leading-5 wrap-break-word hyphens-auto',
 						message.tags?.['first-msg'] === '1' &&
-							'relative border-r-4 border-fuchsia-500 bg-[#422342] px-2 py-1 pr-36'
+							'border-r-4 border-fuchsia-500 bg-[#422342] px-2 py-1'
 					]}
 				>
 					{#if message.tags?.['first-msg'] === '1'}
-						<span class="absolute top-1 right-2 text-xs font-semibold text-fuchsia-500">
+						<span class="block text-right text-xs font-semibold text-fuchsia-500">
 							FIRST MESSAGE
 						</span>
 					{/if}
