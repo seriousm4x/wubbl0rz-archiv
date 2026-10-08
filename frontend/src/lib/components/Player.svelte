@@ -17,7 +17,7 @@
 		video = {} as RecordModel,
 		class: className = '',
 		player = $bindable(),
-		 
+
 		currentTime = $bindable(0),
 		isAudio = $bindable(false),
 		quality,
@@ -34,12 +34,14 @@
 
 	let media = $state<HTMLMediaElement>();
 	let mounted = $state(false);
+	let playbackRate = $state(1);
 	const componentId = $props.id();
 	let type = $derived(video.collectionName === 'vod' ? 'vods' : 'clips');
 	let base = $derived(`${PUBLIC_API_URL}/${type}/${video.filename}`);
 	let src = $derived(`${base}/${isAudio ? 'audio.ogg' : `${video.collectionName}.mp4`}`);
 
 	function setPlaybackRate(rate: number) {
+		playbackRate = rate;
 		if (media) media.playbackRate = rate;
 	}
 
@@ -55,7 +57,8 @@
 				media!,
 				src,
 				() => Math.max(Number(page.url.searchParams.get('t')), currentTime),
-				(time) => (currentTime = time)
+				(time) => (currentTime = time),
+				(rate) => (playbackRate = rate)
 			)
 		);
 	});
@@ -230,30 +233,23 @@
 													<media-text token="menu.speed">Speed</media-text>
 												</media-menu-item>
 												<media-menu-separator class="media-menu-separator"></media-menu-separator>
-												<media-menu-item
-													class="media-menu-radio-item"
-													onselect={() => setPlaybackRate(0.5)}>0.5x</media-menu-item
+												<media-menu-radio-group
+													value={String(playbackRate)}
+													onvalue-change={(event: CustomEvent<{ value: string }>) =>
+														setPlaybackRate(Number(event.detail.value))}
 												>
-												<media-menu-item
-													class="media-menu-radio-item"
-													onselect={() => setPlaybackRate(0.75)}>0.75x</media-menu-item
-												>
-												<media-menu-item
-													class="media-menu-radio-item"
-													onselect={() => setPlaybackRate(1)}>1x</media-menu-item
-												>
-												<media-menu-item
-													class="media-menu-radio-item"
-													onselect={() => setPlaybackRate(1.25)}>1.25x</media-menu-item
-												>
-												<media-menu-item
-													class="media-menu-radio-item"
-													onselect={() => setPlaybackRate(1.5)}>1.5x</media-menu-item
-												>
-												<media-menu-item
-													class="media-menu-radio-item"
-													onselect={() => setPlaybackRate(2)}>2x</media-menu-item
-												>
+													{#each [0.5, 0.75, 1, 1.25, 1.5, 2] as rate (rate)}
+														<media-menu-radio-item
+															value={String(rate)}
+															class="media-menu-radio-item"
+														>
+															{rate}x
+															<media-menu-item-indicator checked={playbackRate === rate}
+																>✓</media-menu-item-indicator
+															>
+														</media-menu-radio-item>
+													{/each}
+												</media-menu-radio-group>
 											</media-menu-content>
 											{#if actions}{@render actions()}{/if}
 										</media-menu-content>

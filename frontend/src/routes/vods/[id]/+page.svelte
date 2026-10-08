@@ -28,6 +28,10 @@
 	let currentTime = $state(0);
 	let isAudio = $state(false);
 	let vod = $derived(data.vod as RecordModel);
+	let resolutionHeight = $derived(Number(vod.resolution?.split('x').at(-1)));
+	let qualityLabel = $derived(Number.isFinite(resolutionHeight) ? `${resolutionHeight}p` : 'Video');
+	let qualityTier = $derived(resolutionHeight >= 2160 ? '4K' : resolutionHeight >= 720 ? 'HD' : '');
+	let bitrate = $derived(((Number(vod.size) * 8) / Number(vod.duration) / 1_000_000).toFixed(1));
 
 	function copyLink(withTimecode = false) {
 		const url = new URL(page.url.href);
@@ -66,7 +70,7 @@
 					<media-icon name="quality" class="media-menu-trigger-item-icon"></media-icon>
 					<media-text>Qualität</media-text>
 					<span class="media-menu-hint">
-						{isAudio ? 'Nur Audio' : '1080p'}
+						{isAudio ? 'Nur Audio' : qualityLabel}
 						<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
 					</span>
 				</media-menu-item>
@@ -76,12 +80,16 @@
 						<media-text>Qualität</media-text>
 					</media-menu-item>
 					<media-menu-radio-group
-						value={isAudio ? 'audio' : '1080p'}
+						value={isAudio ? 'audio' : 'video'}
 						onvalue-change={(event: CustomEvent<{ value: string }>) =>
 							(isAudio = event.detail.value === 'audio')}
 					>
-						<media-menu-radio-item value="1080p" class="media-menu-radio-item">
-							1080p
+						<media-menu-radio-item value="video" class="media-menu-radio-item">
+							<span>
+								{qualityLabel}
+								{#if qualityTier}<sup class="media-menu-tier">{qualityTier}</sup>{/if}
+							</span>
+							<span class="media-menu-badge">{bitrate} Mbps</span>
 							<media-menu-item-indicator checked={!isAudio}>✓</media-menu-item-indicator>
 						</media-menu-radio-item>
 						<media-menu-radio-item value="audio" class="media-menu-radio-item">
