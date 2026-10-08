@@ -67,7 +67,9 @@
 
 <SEO {og} />
 
-<div class="mx-auto flex max-w-480 flex-col gap-8 {theaterEnabled ? '' : 'xl:flex-row'}">
+<div
+	class="mx-auto flex max-w-480 flex-col gap-8 {theaterEnabled ? '' : 'xl:flex-row xl:items-start'}"
+>
 	<div class="flex flex-col gap-4 {theaterEnabled ? '' : 'xl:w-4/5'}">
 		<Player bind:player bind:currentTime video={clip} {isAudio}>
 			{#snippet actions()}
