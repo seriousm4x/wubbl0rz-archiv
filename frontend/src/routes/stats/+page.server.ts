@@ -58,7 +58,7 @@ export async function load({ fetch }) {
 				requestKey: 'all_emotes'
 			})
 			.then((data: RecordModel[]) => {
-				emotes = data;
+				emotes = data.filter((emote: RecordModel) => !emote.global);
 			})
 			.catch((e: Error) => {
 				return e;

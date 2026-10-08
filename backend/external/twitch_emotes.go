@@ -37,7 +37,23 @@ func TwitchUpdateEmotes(app core.App) error {
 		return err
 	}
 
-	url := "https://api.twitch.tv/helix/chat/emotes?broadcaster_id=" + settings.GetString("broadcaster_id")
+	urls := []struct {
+		url      string
+		isGlobal bool
+	}{
+		{"https://api.twitch.tv/helix/chat/emotes/global", true},
+		{"https://api.twitch.tv/helix/chat/emotes?broadcaster_id=" + settings.GetString("broadcaster_id"), false},
+	}
+	for _, source := range urls {
+		if err := twitchUpdateEmotesFromURL(app, settings, source.url, source.isGlobal); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func twitchUpdateEmotesFromURL(app core.App, settings *core.Record, url string, isGlobal bool) error {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		logger.Error.Println(err)
@@ -92,11 +108,13 @@ func TwitchUpdateEmotes(app core.App) error {
 			emote.Set("name", respEmote.Name)
 			emote.Set("url", image)
 			emote.Set("provider", "twitch")
+			emote.Set("global", isGlobal)
 		} else if err != nil {
 			logger.Error.Println(err)
 			return err
 		} else {
 			emote.Set("outdated", false)
+			emote.Set("global", isGlobal)
 		}
 
 		if err := app.Save(emote); err != nil {
