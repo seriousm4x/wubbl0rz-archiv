@@ -12,6 +12,8 @@
 	import IconRoundArrowRightBoldDuotone from '@iconify-icons/solar/round-arrow-right-bold-duotone';
 	import IconRoundArrowRightDownBoldDuotone from '@iconify-icons/solar/round-arrow-right-down-bold-duotone';
 	import IconRoundArrowRightUpBoldDuotone from '@iconify-icons/solar/round-arrow-right-up-bold-duotone';
+	import IconDownloadMinimalisticBoldDuotone from '@iconify-icons/solar/download-minimalistic-bold-duotone';
+	import IconShareBoldDuotone from '@iconify-icons/solar/share-bold-duotone';
 	import Icon from '@iconify/svelte';
 	import { format, formatDistance, parseISO } from 'date-fns';
 	import { de } from 'date-fns/locale';
@@ -74,8 +76,11 @@
 		<Player bind:player bind:currentTime video={clip} {isAudio}>
 			{#snippet actions()}
 				<media-menu-item commandfor="clip-download-menu" class="media-menu-trigger-item">
+					<Icon icon={IconDownloadMinimalisticBoldDuotone} class="media-menu-trigger-item-icon" />
 					<media-text>Herunterladen</media-text>
-					<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
+					<span class="media-menu-hint">
+						<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
+					</span>
 				</media-menu-item>
 				<media-menu-content id="clip-download-menu" class="media-menu-content">
 					<media-menu-item class="media-menu-back-item">
@@ -87,8 +92,11 @@
 					</media-menu-item>
 				</media-menu-content>
 				<media-menu-item commandfor="clip-share-menu" class="media-menu-trigger-item">
+					<Icon icon={IconShareBoldDuotone} class="media-menu-trigger-item-icon" />
 					<media-text>Teilen</media-text>
-					<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
+					<span class="media-menu-hint">
+						<media-icon name="chevron" class="media-menu-forward-chevron"></media-icon>
+					</span>
 				</media-menu-item>
 				<media-menu-content id="clip-share-menu" class="media-menu-content">
 					<media-menu-item class="media-menu-back-item">
