@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 
 	import Card from '#lib/components/Card.svelte';
@@ -24,6 +25,7 @@
 		value: string;
 		text: string;
 	};
+	type videoListPath = `/vods?${string}` | `/clips?${string}`;
 
 	// parse page from url
 	let currentPage = $derived(parseInt(page.url.searchParams.get('page') || '1', 10));
@@ -87,7 +89,11 @@
 		url.searchParams.append('sort', `${ordering}${selectedSort.value}`);
 		url.searchParams.append('page', page.toString());
 
-		goto(url);
+		const destination: videoListPath =
+			pathname === '/vods'
+				? `/vods?${url.searchParams.toString()}`
+				: `/clips?${url.searchParams.toString()}`;
+		goto(resolve(destination));
 	}
 </script>
 
