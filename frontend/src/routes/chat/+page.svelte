@@ -18,7 +18,9 @@
 	let badgesPromise = $state<Promise<TwitchBadges>>(Promise.resolve({}));
 	let roomId = $derived(String(messages.at(0)?.tags?.['room-id'] || ''));
 	let lastMessageId = $derived(messages.at(-1)?.id);
+	const twitchChatWidthStorageKey = 'chat-limit-twitch-width';
 	let shouldAutoScroll = $state(true);
+	let useTwitchChatWidth = $state(false);
 	let chatterHistory: { show: (userName: string) => void };
 
 	let og = $state({
@@ -27,6 +29,7 @@
 	});
 
 	onMount(() => {
+		useTwitchChatWidth = localStorage.getItem(twitchChatWidthStorageKey) === 'true';
 		emotesPromise = getEmotes();
 		$pb.collection('chatmessage').subscribe('*', (e) => {
 			realtimeMessages = [...messages, e.record].slice(-1000);
@@ -45,6 +48,10 @@
 	function handleScroll() {
 		shouldAutoScroll =
 			window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 24;
+	}
+
+	function saveTwitchChatWidthPreference() {
+		localStorage.setItem(twitchChatWidthStorageKey, String(useTwitchChatWidth));
 	}
 
 	$effect(() => {
@@ -66,8 +73,19 @@
 	<h1 class="mb-4 text-2xl font-semibold tracking-tight">
 		<span class="text-base-content tracking-tight">Livechat</span>
 	</h1>
-	<p class="text-base-content/80 mb-8 text-sm">Neue Nachrichten werden automatisch geladen...</p>
-	<div class="message-list">
+	<div class="text-base-content/80 mb-8 flex flex-wrap items-center justify-between gap-3 text-sm">
+		<p>Neue Nachrichten werden automatisch geladen...</p>
+		<label class="flex cursor-pointer items-center gap-2">
+			<span title="Um ASCII Art besser darzustellen">Twitch-Breite</span>
+			<input
+				type="checkbox"
+				class="toggle toggle-sm"
+				bind:checked={useTwitchChatWidth}
+				onchange={saveTwitchChatWidthPreference}
+			/>
+		</label>
+	</div>
+	<div class={['message-list', useTwitchChatWidth && 'max-w-75']}>
 		{#await emotesPromise}
 			<div class="w-full text-center">
 				<span class="loading loading-spinner loading-lg"></span>
